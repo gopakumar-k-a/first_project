@@ -312,6 +312,15 @@ textarea {
 /*----------------------------------------*/
 /*  1.4 Default Button
 /*----------------------------------------*/
+.lowercase {
+	text-transform: lowercase;
+  }
+.login-button {
+    margin-left: auto; /* This pushes the LOGIN button to the right */
+}
+.hb-menu nav ul {
+    display: flex;
+}
 button.li-btn {
 	border: none;
 	background: #fed700;

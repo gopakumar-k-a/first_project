@@ -4,6 +4,12 @@ const userModel = require('../../models/user/userModel')
 
 const bcrypt = require('bcrypt');
 
+const validator = require("validator");
+
+const nodemailer = require('nodemailer');
+
+require('dotenv').config(); //required for accessing env variable
+
 
 
 //load home page
@@ -20,8 +26,8 @@ const loadHome = async (req, res) => {
 const loadLogin = async (req, res) => {
     try {
         const currentEmail = req.query.currentEmail || '' // Get the email from the query parameters
-        const message=req.query.message || ''
-        res.render('user/login', { currentEmail,message})
+        const message = req.query.message || ''
+        res.render('user/login', { currentEmail, message })
     } catch (error) {
         console.log(error.message)
     }
@@ -62,11 +68,51 @@ const loadContact = async (req, res) => {
 
 const loadForgotPassword = async (req, res) => {
     try {
+        const email = req.query.currentEmail
         res.render('user/forgotPassword')
 
     } catch (error) {
         console.log(error.message)
 
+    }
+}
+
+//load otp page
+const loadOtp = async (req, res) => {
+    try {
+            const errMessage=req.query.errMessage || ''
+            const email=req.query.currentEmail || ''
+            res.render('user/otp', {email,errMessage})
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//checking otp
+
+const checkOtp = async (req, res) => {
+    if (req.session.otp == req.body.otp) {
+       
+        // req.session.fullname
+        //  req.session.email
+        // req.session.phoneno
+        // req.session.password
+        // req.session.otp
+         const currentEmail=req.session.email
+        const data = new userModel({
+            name: req.session.fullname,
+            email: req.session.email,
+            phone: req.session.phoneno,
+            password: req.session.password
+        })
+        await data.save()
+        req.session.destroy()
+        return res.redirect(`/login?currentEmail=${encodeURIComponent(currentEmail)}`)
+    }
+    else {
+        const errMessage='incorrect OTP'
+       res.redirect(`/otp?message=${encodeURIComponent(errMessage)}`)
     }
 }
 
@@ -78,6 +124,14 @@ const hashPassword = async (password) => {
     return await bcrypt.hash(password, saltRounds);
 };
 //===========================================
+
+
+//random otp generate function
+function generateOTP() {
+    // Generate a random number between 100000 (inclusive) and 999999 (exclusive)
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 //register user on the server
 const registerUser = async (req, res) => {
     try {
@@ -113,16 +167,38 @@ const registerUser = async (req, res) => {
             else {
                 const hashedPass = await hashPassword(userPass)
                 const fullname = firstname + ' ' + lastname
-                console.log(hashedPass + 'this is hashed password')
-                const data = new userModel({
-                    name: fullname,
-                    email: email,
-                    phone: phoneno,
-                    password: hashedPass
-                })
-                await data.save()
-                const currentEmail=email
-                return res.redirect(`/login?currentEmail=${encodeURIComponent(currentEmail)}`);
+                const otp = generateOTP()
+
+
+                req.session.fullname = fullname
+                req.session.email = email
+                req.session.phoneno = phoneno
+                req.session.password = hashedPass
+                req.session.otp = otp
+                const currentEmail = email
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASSWORD
+                    }
+                });
+                const mailOptions = {
+                    from: process.env.EMAIL_USER,
+                    to: email,
+                    subject: 'OTP For your verification',
+                    html: `<h style="color: blue;">Enter this OTP to register on jersy man</h>
+                    <p>Your OTP is: <strong>${otp}</strong></p>`
+                };
+
+                transporter.sendMail(mailOptions)
+                    .then((info) => {
+                        console.log('Email sent:', info.response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending email:', error.message);
+                    });
+                return res.redirect(`/otp?currentEmail=${encodeURIComponent(currentEmail)}`);
 
             }
 
@@ -134,45 +210,51 @@ const registerUser = async (req, res) => {
 }
 //====================================
 //user login post authentication
-const checkuser=async(req,res)=>{
+const checkuser = async (req, res) => {
 
     try {
-        const {email,password}=req.body
+        const { email, password } = req.body
 
-        if( !email || !password){
-            const message='all fields must be filled'
-                res.redirect(`/login?message=${encodeURIComponent(message)}`)
+        if (!email || !password) {
+            const message = 'all fields must be filled'
+            res.redirect(`/login?message=${encodeURIComponent(message)}`)
         }
-        else{
 
- 
-      const userMatch=await userModel.find({email:email})
-      if(userMatch){
-          if(userMatch.email==email && userMatch.password==password){
-              const message='log in success'
-              res.redirect(`/login?message=${message}`)
-          }
-          else if(userMatch.email==email && userMatch.password!=password){
-              const message='incorrect password'
-              res.redirect(`/login?message=${encodeURIComponent(message)}`)
-          }
-      
-      }
-      else{
-          const message='incorrect email'
-          res.redirect(`/login?message=${encodeURIComponent(message)}`)
-      }
+        console.log(email + ' email')
+        const isValidEmail = validator.isEmail(email);//validating email
+        console.log(isValidEmail + 'validate result')
+        if (!isValidEmail) {
+            const message = 'Please enter a valid email';
+            return res.render('login', { message });
+        }
 
+
+        const userMatch = await userModel.findOne({ email: email, isAdmin: false })
+
+        if (userMatch) {
+            const PasswordMatch = await bcrypt.compare(password, userMatch.password);
+
+            if (PasswordMatch) {
+                const message = 'log in success'
+                return res.redirect(`/login?message=${(message)}`)
+            }
+            else {
+                const message = 'incorrect password'
+                return res.redirect(`/login?message=${(message)}`)
+            }
 
         }
-    
-  
-        
+        else {
+            const message = 'incorrect email or password'
+            return res.redirect(`/login?message=${(message)}`)
+        }
     } catch (error) {
-       console.log(error.message); 
+        console.log(error.message);
     }
 
 }
+
+
 
 
 
@@ -180,5 +262,5 @@ const checkuser=async(req,res)=>{
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
-    loadForgotPassword, registerUser,checkuser
+    loadForgotPassword, registerUser, checkuser, loadOtp,checkOtp
 }
