@@ -27,6 +27,8 @@ user.get('/forgot-password',userController.loadForgotPassword)
 
 user.get('/otp',userController.loadOtp)
 user.post('/verifyotp',userController.checkOtp)
+
+user.get('/logout',userController.logout)
 // user.get('/loginCheck',userController.sLogin)
 // user.get('/checkRegister',userController)
 

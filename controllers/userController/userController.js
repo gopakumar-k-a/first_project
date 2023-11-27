@@ -25,9 +25,24 @@ const loadHome = async (req, res) => {
 
 const loadLogin = async (req, res) => {
     try {
-        const currentEmail = req.query.currentEmail || '' // Get the email from the query parameters
+        const currentEmail = req.session.email || ''
+        // destroys email after storing to current email
         const message = req.query.message || ''
-        res.render('user/login', { currentEmail, message })
+        const isLogin = req.session.isLogin || ''
+        const sMessage = req.query.sMessage || ''
+        res.render('user/login', { currentEmail, message, isLogin, sMessage })
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+//log out
+
+const logout = async (req, res) => {
+    try {
+        req.session.destroy()
+        res.redirect('/login')
     } catch (error) {
         console.log(error.message)
     }
@@ -80,9 +95,9 @@ const loadForgotPassword = async (req, res) => {
 //load otp page
 const loadOtp = async (req, res) => {
     try {
-            const errMessage=req.query.errMessage || ''
-            const email=req.query.currentEmail || ''
-            res.render('user/otp', {email,errMessage})
+        const errMessage = req.query.errMessage || ''
+        const email = req.session.email || ''
+        res.render('user/otp', { email, errMessage })
 
     } catch (error) {
         console.log(error.message);
@@ -92,14 +107,13 @@ const loadOtp = async (req, res) => {
 //checking otp
 
 const checkOtp = async (req, res) => {
+    if (!req.body.otp) {
+        const errMessage = 'all fields must be filled'
+        return res.render('user/otp', { errMessage, email: '' })
+    }
     if (req.session.otp == req.body.otp) {
-       
-        // req.session.fullname
-        //  req.session.email
-        // req.session.phoneno
-        // req.session.password
-        // req.session.otp
-         const currentEmail=req.session.email
+
+        const currentEmail = req.session.email
         const data = new userModel({
             name: req.session.fullname,
             email: req.session.email,
@@ -108,11 +122,14 @@ const checkOtp = async (req, res) => {
         })
         await data.save()
         req.session.destroy()
-        return res.redirect(`/login?currentEmail=${encodeURIComponent(currentEmail)}`)
+
+        const sMessage = 'Registration Successfull'
+        return res.redirect(`/login?sMessage=${encodeURIComponent(sMessage)}`);
+
     }
     else {
-        const errMessage='incorrect OTP'
-       res.redirect(`/otp?message=${encodeURIComponent(errMessage)}`)
+        const errMessage = 'incorrect OTP'
+        return res.render('user/otp', { errMessage, email: '' })
     }
 }
 
@@ -132,6 +149,40 @@ function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+//node mailer function for sending otp to mail
+const sendOtp = async (email, otp) => {
+    try {
+
+
+
+        console.log('generated OTP' + otp)
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'OTP For your verification',
+            html: `<h style="color: blue;">Enter this OTP to register on jersy man</h>
+            <p>Your OTP is: <strong>${otp}</strong></p>`
+        };
+
+        transporter.sendMail(mailOptions)
+            .then((info) => {
+                console.log('Email sent:', info.response);
+            })
+            .catch((error) => {
+                console.error('Error sending email:', error.message);
+            });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 //register user on the server
 const registerUser = async (req, res) => {
     try {
@@ -146,12 +197,12 @@ const registerUser = async (req, res) => {
 
         if (!firstname || !lastname || !email || !phoneno || !password || !cpassword) {
             const message = 'All fields must be filled';
-            return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+            return res.render(`user/register`, { message });
         }
         else if (cpassword != password) {
             const message = 'password is not matching'
             console.log(user)
-            return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+            return res.render(`user/register`, { message });
         }
         else {
             const userPass = req.body.password
@@ -162,43 +213,27 @@ const registerUser = async (req, res) => {
 
             if (userMatch.length > 0) {
                 const message = 'email already exists'
-                return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+                return res.render(`user/register`, { message });
             }
             else {
                 const hashedPass = await hashPassword(userPass)
                 const fullname = firstname + ' ' + lastname
-                const otp = generateOTP()
+
 
 
                 req.session.fullname = fullname
                 req.session.email = email
                 req.session.phoneno = phoneno
                 req.session.password = hashedPass
+                const otp = generateOTP()
                 req.session.otp = otp
-                const currentEmail = email
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.EMAIL_USER,
-                        pass: process.env.EMAIL_PASSWORD
-                    }
-                });
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
-                    to: email,
-                    subject: 'OTP For your verification',
-                    html: `<h style="color: blue;">Enter this OTP to register on jersy man</h>
-                    <p>Your OTP is: <strong>${otp}</strong></p>`
-                };
+                console.log(req.session + '  this is generated session');
 
-                transporter.sendMail(mailOptions)
-                    .then((info) => {
-                        console.log('Email sent:', info.response);
-                    })
-                    .catch((error) => {
-                        console.error('Error sending email:', error.message);
-                    });
-                return res.redirect(`/otp?currentEmail=${encodeURIComponent(currentEmail)}`);
+                // const currentEmail = email
+                await sendOtp(email, otp)
+
+
+                return res.redirect(`/otp`);
 
             }
 
@@ -217,15 +252,15 @@ const checkuser = async (req, res) => {
 
         if (!email || !password) {
             const message = 'all fields must be filled'
-            res.redirect(`/login?message=${encodeURIComponent(message)}`)
+            return res.redirect(`/login?message=${message}`)
         }
 
         console.log(email + ' email')
-        const isValidEmail = validator.isEmail(email);//validating email
+        const isValidEmail = validator.isEmail(email); //validating email
         console.log(isValidEmail + 'validate result')
         if (!isValidEmail) {
             const message = 'Please enter a valid email';
-            return res.render('login', { message });
+            return res.redirect(`/login?message=${message}`)
         }
 
 
@@ -236,17 +271,19 @@ const checkuser = async (req, res) => {
 
             if (PasswordMatch) {
                 const message = 'log in success'
-                return res.redirect(`/login?message=${(message)}`)
+                req.session.isLogin = true
+                return res.redirect(`/login?message=${message}`)
+
             }
             else {
                 const message = 'incorrect password'
-                return res.redirect(`/login?message=${(message)}`)
+                return res.redirect(`/login?message=${message}`)
             }
 
         }
         else {
             const message = 'incorrect email or password'
-            return res.redirect(`/login?message=${(message)}`)
+            return res.redirect(`/login?message=${message}`)
         }
     } catch (error) {
         console.log(error.message);
@@ -262,5 +299,5 @@ const checkuser = async (req, res) => {
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
-    loadForgotPassword, registerUser, checkuser, loadOtp,checkOtp
+    loadForgotPassword, registerUser, checkuser, loadOtp, checkOtp, logout
 }
