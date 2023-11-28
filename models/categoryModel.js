@@ -7,7 +7,15 @@ const categorySchema=new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
+    },
+    createdAt:{
+        type:Date,
+        default: () => Date.now()
     }
+
+
 })
 
-module.exports=mongoose.model('category',categorySchema)
+
+const category=mongoose.model('category',categorySchema)
+module.exports=category

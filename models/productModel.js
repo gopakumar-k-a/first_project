@@ -109,6 +109,14 @@ const productSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         required: true
+    },
+    createdAt:{
+        type:Date,
+        default: () => Date.now()
     }
 
+
 })
+
+const product=mongoose.model('product',productSchema)
+module.exports=product

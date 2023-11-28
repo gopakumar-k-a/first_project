@@ -7,7 +7,14 @@ const brandSchema=new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
+    },
+    createdAt:{
+        type:Date,
+        default: () => Date.now()
     }
+
 })
 
-module.exports=mongoose.model('brand',brandSchema)
+
+const brand=mongoose.model('brand',brandSchema)
+module.exports=brand

@@ -8,6 +8,13 @@ const teamSchema=mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
+    },
+    createdAt:{
+        type:Date,
+        default: () => Date.now()
     }
+
 })
-module.exports=mongoose.Model('team',teamSchema)
+
+const team=mongoose.Model('team',teamSchema)
+module.exports=team
