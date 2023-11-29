@@ -3,6 +3,20 @@
     <%- include('sideNav.ejs') %>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
         <main class="main-wrap">
             <header class="main-header navbar">
                 <div class="col-search">
@@ -75,113 +89,117 @@
                     </ul>
                 </div>
             </header>
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Categories </h2>
-                        <p>Add, edit or delete a category</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Search Categories" class="form-control bg-white">
-                    </div>
+
+
+
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <form action="/admin/add-category" method="post">
-                                    <div class="mb-4">
-                                        <label for="product_name" class="form-label">Category Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control"
-                                            id="product_name" name="categoryName">
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form action="/admin/add-category" method="post">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Category Name</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name"
+                                        name="categoryName">
 
-                                    </div>
-                                    <span class="text-center text-danger">
-                                        <%= ceMessage %>
-                                    </span>
-                                    <span class="text-center text-success">
-                                        <%= csMessage %>
-                                    </span>
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary">Create category</button>
-
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Sl No</th>
-                                                <th>Name</th>
-                                                <th>Status</th>
-                                                <th>block/unblock</th>
-                                                <th> </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <% for(let i=0;i<catData.length;i++){ %>
-                                                <tr>
-
-                                                    <td>
-                                                        <%=i+1 %>
-                                                    </td>
-                                                    <td><b>
-                                                            <%= catData[i].name %>
-                                                        </b></td>
-                                                    <td>
-                                                        <% if (catData[i].isActive==true) { %>
-                                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                                                <span class="badge rounded-pill alert-success"
-                                                                    onclick="confirmStatusChange('<%= catData[i]._id %>')">Active</span>
-                                                            </div>
-                                                            <% } else { %>
-                                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                                                    <span
-                                                                        class="badge rounded-pill alert-danger">Disabled</span>
-                                                                </div>
-                                                                <% } %>
-                                                    </td>
-                                                    <td>
-                                                        <% if (catData[i].isActive===true) { %>
-                                                            <a href="#" onclick="confirmBlock('<%= catData[i]._id %>')">
-                                                                <button
-                                                                    class="btn btn-sm btn-danger rounded font-sm">Block</button>
-                                                            </a>
-                                                            <% } else { %>
-                                                                <a href="#"
-                                                                    onclick="confirmUnblock('<%= catData[i]._id %>')">
-                                                                    <button
-                                                                        class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
-                                                                </a>
-                                                                <% } %>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-
-                                                            <a href="/admin/edit-cat?col=<%= catData[i].name %>&id=<%= catData[i]._id %>"
-                                                                class="btn btn-sm font-sm rounded btn-brand">
-                                                                <i class="material-icons md-edit"></i> Edit
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <%}%>
-
-                                        </tbody>
-                                    </table>
                                 </div>
-                            </div> <!-- .col// -->
-                        </div> <!-- .row // -->
-                    </div> <!-- card body .// -->
-                </div> <!-- card .// -->
+                                <span class="text-center text-danger">
+                                    <%= ceMessage %>
+                                </span>
+                                <span class="text-center text-success">
+                                    <%= csMessage %>
+                                </span>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Create category</button>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl No</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>block/unblock</th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <% for(let i=0;i<catData.length;i++){ %>
+                                            <tr>
+
+                                                <td>
+                                                    <%=i+1 %>
+                                                </td>
+                                                <td><b>
+                                                        <%= catData[i].name %>
+                                                    </b></td>
+                                                <td>
+                                                    <% if (catData[i].isActive==true) { %>
+                                                        <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                            <span class="badge rounded-pill alert-success"
+                                                                onclick="confirmStatusChange('<%= catData[i]._id %>')">Active</span>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                <span
+                                                                    class="badge rounded-pill alert-danger">Disabled</span>
+                                                            </div>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if (catData[i].isActive===true) { %>
+                                                        <a href="#" onclick="confirmBlock('<%= catData[i]._id %>')">
+                                                            <button
+                                                                class="btn btn-sm btn-danger rounded font-sm">Block</button>
+                                                        </a>
+                                                        <% } else { %>
+                                                            <a href="#"
+                                                                onclick="confirmUnblock('<%= catData[i]._id %>')">
+                                                                <button
+                                                                    class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
+                                                            </a>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary"
+                                                        onclick="launchSweetAlert('<%= catData[i]._id %>','<%= catData[i].name %>')">
+                                                        edit
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+                                            <%}%>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
             </section> <!-- content-main end// -->
+
+
+            </div>
 
 
             <!-- =================second-category===================== -->
             <section class="content-main">
+
                 <div class="content-header">
                     <div>
                         <h2 class="content-title card-title">League </h2>
@@ -195,7 +213,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <form action="/admin/add-category" method="post">
+                                <form action="/admin/add-league" method="post">
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Category Name</label>
                                         <input type="text" placeholder="Type here" class="form-control"
@@ -203,13 +221,13 @@
 
                                     </div>
                                     <span class="text-center text-danger">
-                                        <%= ceMessage %>
+                                        <%= leMessage %>
                                     </span>
                                     <span class="text-center text-success">
-                                        <%= csMessage %>
+                                        <%= lsMessage %>
                                     </span>
                                     <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary">Create category</button>
+                                        <button type="submit" class="btn btn-primary">Create League</button>
 
                                     </div>
                                 </form>
@@ -222,26 +240,26 @@
                                                 <th>Sl No</th>
                                                 <th>Name</th>
                                                 <th>Status</th>
-                                                <th>block/unblock</th>
+                                                <th>Block/Unblock</th>
                                                 <th> </th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
-                                            <% for(let i=0;i<catData.length;i++){ %>
+                                            <% for(let i=0;i<leagueData.length;i++){ %>
                                                 <tr>
 
                                                     <td>
                                                         <%=i+1 %>
                                                     </td>
                                                     <td><b>
-                                                            <%= catData[i].name %>
+                                                            <%= leagueData[i].name %>
                                                         </b></td>
                                                     <td>
-                                                        <% if (catData[i].isActive==true) { %>
+                                                        <% if (leagueData[i].isActive==true) { %>
                                                             <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                                                <span class="badge rounded-pill alert-success"
-                                                                    onclick="confirmStatusChange('<%= catData[i]._id %>')">Active</span>
+                                                                <span
+                                                                    class="badge rounded-pill alert-success">Active</span>
                                                             </div>
                                                             <% } else { %>
                                                                 <div class="col-lg-2 col-sm-2 col-4 col-status">
@@ -251,27 +269,128 @@
                                                                 <% } %>
                                                     </td>
                                                     <td>
-                                                        <% if (catData[i].isActive===true) { %>
-                                                            <a href="#" onclick="confirmBlock('<%= catData[i]._id %>')">
+                                                        <% if (leagueData[i].isActive===true) { %>
+                                                            <a href="#"
+                                                                onclick="leagueBlock('<%= leagueData[i]._id %>')">
                                                                 <button
                                                                     class="btn btn-sm btn-danger rounded font-sm">Block</button>
                                                             </a>
                                                             <% } else { %>
                                                                 <a href="#"
-                                                                    onclick="confirmUnblock('<%= catData[i]._id %>')">
+                                                                    onclick="leagueUnblock('<%= leagueData[i]._id %>')">
                                                                     <button
                                                                         class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
                                                                 </a>
                                                                 <% } %>
                                                     </td>
                                                     <td>
-                                                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="sweetAlertLeagueUpdate('<%= leagueData[i]._id %>','<%= leagueData[i].name %>')">
+                                                            edit
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
 
-                                                            <a href="/admin/edit-cat?col=<%= catData[i].name %>&id=<%= catData[i]._id %>"
-                                                                class="btn btn-sm font-sm rounded btn-brand">
-                                                                <i class="material-icons md-edit"></i> Edit
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- .col// -->
+                        </div> <!-- .row // -->
+                    </div> <!-- card body .// -->
+                </div> <!-- card .// -->
+            </section>
+
+            <!-- =========================team==================== -->
+            <section class="content-main">
+
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Team </h2>
+                        <p>Add, edit or delete a Tea,</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <form action="/admin/add-team" method="post">
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Category Name</label>
+                                        <input type="text" placeholder="Type here" class="form-control"
+                                            id="product_name" name="teamName">
+
+                                    </div>
+                                    <span class="text-center text-danger">
+                                        <%= teMessage %>
+                                    </span>
+                                    <span class="text-center text-success">
+                                        <%= tsMessage %>
+                                    </span>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Create Team</button>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl No</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Block/Unblock</th>
+                                                <th> </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <% for(let i=0;i<teamData.length;i++){ %>
+                                                <tr>
+
+                                                    <td>
+                                                        <%=i+1 %>
+                                                    </td>
+                                                    <td><b>
+                                                            <%= teamData[i].name %>
+                                                        </b></td>
+                                                    <td>
+                                                        <% if (teamData[i].isActive==true) { %>
+                                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                <span
+                                                                    class="badge rounded-pill alert-success">Active</span>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                    <span
+                                                                        class="badge rounded-pill alert-danger">Disabled</span>
+                                                                </div>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (teamData[i].isActive===true) { %>
+                                                            <a href="#" onclick="teamBlock('<%= teamData[i]._id %>')">
+                                                                <button
+                                                                    class="btn btn-sm btn-danger rounded font-sm">Block</button>
                                                             </a>
-                                                        </div>
+                                                            <% } else { %>
+                                                                <a href="#"
+                                                                    onclick="teamUnblock('<%= teamData[i]._id %>')">
+                                                                    <button
+                                                                        class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
+                                                                </a>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="sweetAlertTeamUpdate('<%= teamData[i]._id %>','<%= teamData[i].name %>')">
+                                                            edit
+                                                        </button>
                                                     </td>
                                                 </tr>
                                                 <%}%>
@@ -287,11 +406,32 @@
 
 
 
-
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
                         <script>
+                            //categoryUpdate=sweetAlert=================================
+                            function launchSweetAlert(catId, name) {
+                                Swal.fire({
+                                    title: 'Update category name',
+                                    html: `
+                                        <form id="updateForm" action="/admin/edit-cat" method="POST">
+                                            <input name="catName" type="text" id="inputField" class="swal2-input" value="${name || ''}">
+                                            <input name="id" type="hidden" id="id" class="swal2-input" value="${catId || ''}">
+                                        </form>
+                                    `,
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Update Category Name',
+                                    cancelButtonText: 'Cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Trigger form submission when the user clicks "Update Category Name"
+                                        document.getElementById('updateForm').submit();
+                                    }
+                                });
+                            }
+                            // category block and unblock
                             function confirmBlock(categoryId) {
                                 Swal.fire({
                                     title: 'Are you sure?',
@@ -323,7 +463,125 @@
                                     }
                                 });
                             }
+
+
+
+                            //========================update league data=========================================
+
+                            function sweetAlertLeagueUpdate(leagueId, name) {
+                                Swal.fire({
+                                    title: 'Update category name',
+                                    html: `
+                                        <form id="updateLeagueForm" action="/admin/edit-league" method="POST">
+                                            <input name="leagueName" type="text" id="inputField" class="swal2-input" value="${name || ''}">
+                                            <input name="id" type="hidden" id="id" class="swal2-input" value="${leagueId || ''}">
+                                        </form>
+                                    `,
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Update Category Name',
+                                    cancelButtonText: 'Cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Trigger form submission when the user clicks "Update Category Name"
+                                        document.getElementById('updateLeagueForm').submit();
+                                    }
+                                });
+                            }
+                            //block league
+                            function leagueBlock(leagueId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to block this category.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, block it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/blockLeague?_id=" + leagueId;
+                                    }
+                                });
+                            }
+                            //unblock league
+                            function leagueUnblock(leagueId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to unblock this category.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#28a745',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, unblock it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/unblockLeague?_id=" + leagueId;
+                                    }
+                                });
+                            }
+                        //=======================team management=================================
+                        
+                        function sweetAlertTeamUpdate(teamId, name) {
+                                Swal.fire({
+                                    title: 'Update Team name',
+                                    html: `
+                                        <form id="updateTeamForm" action="/admin/edit-team" method="POST">
+                                            <input name="teamName" type="text" id="inputField" class="swal2-input" value="${name || ''}">
+                                            <input name="id" type="hidden" id="id" class="swal2-input" value="${teamId || ''}">
+                                        </form>
+                                    `,
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Update Category Name',
+                                    cancelButtonText: 'Cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Trigger form submission when the user clicks "Update Category Name"
+                                        document.getElementById('updateTeamForm').submit();
+                                    }
+                                });
+                            }
+                        //block team
+                        function teamBlock(teamId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to block this team.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, block it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/blockTeam?_id=" + teamId;
+                                    }
+                                });
+                            }
+                            //unblock team
+                            function teamUnblock(teamId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to unblock this team.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#28a745',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, unblock it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/unblockTeam?_id=" + teamId;
+                                    }
+                                });
+                            }
+
+
+
                         </script>©, Evara - HTML Ecommerce Template .
+                        <!-- Add this script tag to include the following JavaScript code -->
+
+
+
                     </div>
                     <div class="col-sm-6">
                         <div class="text-sm-end">
@@ -340,6 +598,10 @@
         <script src="/admin-asset/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="/admin-asset/js/main.js" type="text/javascript"></script>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         </body>
 
 

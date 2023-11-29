@@ -2,32 +2,74 @@ const express=require('express')
 const admin=express()
 const adminController=require('../../controllers/adminController/adminController')
 
+const productController=require('../../controllers/adminController/productController')
+
 
 //load login page page
 admin.get('/',adminController.loadLogin)
 //load dashboard(dummy content)
-admin.post('/',adminController.loadDashboard)
+admin.post('/',adminController.checkAdmin)
 //load dashboard page
 admin.get('/dashboard',adminController.loadDashboard)
-//load projectlist page
-admin.get('/product-list',adminController.loadProjectList)
-//load addproduct page
-admin.get('/add-product',adminController.loadAddProduct)
 
-//===========product management
+
+
+
+
+
+//load projectlist page
+admin.get('/product-list',productController.loadProjectList)
+//load addproduct page
+admin.get('/add-product',productController.loadAddProduct)
+
+//===========product management====================
 
 //load product management page
-admin.get('/category-management',adminController.loadCategory)
-//category management
-//adding new category
-admin.post('/add-category',adminController.addCategory)
-//loading update page
-admin.get('/edit-cat',adminController.loadEditCategory)
+admin.get('/category-management',productController.loadCategory)
+// category management=========================
+
+
+// ------category--management--------------
+//inserting new category
+admin.post('/add-category',productController.addCategory)
 //updating data of category
-admin.post('/edit-cat',adminController.updateCatName)
+admin.post('/edit-cat',productController.updateCatName)
+//blocking categories
+admin.get('/blockCategory',productController.blockCat)
+//unblocking categories
+admin.get('/unblockCategory',productController.unblockCat)
+
+//----------------------league-management--------------
+//inserting data of league
+admin.post('/add-league',productController.insertLeague)
+//updating data of league
+admin.post('/edit-league',productController.updateLeagueName)
+//blocking leagues
+admin.get('/blockLeague',productController.blockLeague)
+//unblocking leagues
+admin.get('/unblockLeague',productController.unblockLeague)
 
 
-//blocking and unblocking categories
-admin.get('/blockCategory',adminController.blockCat)
-admin.get('/unblockCategory',adminController.unblockCat)
+//------------------------team-management---------------------------
+//inserting  data of team
+admin.post('/add-team',productController.insertTeam)
+//updating data of team
+admin.post('/edit-team',productController.updateTeamName)
+//blocking team
+admin.get('/blockTeam',productController.blockTeam)
+//unblocking team
+admin.get('/unblockTeam',productController.unblockTeam)
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports=admin

@@ -16,5 +16,5 @@ const teamSchema=mongoose.Schema({
 
 })
 
-const team=mongoose.Model('team',teamSchema)
+const team=mongoose.model('team',teamSchema)
 module.exports=team

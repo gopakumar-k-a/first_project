@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 
 const leagueSchema=new mongoose.Schema({
     name:{
-        typea:String,
+        type:String,
         required:true
     },
     isActive:{
