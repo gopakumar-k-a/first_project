@@ -91,7 +91,7 @@
             </header>
 
 
-
+            <!-- ========================================category================================== -->
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Categories </h2>
@@ -105,18 +105,19 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/add-category" method="post">
+                            <form action="/admin/add-category" method="post" onsubmit="return validatecat()">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Category Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name"
+                                    <input type="text" placeholder="Type here" class="form-control" id="cat-name"
                                         name="categoryName">
 
                                 </div>
-                                <span class="text-center text-danger">
-                                    <%= ceMessage %>
-                                </span>
+
                                 <span class="text-center text-success">
                                     <%= csMessage %>
+                                </span>
+                                <span class="text-center text-danger" id="errMessage">
+
                                 </span>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary">Create category</button>
@@ -197,7 +198,7 @@
             </div>
 
 
-            <!-- =================second-category===================== -->
+            <!-- =================league===================== -->
             <section class="content-main">
 
                 <div class="content-header">
@@ -213,11 +214,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <form action="/admin/add-league" method="post">
+                                <form action="/admin/add-league" method="post" onsubmit="return validateLeague()">
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Category Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control"
-                                            id="product_name" name="categoryName">
+                                        <input type="text" placeholder="Type here" class="form-control" id="league-name"
+                                            name="categoryName">
 
                                     </div>
                                     <span class="text-center text-danger">
@@ -225,6 +226,9 @@
                                     </span>
                                     <span class="text-center text-success">
                                         <%= lsMessage %>
+                                    </span>
+                                    <span class="text-center text-success" class="league-err">
+
                                     </span>
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary">Create League</button>
@@ -405,12 +409,157 @@
             </section>
 
 
+            <!-- =====================brand============================================================ -->
+            <section class="content-main">
+
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Brand </h2>
+                        <p>Add, edit or delete a brand,</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <form action="/admin/add-brand" method="post" onsubmit="return validateForm()"
+                                    enctype="multipart/form-data">
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Brand Name</label>
+                                        <input type="text" placeholder="Type here" class="form-control" id="brand-name"
+                                            name="brandName">
+
+                                    </div>
+                                    <span class="text-center text-danger">
+                                        <%= beMessage %>
+                                    </span>
+                                    <span class="text-center text-success">
+                                        <%= bsMessage %>
+                                    </span>
+                                    <span class="text-center text-danger" id="successMessage">
+
+                                    </span>
+                                    <div class="d-grid">
+                                        <div class="card-body">
+                                            <div class="input-upload">
+                                                <img src="/admin-assets/imgs/theme/upload.svg" alt="">
+                                                <input class="form-control" type="file" id="file-input"
+                                                    name="brandInput">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Create Brand
+                                        </button>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl No</th>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Block/Unblock</th>
+                                                <th> </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <% for(let i=0;i<brandData.length;i++){ %>
+
+                                                <tr>
+                                                    <td>
+                                                        <%=i+1 %>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Display the image using the imageUrl -->
+                                                        <img src="/admin-assets/uploads/<%= brandData[i].imageUrl %>"
+                                                            alt="Brand Image"
+                                                            style="max-width: 50px; max-height: 50px;">
+                                                    </td>
+                                                    <td><b>
+                                                            <%= brandData[i].name %>
+                                                        </b></td>
+                                                    <td>
+                                                        <% if (brandData[i].isActive==true) { %>
+                                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                <span
+                                                                    class="badge rounded-pill alert-success">Active</span>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                    <span
+                                                                        class="badge rounded-pill alert-danger">Disabled</span>
+                                                                </div>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (brandData[i].isActive===true) { %>
+                                                            <a href="#" onclick="brandBlock('<%= brandData[i]._id %>')">
+                                                                <button
+                                                                    class="btn btn-sm btn-danger rounded font-sm">Block</button>
+                                                            </a>
+                                                            <% } else { %>
+                                                                <a href="#"
+                                                                    onclick="brandUnblock('<%= brandData[i]._id %>')">
+                                                                    <button
+                                                                        class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
+                                                                </a>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="sweetAlertBrandUpdate('<%= brandData[i]._id %>','<%= brandData[i].name %>')">
+                                                            edit
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- .col// -->
+                        </div> <!-- .row // -->
+                    </div> <!-- card body .// -->
+                </div> <!-- card .// -->
+            </section>
+            <!-- Add this script to your HTML to log image paths to the console -->
+
+
+
+
 
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
                         <script>
-                            //categoryUpdate=sweetAlert=================================
+                            //categoryUpdate=================================
+                            function validatecat() {
+                                // Get the values of the form fields
+                                const catName = document.getElementById('cat-name').value;
+
+                                // Check if both fields are filled
+                                if (catName.trim() === '') {
+                                    // Display an error message
+                                    document.getElementById('errMessage').innerText = 'All fields must be filled.';
+                                    // Prevent form submission
+                                    return false;
+                                }
+
+                                // Clear any previous error messages
+                                document.getElementById('successMessage').innerText = '';
+
+                                // Allow form submission
+                                return true;
+                            }
+                            //update sweet alert
                             function launchSweetAlert(catId, name) {
                                 Swal.fire({
                                     title: 'Update category name',
@@ -467,6 +616,26 @@
 
 
                             //========================update league data=========================================
+                            //validate league
+
+                            function validateLeague() {
+                                // Get the values of the form fields
+                                const leagueName = document.getElementById('league-name').value;
+
+                                // Check if the field is filled
+                                if (leagueName.trim() === '') {
+                                    // Display an error message
+                                    document.querySelector('.league-err').innerText = 'All fields must be filled.';
+                                    // Prevent form submission
+                                    return false;
+                                }
+
+                                // Clear any previous error messages
+                                document.querySelector('.league-err').innerText = '';
+
+                                // Allow form submission
+                                return true;
+                            }
 
                             function sweetAlertLeagueUpdate(leagueId, name) {
                                 Swal.fire({
@@ -520,9 +689,9 @@
                                     }
                                 });
                             }
-                        //=======================team management=================================
-                        
-                        function sweetAlertTeamUpdate(teamId, name) {
+                            //=======================team management=================================
+
+                            function sweetAlertTeamUpdate(teamId, name) {
                                 Swal.fire({
                                     title: 'Update Team name',
                                     html: `
@@ -542,8 +711,8 @@
                                     }
                                 });
                             }
-                        //block team
-                        function teamBlock(teamId) {
+                            //block team
+                            function teamBlock(teamId) {
                                 Swal.fire({
                                     title: 'Are you sure?',
                                     text: 'You are about to block this team.',
@@ -574,8 +743,80 @@
                                     }
                                 });
                             }
+                            //============================brand management=======================================
+                            //brand form validation-----------------------
+                            function validateForm() {
+                                // Get the values of the form fields
+                                const brandName = document.getElementById('brand-name').value;
+                                const fileInput = document.getElementById('file-input').value;
 
+                                // Check if both fields are filled
+                                if (brandName.trim() === '' || fileInput.trim() === '') {
+                                    // Display an error message
+                                    document.getElementById('successMessage').innerText = 'All fields must be filled.';
+                                    // Prevent form submission
+                                    return false;
+                                }
 
+                                // Clear any previous error messages
+                                document.getElementById('successMessage').innerText = '';
+
+                                // Allow form submission
+                                return true;
+                            }
+                            //brand update
+                            function sweetAlertBrandUpdate(brandId, name) {
+                                Swal.fire({
+                                    title: 'Update Brand name',
+                                    html: `
+                                        <form id="updateBrandForm" action="/admin/edit-brand" method="POST">
+                                            <input name="brandName" type="text" id="inputField" class="swal2-input" value="${name || ''}">
+                                            <input name="id" type="hidden" id="id" class="swal2-input" value="${brandId || ''}">
+                                        </form>
+                                    `,
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Update Brand Name',
+                                    cancelButtonText: 'Cancel',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Trigger form submission when the user clicks "Update Category Name"
+                                        document.getElementById('updateBrandForm').submit();
+                                    }
+                                });
+                            }
+                            //block team
+                            function brandBlock(brandId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to block this brand.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, block it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/block-brand?_id=" + brandId;
+                                    }
+                                });
+                            }
+                            //unblock team
+                            function brandUnblock(brandId) {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'You are about to unblock this brand.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#28a745',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Yes, unblock it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/admin/unblock-brand?_id=" + brandId;
+                                    }
+                                });
+                            }
 
                         </script>©, Evara - HTML Ecommerce Template .
                         <!-- Add this script tag to include the following JavaScript code -->

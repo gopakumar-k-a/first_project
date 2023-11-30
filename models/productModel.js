@@ -27,14 +27,6 @@ const productSchema = new mongoose.Schema({
     },
     size: {
         s: {
-            regPrice: {
-                type: number,
-                default: 0
-            },
-            salePrice: {
-                type: number,
-                default: 0
-            },
             quantity: {
                 type: number,
                 default: 0
@@ -42,14 +34,6 @@ const productSchema = new mongoose.Schema({
 
         },
         m: {
-            regPrice: {
-                type: number,
-                default: 0
-            },
-            salePrice: {
-                type: number,
-                default: 0
-            },
             quantity: {
                 type: number,
                 default: 0
@@ -57,49 +41,22 @@ const productSchema = new mongoose.Schema({
 
         },
         l: {
-            regPrice: {
-                type: number,
-                default: 0
-            },
-            salePrice: {
-                type: number,
-                default: 0
-            },
             quantity: {
                 type: number,
                 default: 0
             }
 
+        }
+    },
+    price: {
+
+        salePrice: {
+            type: number,
+            default: 0
         },
-        xl: {
-            regPrice: {
-                type: number,
-                default: 0
-            },
-            salePrice: {
-                type: number,
-                default: 0
-            },
-            quantity: {
-                type: number,
-                default: 0
-            }
-
-        },
-        xxl: {
-            regPrice: {
-                type: number,
-                default: 0
-            },
-            salePrice: {
-                type: number,
-                default: 0
-            },
-            quantity: {
-                type: number,
-                default: 0
-            }
-
+        regularPrice: {
+            type: number,
+            default: 0
         }
     },
     imagesUrl: {
@@ -110,13 +67,13 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    createdAt:{
-        type:Date,
+    createdAt: {
+        type: Date,
         default: () => Date.now()
     }
 
 
 })
 
-const product=mongoose.model('product',productSchema)
-module.exports=product
+const product = mongoose.model('product', productSchema)
+module.exports = product

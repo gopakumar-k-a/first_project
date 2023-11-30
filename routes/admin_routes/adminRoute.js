@@ -3,7 +3,8 @@ const admin=express()
 const adminController=require('../../controllers/adminController/adminController')
 
 const productController=require('../../controllers/adminController/productController')
-
+//requiring storage engine for multer
+const upload=require('../../multer')
 
 //load login page page
 admin.get('/',adminController.loadLogin)
@@ -59,6 +60,18 @@ admin.post('/edit-team',productController.updateTeamName)
 admin.get('/blockTeam',productController.blockTeam)
 //unblocking team
 admin.get('/unblockTeam',productController.unblockTeam)
+
+
+//-----------------------brand-management-------------------------
+//inserting new brand
+admin.post('/add-brand',upload.single('brandInput'),productController.insertBrand)
+//update-brand
+admin.post('/edit-brand',productController.updateBrandName)
+
+//blocking brand
+admin.get('/block-brand',productController.blockBrand)
+//unblocking brand
+admin.get('/unblock-brand',productController.unblockBrand)
 
 
 

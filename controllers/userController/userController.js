@@ -121,7 +121,11 @@ const checkOtp = async (req, res) => {
             password: req.session.password
         })
         await data.save()
-        req.session.destroy()
+        delete req.session.fullname;
+        delete req.session.email;
+        delete req.session.phoneno;
+        delete req.session.password;
+        delete req.session.otp;
 
         const sMessage = 'Registration Successfull'
         return res.redirect(`/login?sMessage=${encodeURIComponent(sMessage)}`);

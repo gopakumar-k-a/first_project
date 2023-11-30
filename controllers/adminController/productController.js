@@ -7,8 +7,11 @@ const categoryModel = require('../../models/categoryModel')
 const leagueModel = require('../../models/leagueModel')
 //team data(eg:india,barcelona)
 const teamModel = require('../../models/teamModel')
+//brand model(eg:nike ,adidda,etc)
+const brandModel=require('../../models/brandModel')
 
 const mongoose = require('mongoose')
+
 
 
 
@@ -45,13 +48,17 @@ const loadCategory = async (req, res) => {
         const leMessage = req.query.leMessage || ''
         const tsMessage = req.query.tsMessage || ''
         const teMessage=req.query.teMessage || ''
+        const beMessage=req.query.beMessage || ''
+        const bsMessage=req.query.beMessage || ''
         const catData = await categoryModel.find({})
         const leagueData = await leagueModel.find({})
         const teamData = await teamModel.find({})
+        const brandData=await brandModel.find({})
         // console.log(catData);
         res.render('admin/categoryManagement', {
             ceMessage, leMessage, teMessage,
-            lsMessage, csMessage, tsMessage, catData, leagueData, teamData, leagueData
+            lsMessage, csMessage, tsMessage,beMessage,bsMessage,
+             catData, leagueData, teamData,brandData
         })
     } catch (error) {
         console.log(error.message);
@@ -136,13 +143,6 @@ const updateCatName = async (req, res) => {
         return res.redirect('/admin/category-management?errorMessage=' + encodeURIComponent(error.message));
     }
 };
-
-
-
-
-
-
-
 
 
 //block and unblock category
@@ -322,8 +322,94 @@ const unblockTeam = async (req, res) => {
 
 }
 
+//========================brand=management===============================
+
+const insertBrand = async (req, res) => {
+    try {
+        const brand = req.body.brandName;
+        const img = req.file.filename;
+
+
+        const matchBrand = await brandModel.find({ name: brand });
+
+        if (matchBrand.length > 0) {
+            const err = 'Brand already exists'; 
+            return res.redirect(`/admin/category-management?beMessage=${err}`);
+        } else {
+            const data = new brandModel({
+                name: brand,
+                imageUrl: img, 
+            });
+
+            await data.save();
+
+            const bsMessage = 'Brand added successfully'; // Adjusted success message
+            return res.redirect(`/admin/category-management/?bsMessage=${bsMessage}`);
+        }
+    } catch (error) {
+  
+        console.error(error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
+//update brand
+const updateBrandName = async (req, res) => {
+    try {
+        const brandName = req.body.brandName;
+        const id = req.body.id;
+        // Find the category by id
+        const existingData = await brandModel.find({ name: brandName, _id: { $ne: id } });
+        console.log(existingData+'  this is dataleague ');
+
+        console.log(existingData.name + ' dataleague name');
+
+        // Check if the new name is the same as the existing one
+        if (existingData.length>0) {
+            return res.redirect('/admin/category-management?teMessage=name already exists');
+        } else {
+            // Update the category name
+            await brandModel.updateOne({ _id: id }, { name: brandName });
+
+            return res.redirect('/admin/category-management?tsMessage=value updated successfully');
+        }
+    } catch (error) {
+        console.log(error.message);
+
+    }
+};
+
+const blockBrand= async (req, res) => {
+    try {
+        const brandId = req.query._id
+        console.log('this is brand id');
+        await brandModel.updateOne({ _id: brandId }, { isActive: false })
+        return res.redirect('/admin/category-management')
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+const unblockBrand = async (req, res) => {
+    try {
+        const brandId = req.query._id
+        console.log('this is brand id');
+        await brandModel.updateOne({ _id: brandId }, { isActive: true })
+        return res.redirect('/admin/category-management')
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+
+
+
+
+
+
+
 module.exports={ loadProjectList, loadAddProduct,
     loadCategory, addCategory, loadEditCategory, blockCat, unblockCat,
     updateCatName, insertLeague, blockLeague, unblockLeague,
-    insertTeam,updateLeagueName,blockTeam,unblockTeam,updateTeamName
+    insertTeam,updateLeagueName,blockTeam,unblockTeam,updateTeamName,insertBrand,
+    blockBrand,unblockBrand,updateBrandName
 }
