@@ -291,7 +291,7 @@ const updateTeamName = async (req, res) => {
             return res.redirect('/admin/category-management?teMessage=name already exists');
         } else {
             // Update the category name
-            await leagueModel.updateOne({ _id: id }, { name: teamName });
+            await teamModel.updateOne({ _id: id }, { name: teamName });
 
             return res.redirect('/admin/category-management?tsMessage=value updated successfully');
         }
