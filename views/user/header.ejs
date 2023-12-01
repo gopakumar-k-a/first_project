@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="css/material-design-iconic-font.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha256-QwcmL/XFfPTfEXtP8lTl+LUK+TVLi3FMs1W6t98+OE" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha256-QwcmL/XFfPTfEXtP8lTl+LUK+TVLi3FMs1W6t98+OE" crossorigin="anonymous">
 
     <!-- Font Awesome Stars-->
     <link rel="stylesheet" href="css/fontawesome-stars.css">
@@ -228,20 +229,32 @@
                             <!-- Begin Header Bottom Menu Area -->
                             <!-- ===============================jersey man main nav area=============================== -->
                             <div class="hb-menu">
+
+                                <!-- navbar after login -->
+
                                 <nav>
                                     <ul>
+
                                         <li><a href="/">HOME</a></li>
                                         <li><a href="/about">ABOUT</a></li>
                                         <li><a href="/contact">CONTACT US</a></li>
-                                      
-                                            <!-- <li class="login-button"><a href=""><img src="images/user/user-circle.svg" alt="Logo" style="width: 25px; height: 25px; margin-right: 5px; margin-top: 5px;">USER DASHBOARD</a></li> -->
+                                        <% if(user) {%>
+                                            <li class="login-button"><a href=""><img src="images/user/user-circle.svg"
+                                                        alt="Logo"
+                                                        style="width: 25px; height: 25px; margin-right: 5px; margin-top: 5px;">USER
+                                                    DASHBOARD</a></li>
 
-                                            <!-- <li class="login-button" style="float: right;"><a href="/logout">LOG out</a></li> -->
-                                      
+                                            <li class="login-button" style="float: right;"><a href="/logout">LOG out</a>
+                                            </li>
+
+                                            <!-- <li class="login-button"><a href="/login">LOGIN</a></li> -->
+                                            <%} else {%>
                                                 <li class="login-button"><a href="/login">LOGIN</a></li>
-                                              
+                                                <%}%>
                                     </ul>
                                 </nav>
+
+
                             </div>
                             <!-- Header Bottom Menu Area End Here -->
                         </div>

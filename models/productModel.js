@@ -52,11 +52,11 @@ const productSchema = new mongoose.Schema({
 
         salePrice: {
             type: number,
-            default: 0
+            required:true
         },
         regularPrice: {
             type: number,
-            default: 0
+            required:true
         }
     },
     imagesUrl: {
@@ -65,7 +65,7 @@ const productSchema = new mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        required: true
+        default:true
     },
     createdAt: {
         type: Date,

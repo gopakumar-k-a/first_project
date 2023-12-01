@@ -8,14 +8,14 @@ const brandSchema=new mongoose.Schema({
         type:Boolean,
         default:true
     },
-    createdAt:{
-        type:Date,
-        default: () => Date.now()
-    },
     imageUrl: {
         type: String,
         required: true
     },
+    createdAt:{
+        type:Date,
+        default: () => Date.now()
+    }
 
 })
 

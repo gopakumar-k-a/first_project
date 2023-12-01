@@ -21,11 +21,12 @@ user.get('/login',userController.loadLogin)
 user.post('/login',userController.checkuser)
 user.get('/register',userController.loadRegister)
 user.post('/register',userController.registerUser)
+user.post('/resend-otp',userController.resendOtp)
 user.get('/about',userController.loadAbout)
 user.get('/contact',userController.loadContact)
 user.get('/forgot-password',userController.loadForgotPassword)
 
-user.get('/otp',userController.loadOtp)
+// user.get('/otp',userController.loadOtp)
 user.post('/verifyotp',userController.checkOtp)
 
 user.get('/logout',userController.logout)

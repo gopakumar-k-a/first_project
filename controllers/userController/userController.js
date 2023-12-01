@@ -15,7 +15,8 @@ require('dotenv').config(); //required for accessing env variable
 //load home page
 const loadHome = async (req, res) => {
     try {
-        res.render('user/home')
+        const user = req.session.userEmail || ''
+        res.render('user/home', { user })
     } catch (error) {
         console.log(error.message);
     }
@@ -25,12 +26,14 @@ const loadHome = async (req, res) => {
 
 const loadLogin = async (req, res) => {
     try {
+        const user = req.session.userEmail || ''
         const currentEmail = req.session.email || ''
         // destroys email after storing to current email
+
         const message = req.query.message || ''
         const isLogin = req.session.isLogin || ''
         const sMessage = req.query.sMessage || ''
-        res.render('user/login', { currentEmail, message, isLogin, sMessage })
+        res.render('user/login', { currentEmail, message, isLogin, sMessage, user })
 
     } catch (error) {
         console.log(error.message)
@@ -41,7 +44,7 @@ const loadLogin = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        req.session.destroy()
+        await req.session.destroy()
         res.redirect('/login')
     } catch (error) {
         console.log(error.message)
@@ -53,8 +56,9 @@ const logout = async (req, res) => {
 
 const loadRegister = async (req, res) => {
     try {
+        const user = req.session.userEmail || ''
         const message = req.query.message || ''
-        res.render('user/register', { message })
+        res.render('user/register', { message, user })
     } catch (error) {
         console.log(error.message)
     }
@@ -63,7 +67,8 @@ const loadRegister = async (req, res) => {
 //load about page
 const loadAbout = async (req, res) => {
     try {
-        res.render('user/about')
+        const user = req.session.userEmail || ''
+        res.render('user/about', { user })
     } catch (error) {
         console.log(error.message)
     }
@@ -73,7 +78,8 @@ const loadAbout = async (req, res) => {
 
 const loadContact = async (req, res) => {
     try {
-        res.render('user/contact')
+        const user = req.session.userEmail || ''
+        res.render('user/contact', { user })
     } catch (error) {
         console.log(error.message)
     }
@@ -83,8 +89,9 @@ const loadContact = async (req, res) => {
 
 const loadForgotPassword = async (req, res) => {
     try {
+        const user = req.session.userEmail || ''
         const email = req.query.currentEmail
-        res.render('user/forgotPassword')
+        res.render('user/forgotPassword', { user })
 
     } catch (error) {
         console.log(error.message)
@@ -95,9 +102,10 @@ const loadForgotPassword = async (req, res) => {
 //load otp page
 const loadOtp = async (req, res) => {
     try {
+        const user = req.session.userEmail || ''
         const errMessage = req.query.errMessage || ''
         const email = req.session.email || ''
-        res.render('user/otp', { email, errMessage })
+        res.render('user/otp', { email, errMessage, user })
 
     } catch (error) {
         console.log(error.message);
@@ -107,9 +115,10 @@ const loadOtp = async (req, res) => {
 //checking otp
 
 const checkOtp = async (req, res) => {
+    const user = req.session.userEmail || ''
     if (!req.body.otp) {
         const errMessage = 'all fields must be filled'
-        return res.render('user/otp', { errMessage, email: '' })
+        return res.render('user/otp', { errMessage, email: '', user })
     }
     if (req.session.otp == req.body.otp) {
 
@@ -133,7 +142,7 @@ const checkOtp = async (req, res) => {
     }
     else {
         const errMessage = 'incorrect OTP'
-        return res.render('user/otp', { errMessage, email: '' })
+        return res.render('user/otp', { errMessage, email: '', user })
     }
 }
 
@@ -190,34 +199,38 @@ const sendOtp = async (email, otp) => {
 //register user on the server
 const registerUser = async (req, res) => {
     try {
-        const user = req.body
-        const firstname = user.firstname
-        const lastname = user.lastname
-        const email = user.email
-        const phoneno = user.phoneno
-        const password = user.password
-        const cpassword = user.cpassword
 
+        const firstname = req.body.firstname
+        const lastname = req.body.lastname
+        const email = req.body.email
+        const phoneno = req.body.phoneno
+        const password = req.body.password
+        const cpassword = req.body.cpassword
+        const user = req.session.userEmail || ''
 
         if (!firstname || !lastname || !email || !phoneno || !password || !cpassword) {
             const message = 'All fields must be filled';
-            return res.render(`user/register`, { message });
+            return res.render(`user/register`, { message, user });
         }
         else if (cpassword != password) {
             const message = 'password is not matching'
             console.log(user)
-            return res.render(`user/register`, { message });
+            return res.render(`user/register`, { message, user });
         }
         else {
             const userPass = req.body.password
 
             const userMatch = await userModel.find({ email: email })
+            const phoneMatch = await userModel.find({ phone: phoneno })
             console.log(userMatch.email + 'this is matched mail')
 
 
             if (userMatch.length > 0) {
                 const message = 'email already exists'
-                return res.render(`user/register`, { message });
+                return res.render(`user/register`, { message, user });
+            }
+            else if (phoneMatch.length > 0) {
+                return res.render(`user/register`, { message: 'phone no already in use', user });
             }
             else {
                 const hashedPass = await hashPassword(userPass)
@@ -237,7 +250,7 @@ const registerUser = async (req, res) => {
                 await sendOtp(email, otp)
 
 
-                return res.redirect(`/otp`);
+                return res.render('user/otp', { user, email: '', errMessage: '' })
 
             }
 
@@ -245,6 +258,22 @@ const registerUser = async (req, res) => {
     }
     catch (error) {
         console.log(error.message)
+    }
+}
+
+const resendOtp = async (req, res) => {
+    try {
+        const user = req.session.userEmail || ''
+        const email = req.session.email;
+        const otp = generateOTP();
+        req.session.otp = otp;
+        console.log('resend generated OTP'+otp);
+
+        await sendOtp(email, otp);
+
+        res.render('user/otp', { user, email: email, errMessage: '' });
+    } catch (error) {
+     console.log(error.message);
     }
 }
 //====================================
@@ -275,8 +304,8 @@ const checkuser = async (req, res) => {
 
             if (PasswordMatch) {
                 const message = 'log in success'
-                req.session.isLogin = true
-                return res.redirect(`/login?message=${message}`)
+                req.session.userEmail = userMatch.email
+                return res.redirect(`/?message=${message}`)
 
             }
             else {
@@ -303,5 +332,6 @@ const checkuser = async (req, res) => {
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
-    loadForgotPassword, registerUser, checkuser, loadOtp, checkOtp, logout
+    loadForgotPassword, registerUser, checkuser, loadOtp, checkOtp, logout,
+    resendOtp
 }
