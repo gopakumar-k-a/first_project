@@ -21,6 +21,7 @@ const mongoose = require('mongoose')
 //load product list page
 const loadProjectList = async (req, res) => {
     try {
+
         res.render('admin/productList')
     } catch (error) {
         console.log(error.message);
@@ -31,7 +32,12 @@ const loadProjectList = async (req, res) => {
 
 const loadAddProduct = async (req, res) => {
     try {
-        res.render('admin/addProduct')
+        const catData=await categoryModel.find({}).sort({name:1})
+        const leagueData=await leagueModel.find({}).sort({name:1})
+        const teamData=await teamModel.find({}).sort({name:1})
+        const brandData=await brandModel.find({}).sort({name:1})
+        
+        res.render('admin/addProduct',{catData,leagueData,teamData,brandData})
 
     } catch (error) {
         console.log(error.message);
