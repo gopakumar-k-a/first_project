@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // =============serving static files================
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/upload',express.static(path.join('public/admin-assets/uploads')))
 
 
 //====================view engine======================

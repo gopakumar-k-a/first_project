@@ -141,38 +141,46 @@
                                         <tbody>
                                             <% for(let i=0;i<catData.length;i++){ %>
                                                 <tr>
-                                                    <td><%=i+1 %></td>
-                                                    <td><b><%= catData[i].name %></b></td>
+                                                    <td>
+                                                        <%=i+1 %>
+                                                    </td>
+                                                    <td><b>
+                                                            <%= catData[i].name %>
+                                                        </b></td>
                                                     <td>
                                                         <% if (catData[i].isActive==true) { %>
                                                             <div class="col-lg-2 col-sm-2 col-4 col-status">
                                                                 <span class="badge rounded-pill alert-success"
                                                                     onclick="confirmStatusChange('<%= catData[i]._id %>')">Active</span>
                                                             </div>
-                                                        <% } else { %>
-                                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                                                <span class="badge rounded-pill alert-danger">Disabled</span>
-                                                            </div>
-                                                        <% } %>
+                                                            <% } else { %>
+                                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                                    <span
+                                                                        class="badge rounded-pill alert-danger">Disabled</span>
+                                                                </div>
+                                                                <% } %>
                                                     </td>
                                                     <td>
                                                         <% if (catData[i].isActive===true) { %>
                                                             <a href="#" onclick="confirmBlock('<%= catData[i]._id %>')">
-                                                                <button class="btn btn-sm btn-danger rounded font-sm">Block</button>
+                                                                <button
+                                                                    class="btn btn-sm btn-danger rounded font-sm">Block</button>
                                                             </a>
-                                                        <% } else { %>
-                                                            <a href="#" onclick="confirmUnblock('<%= catData[i]._id %>')">
-                                                                <button class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
-                                                            </a>
-                                                        <% } %>
+                                                            <% } else { %>
+                                                                <a href="#"
+                                                                    onclick="confirmUnblock('<%= catData[i]._id %>')">
+                                                                    <button
+                                                                        class="btn btn-sm btn-success rounded font-sm ml-2">Unblock</button>
+                                                                </a>
+                                                                <% } %>
                                                     </td>
                                                 </tr>
-                                            <% } %>
+                                                <% } %>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            
+
                         </div> <!-- .col// -->
                     </div> <!-- .row // -->
                 </div> <!-- card body .// -->

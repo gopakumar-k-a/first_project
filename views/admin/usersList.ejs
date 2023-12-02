@@ -77,8 +77,7 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Products List</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
+                        <h2 class="content-title card-title">Users List</h2>
                     </div>
                     <div>
                         <a href="#" class="btn btn-light rounded font-md">Export</a>
@@ -87,16 +86,14 @@
                     </div>
                 </div>
                 <div class="card mb-4">
-                   
-                     <!-- card-header end// -->
+
+                    <%for(let i=0;i<userData.length;i++){%>
                     <div class="card-body">
-                        <%for(let i=0;i<userData.length;i++){%>
+                       
                             <article class="itemlist">
                                 <div class="row align-items-center">
                                     <div class="col col-check flex-grow-0">
-                                        <!-- <div class="form-check">
-                                    <input class="form-check-input" type="checkbox">
-                                </div> -->
+
                                         <h>
                                             <%= i+1 %>
                                         </h>
@@ -127,27 +124,27 @@
                                             <%}%>
                                                 <div class="col-lg-1 col-sm-2 col-4 col-date">
                                                     <span>
-                                                        <%= userData[i].createdAt %>
+
                                                     </span>
                                                 </div>
                                                 <% if(userData[i].isActive==true){%>
                                                     <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
 
-                                                     
-                                                            
-                                                            <button onclick="confirmBlock('<%= userData[i]._id %>')"
+
+
+                                                        <button onclick="confirmBlock('<%= userData[i]._id %>')"
                                                             type="button" class="btn btn-danger">Block
+                                                        </button>
+                                                    </div>
+                                                    <%}else{%>
+                                                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+                                                            <button onclick="confirmUnblock('<%= userData[i]._id %>')"
+                                                                type="button" class="btn btn-success">Unblock
                                                             </button>
-                                                        </div>
-                                                        <%}else{%>
-                                                            <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                                                <button onclick="confirmUnblock('<%= userData[i]._id %>')"
-                                                                     type="button" class="btn btn-success">Unblock
-                                                                </button>
-                                                      
+
                                                             <%}%>
-                                                            </div>
-                                                   
+                                                        </div>
+
 
                                 </div> <!-- row .// -->
                             </article>
