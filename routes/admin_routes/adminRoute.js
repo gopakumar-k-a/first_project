@@ -12,8 +12,12 @@ admin.get('/',adminController.loadLogin)
 admin.post('/',adminController.checkAdmin)
 //load dashboard page
 admin.get('/dashboard',adminController.loadDashboard)
-
-
+//load users list
+admin.get('/edit-users',adminController.loadUsersList)
+//block user
+admin.get('/block-user',adminController.blockUser)
+//unblock user
+admin.get('/unblock-user',adminController.unBlockUser)
 
 
 

@@ -35,12 +35,14 @@ const loadProjectList = async (req, res) => {
 
 const loadAddProduct = async (req, res) => {
     try {
+        const errMessage=req.query.errMessage || ''
+        const sccMessage=req.query.sccMessage || ''
         const catData = await categoryModel.find({}).sort({ name: 1 })
         const leagueData = await leagueModel.find({}).sort({ name: 1 })
         const teamData = await teamModel.find({}).sort({ name: 1 })
         const brandData = await brandModel.find({}).sort({ name: 1 })
 
-        res.render('admin/addProduct', { catData, leagueData, teamData, brandData })
+        res.render('admin/addProduct', { catData, leagueData, teamData, brandData,errMessage,sccMessage })
 
     } catch (error) {
         console.log(error.message);
@@ -435,6 +437,15 @@ const insertProduct = async (req, res) => {
             salePrice,
             regularPrice,
         } = req.body;
+        const matchData=await productModel.find({name:productName})
+        if(matchData.length>0){
+            const errMessage='value already exists'
+            return res.redirect('/admin/add-product?errMessage='+errMessage)
+        }
+        else{
+
+
+
         const images = req.files.map((file) => file.path);
         // console.log(teamId+'teamID');
 
@@ -455,7 +466,11 @@ const insertProduct = async (req, res) => {
             imagesUrl:images
         });
         await newProduct.save()
-        res.redirect('/admin/add-product')
+        console.log('data saved successfully');
+        const sccMessage='value added successfully'
+        return res.redirect('/admin/add-product?sccMessage='+sccMessage)
+        
+    }
 
     } catch (error) {
         console.log(error.message)
