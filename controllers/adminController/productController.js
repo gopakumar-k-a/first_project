@@ -8,7 +8,10 @@ const leagueModel = require('../../models/leagueModel')
 //team data(eg:india,barcelona)
 const teamModel = require('../../models/teamModel')
 //brand model(eg:nike ,adidda,etc)
-const brandModel=require('../../models/brandModel')
+const brandModel = require('../../models/brandModel')
+//product model
+const productModel = require('../../models/productModel')
+
 
 const mongoose = require('mongoose')
 
@@ -32,12 +35,12 @@ const loadProjectList = async (req, res) => {
 
 const loadAddProduct = async (req, res) => {
     try {
-        const catData=await categoryModel.find({}).sort({name:1})
-        const leagueData=await leagueModel.find({}).sort({name:1})
-        const teamData=await teamModel.find({}).sort({name:1})
-        const brandData=await brandModel.find({}).sort({name:1})
-        
-        res.render('admin/addProduct',{catData,leagueData,teamData,brandData})
+        const catData = await categoryModel.find({}).sort({ name: 1 })
+        const leagueData = await leagueModel.find({}).sort({ name: 1 })
+        const teamData = await teamModel.find({}).sort({ name: 1 })
+        const brandData = await brandModel.find({}).sort({ name: 1 })
+
+        res.render('admin/addProduct', { catData, leagueData, teamData, brandData })
 
     } catch (error) {
         console.log(error.message);
@@ -53,18 +56,18 @@ const loadCategory = async (req, res) => {
         const lsMessage = req.query.lsMessage || ''
         const leMessage = req.query.leMessage || ''
         const tsMessage = req.query.tsMessage || ''
-        const teMessage=req.query.teMessage || ''
-        const beMessage=req.query.beMessage || ''
-        const bsMessage=req.query.beMessage || ''
+        const teMessage = req.query.teMessage || ''
+        const beMessage = req.query.beMessage || ''
+        const bsMessage = req.query.beMessage || ''
         const catData = await categoryModel.find({})
         const leagueData = await leagueModel.find({})
         const teamData = await teamModel.find({})
-        const brandData=await brandModel.find({})
+        const brandData = await brandModel.find({})
         // console.log(catData);
         res.render('admin/categoryManagement', {
             ceMessage, leMessage, teMessage,
-            lsMessage, csMessage, tsMessage,beMessage,bsMessage,
-             catData, leagueData, teamData,brandData
+            lsMessage, csMessage, tsMessage, beMessage, bsMessage,
+            catData, leagueData, teamData, brandData
         })
     } catch (error) {
         console.log(error.message);
@@ -131,12 +134,12 @@ const updateCatName = async (req, res) => {
 
         // Find the category by id
         const existingData = await categoryModel.find({ name: catName, _id: { $ne: id } });
-        console.log(existingData+'  this is ');
+        console.log(existingData + '  this is ');
 
         console.log(existingData.name + ' - update data');
 
         // Check if the new name is the same as the existing one
-        if (existingData.length>0) {
+        if (existingData.length > 0) {
             return res.redirect('/admin/category-management?ceMessage=name already exists');
         } else {
             // Update the category name
@@ -157,6 +160,7 @@ const blockCat = async (req, res) => {
         const categoryId = req.query._id
         console.log(categoryId + '   category id');
         await categoryModel.updateOne({ _id: categoryId }, { isActive: false });
+        await productModel.updateMany({ _id: categoryId }, { $set: { catStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -169,6 +173,7 @@ const unblockCat = async (req, res) => {
         const categoryId = req.query._id
         console.log(categoryId + '   category id');
         await categoryModel.updateOne({ _id: categoryId }, { isActive: true });
+        await productModel.updateMany({ _id: categoryId }, { $set: { catStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -212,15 +217,15 @@ const updateLeagueName = async (req, res) => {
     try {
         const leagueName = req.body.leagueName;
         const id = req.body.id;
-   
+
         // Find the category by id
         const existingData = await leagueModel.find({ name: leagueName, _id: { $ne: id } });
-        console.log(existingData+'  this is dataleague ');
+        console.log(existingData + '  this is dataleague ');
 
         console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
-        if (existingData.length>0) {
+        if (existingData.length > 0) {
             return res.redirect('/admin/category-management?leMessage=name already exists');
         } else {
             // Update the category name
@@ -238,6 +243,7 @@ const blockLeague = async (req, res) => {
     try {
         const leagueId = req.query._id
         await leagueModel.updateOne({ _id: leagueId }, { isActive: false })
+        await productModel.updateMany({ league: leagueId }, { $set: { leagueStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -247,6 +253,7 @@ const blockLeague = async (req, res) => {
 const unblockLeague = async (req, res) => {
     const leagueId = req.query._id
     await leagueModel.updateOne({ _id: leagueId }, { isActive: true })
+    await productModel.updateMany({ _id: leagueId }, { $set: { leagueStatus: true } })
     return res.redirect('/admin/category-management')
 }
 
@@ -257,15 +264,16 @@ const insertTeam = async (req, res) => {
 
         const team = req.body.teamName.toLowerCase();
         if (!team) {
-            const err='please fill the fields'
+            const err = 'please fill the fields'
             return res.redirect(`/admin/category-management?teMessage=${err}`);
             // return res.render('admin/categoryManagement', { teMessage: 'team added succesfully', leMessage: '', csMessage: '', ceMessage: '', lsMessage })
         }
 
         const matchTeam = await teamModel.find({ name: team })
         if (matchTeam.length > 0) {
-            const err='team already exists'
-            return res.redirect(`/admin/category-management?teMessage=${err}`);        }
+            const err = 'team already exists'
+            return res.redirect(`/admin/category-management?teMessage=${err}`);
+        }
         else {
             const data = new teamModel({
                 name: team
@@ -288,12 +296,12 @@ const updateTeamName = async (req, res) => {
         const id = req.body.id;
         // Find the category by id
         const existingData = await teamModel.find({ name: teamName, _id: { $ne: id } });
-        console.log(existingData+'  this is dataleague ');
+        console.log(existingData + '  this is dataleague ');
 
         console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
-        if (existingData.length>0) {
+        if (existingData.length > 0) {
             return res.redirect('/admin/category-management?teMessage=name already exists');
         } else {
             // Update the category name
@@ -311,6 +319,7 @@ const blockTeam = async (req, res) => {
     try {
         const teamId = req.query._id
         await teamModel.updateOne({ _id: teamId }, { isActive: false })
+        await productModel.updateMany({ team: teamId }, { $set: { teamStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -321,6 +330,7 @@ const unblockTeam = async (req, res) => {
     try {
         const teamId = req.query._id
         await teamModel.updateOne({ _id: teamId }, { isActive: true })
+        await productModel.updateMany({ team: teamId }, { $set: { teamStatus: true } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -339,12 +349,12 @@ const insertBrand = async (req, res) => {
         const matchBrand = await brandModel.find({ name: brand });
 
         if (matchBrand.length > 0) {
-            const err = 'Brand already exists'; 
+            const err = 'Brand already exists';
             return res.redirect(`/admin/category-management?beMessage=${err}`);
         } else {
             const data = new brandModel({
                 name: brand,
-                imageUrl: img, 
+                imageUrl: img,
             });
 
             await data.save();
@@ -353,7 +363,7 @@ const insertBrand = async (req, res) => {
             return res.redirect(`/admin/category-management/?bsMessage=${bsMessage}`);
         }
     } catch (error) {
-  
+
         console.error(error);
         return res.status(500).send('Internal Server Error');
     }
@@ -365,12 +375,12 @@ const updateBrandName = async (req, res) => {
         const id = req.body.id;
         // Find the category by id
         const existingData = await brandModel.find({ name: brandName, _id: { $ne: id } });
-        console.log(existingData+'  this is dataleague ');
+        console.log(existingData + '  this is dataleague ');
 
         console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
-        if (existingData.length>0) {
+        if (existingData.length > 0) {
             return res.redirect('/admin/category-management?teMessage=name already exists');
         } else {
             // Update the category name
@@ -384,11 +394,12 @@ const updateBrandName = async (req, res) => {
     }
 };
 
-const blockBrand= async (req, res) => {
+const blockBrand = async (req, res) => {
     try {
         const brandId = req.query._id
         console.log('this is brand id');
         await brandModel.updateOne({ _id: brandId }, { isActive: false })
+        await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -400,6 +411,7 @@ const unblockBrand = async (req, res) => {
         const brandId = req.query._id
         console.log('this is brand id');
         await brandModel.updateOne({ _id: brandId }, { isActive: true })
+        await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: false } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -408,14 +420,57 @@ const unblockBrand = async (req, res) => {
 }
 
 
+const insertProduct = async (req, res) => {
+    try {
+        const {
+            productName,
+            categoryId,
+            leagueId,
+            teamId,
+            brandId,
+            productDesc,
+            smallQty,
+            mediumQty,
+            largeQty,
+            salePrice,
+            regularPrice,
+        } = req.body;
+        const images = req.files.map((file) => file.path);
+        // console.log(teamId+'teamID');
+
+  const dummyImg='hiiii' //dummy content
+        const newProduct = new productModel({
+            name: productName,
+            category: categoryId,
+            league: leagueId,
+            team: teamId,
+            brand: brandId,
+            description: productDesc,
+            size: {
+                s: { quantity: smallQty },
+                m: { quantity: mediumQty },
+                l: { quantity: largeQty },
+            },
+            price: { salePrice, regularPrice },
+            imagesUrl:images
+        });
+        await newProduct.save()
+        res.redirect('/admin/add-product')
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
 
 
 
 
-module.exports={ loadProjectList, loadAddProduct,
+
+module.exports = {
+    loadProjectList, loadAddProduct,
     loadCategory, addCategory, loadEditCategory, blockCat, unblockCat,
     updateCatName, insertLeague, blockLeague, unblockLeague,
-    insertTeam,updateLeagueName,blockTeam,unblockTeam,updateTeamName,insertBrand,
-    blockBrand,unblockBrand,updateBrandName
+    insertTeam, updateLeagueName, blockTeam, unblockTeam, updateTeamName, insertBrand,
+    blockBrand, unblockBrand, updateBrandName, insertProduct
 }

@@ -82,18 +82,18 @@
                             <div class="card-body">
 
                                 
-                                <form>
+                                <form action="/admin/add-product" method="post" enctype="multipart/form-data">
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Product Name</label>
                                         <input type="text" placeholder="Product Name" class="form-control"
-                                            id="product_name">
+                                            id="product_name" name="productName">
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="categoryId">
                                             <%for(let i=0;i<catData.length;i++){%>
-                                                <option>
+                                                <option value="<%= catData[i]._id %>" >
                                                     <%= catData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -103,9 +103,9 @@
                                     <div class="mb-4">
                                         <label class="form-label">League</label>
 
-                                        <select class="form-select">
+                                        <select class="form-select"  name="leagueId">
                                             <%for(let i=0;i<leagueData.length;i++){%>
-                                                <option>
+                                                <option value="<%= leagueData[i]._id %>">
                                                     <%= leagueData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -115,9 +115,9 @@
                                     <div class="mb-4">
                                         <label class="form-label">Team</label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="teamId">
                                             <%for(let i=0;i<teamData.length;i++){%>
-                                                <option>
+                                                <option value="<%= teamData[i]._id %>" >
                                                     <%= teamData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -127,9 +127,9 @@
                                     <div class="mb-4">
                                         <label class="form-label">Brand</label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="brandId">
                                             <%for(let i=0;i<brandData.length;i++){%>
-                                                <option>
+                                                <option value="<%= brandData[i]._id %>" >
                                                     <%= brandData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -138,7 +138,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Product description</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" name="productDesc"></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
@@ -147,7 +147,7 @@
                                                 <label class="form-label">Small Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of small" type="number"
-                                                        class="form-control">
+                                                        class="form-control" name="smallQty">
                                                 </div>
                                             </div>
                                         </div>
@@ -159,7 +159,7 @@
                                                 <label class="form-label">Medium Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of medium" type="number"
-                                                        class="form-control">
+                                                        class="form-control" name="mediumQty">
                                                 </div>
                                             </div>
                                         </div>
@@ -171,7 +171,7 @@
                                                 <label class="form-label">Large Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of large" type="number"
-                                                        class="form-control">
+                                                        class="form-control" name="largeQty">
                                                 </div>
                                             </div>
                                         </div>
@@ -183,14 +183,14 @@
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Sale Price</label>
                                                 <input type="text" placeholder="Enter the Sale Price"
-                                                    class="form-control" id="product_name">
+                                                    class="form-control" id="product_name" name="salePrice">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Regular Price</label>
                                                 <input type="text" placeholder="Enter the Regular Price"
-                                                    class="form-control" id="product_name">
+                                                    class="form-control" id="product_name" name="regularPrice">
                                             </div>
                                         </div>
                                     </div>
@@ -201,11 +201,12 @@
                                         <div class="card-body">
                                             <div class="input-upload">
                                                 <img src="/admin-assets/imgs/theme/upload.svg" alt="">
-                                                <input class="form-control" type="file">
+                                                <input class="form-control" type="file" multiple name="images" accept="image/*">
+
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary">
                                         Add Product
                                     </button>
                                 </form>

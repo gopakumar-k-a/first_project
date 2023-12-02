@@ -22,27 +22,27 @@ const productSchema = new mongoose.Schema({
         ref: 'brand'
     },
     description: {
-        types: String,
+        type: String,
         required: true
     },
     size: {
         s: {
             quantity: {
-                type: number,
+                type: Number,
                 default: 0
             }
 
         },
         m: {
             quantity: {
-                type: number,
+                type: Number,
                 default: 0
             }
 
         },
         l: {
             quantity: {
-                type: number,
+                type: Number,
                 default: 0
             }
 
@@ -51,16 +51,16 @@ const productSchema = new mongoose.Schema({
     price: {
 
         salePrice: {
-            type: number,
+            type: Number,
             required:true
         },
         regularPrice: {
-            type: number,
+            type: Number,
             required:true
         }
     },
     imagesUrl: {
-        type: String,
+        type: [String],
         required: true
     },
     isActive: {
@@ -70,6 +70,22 @@ const productSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: () => Date.now()
+    },
+    catStatus:{
+      type:Boolean,
+      default:true
+    },
+    leagueStatus:{
+        type:Boolean,
+        default:true
+    },
+    teamStatus:{
+        type:Boolean,
+        default:true
+    },
+    brandStatus:{
+        type:Boolean,
+        default:true
     }
 
 

@@ -74,6 +74,11 @@ admin.get('/block-brand',productController.blockBrand)
 admin.get('/unblock-brand',productController.unblockBrand)
 
 
+//---------------------------product-management-------------------
+
+admin.post('/add-product',upload.array('images', 4),productController.insertProduct)
+
+
 
 
 
