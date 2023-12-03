@@ -15,6 +15,15 @@ const loadLogin = async (req, res) => {
         console.log(error.message)
     }
 }
+//logut admin
+const logout=async(req,res)=>{
+    try {
+        req.session.destroy()
+        return res.redirect('/admin')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 //authenticating admin
 const checkAdmin = async (req, res) => {
 
@@ -44,6 +53,7 @@ const checkAdmin = async (req, res) => {
             const PasswordMatch = await bcrypt.compare(password, userMatch.password);
 
             if (PasswordMatch) {
+                req.session.isAdmin=email
                 return res.render('admin/adminDashboard')
 
             }
@@ -106,5 +116,6 @@ const unBlockUser=async (req,res)=>{
 
 
 module.exports = {
-    loadLogin, loadDashboard, checkAdmin, loadUsersList,blockUser,unBlockUser
+    loadLogin, loadDashboard, checkAdmin, loadUsersList,blockUser,
+    unBlockUser,logout
 }

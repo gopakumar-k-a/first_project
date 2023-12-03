@@ -2,7 +2,8 @@
 const express = require('express')
 const app = express()
 const path = require('path')
-
+const session = require('express-session');
+require('dotenv').config();
 //======================================
 //========database=connection=============
 const mongoose = require('mongoose')
@@ -14,7 +15,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/myJersyDB')
         console.log('error connecting : ' + err);
     })
 
-
+//===============================
+app.use(express.urlencoded({extended:true}))
+// Use the session middleware
+app.use(session({
+    secret:  process.env.SECRET_KEY, 
+    resave: false,
+    saveUninitialized: false
+    // Additional options can be configured as needed
+  }));
 
 
 

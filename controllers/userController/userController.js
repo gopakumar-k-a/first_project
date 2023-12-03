@@ -85,19 +85,7 @@ const loadContact = async (req, res) => {
     }
 }
 
-//load forgot password page
 
-const loadForgotPassword = async (req, res) => {
-    try {
-        const user = req.session.userEmail || ''
-        const email = req.query.currentEmail
-        res.render('user/forgotPassword', { user })
-
-    } catch (error) {
-        console.log(error.message)
-
-    }
-}
 
 //load otp page
 const loadOtp = async (req, res) => {
@@ -323,6 +311,33 @@ const checkuser = async (req, res) => {
     }
 
 }
+//load forgot password page
+
+const loadForgotPassword = async (req, res) => {
+    try {
+        const user = req.session.userEmail || ''
+        const message=req.query.fogp || 'before otp'
+        res.render('user/forgotPassword', {user,message})
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+//sending an otp
+const forgotPass=async(req,res)=>{
+    try {
+        const email=req.body.email
+        const otp = generateOTP();
+        req.session.otp = otp;
+        console.log('forgot pass generated OTP'+otp);
+        await sendOtp(email, otp);
+        const message='otp send'
+        return res.redirect('/admin/forgot-password?fogp='+message)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -333,5 +348,5 @@ const checkuser = async (req, res) => {
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
     loadForgotPassword, registerUser, checkuser, loadOtp, checkOtp, logout,
-    resendOtp
+    resendOtp,forgotPass
 }

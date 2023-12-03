@@ -77,25 +77,26 @@
                     <div class="col-lg-6">
                         <div class="card mb-4">
                             <div class="card-header">
-                                <h4>Add Product</h4>
+                                <h4>Edit Product</h4>
                             </div>
                             <div class="card-body">
                                  
 
                                 
-                                <form action="/admin/add-product" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                <form action="/admin/edit-product" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
 
                                     <h4 class=" text-danger text-center" for="errMessage"><%= errMessage %></h4>
                                     <h4 class=" text-success text-center" for="sccMessage"><%= sccMessage %></h4>
                                     <h4 class=" text-success text-center" id="errMessage"></h4>
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Product Name</label>
-                                        <input type="text" placeholder="Product Name" class="form-control"
-                                            id="product_name" name="productName">
+                                        <input type="text" class="form-control"
+                                            id="product_name" name="productName" value="<%=proData.name%>">
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
-
+                                        <input type="text" class="form-control"
+                                        id="product_name" name="productName" value="<%=proData.category.name%>" readonly>
                                         <select class="form-select" name="categoryId">
                                             <%for(let i=0;i<catData.length;i++){%>
                                                 <option value="<%= catData[i]._id %>" >
@@ -107,7 +108,8 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">League</label>
-
+                                        <input type="text" class="form-control"
+                                        id="product_name" name="productName" value="<%=proData.league.name%>" readonly>
                                         <select class="form-select"  name="leagueId">
                                             <%for(let i=0;i<leagueData.length;i++){%>
                                                 <option value="<%= leagueData[i]._id %>">
@@ -119,7 +121,8 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Team</label>
-
+                                        <input type="text" class="form-control"
+                                        id="product_name" name="productName" value="<%=proData.team.name%>" readonly>
                                         <select class="form-select" name="teamId">
                                             <%for(let i=0;i<teamData.length;i++){%>
                                                 <option value="<%= teamData[i]._id %>" >
@@ -131,7 +134,8 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Brand</label>
-
+                                        <input type="text" class="form-control"
+                                        id="product_name" name="productName" value="<%=proData.brand.name%>" readonly>
                                         <select class="form-select" name="brandId">
                                             <%for(let i=0;i<brandData.length;i++){%>
                                                 <option value="<%= brandData[i]._id %>" >
@@ -143,7 +147,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Product description</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4" name="productDesc"></textarea>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" name="productDesc"><%=proData.description%></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
@@ -152,7 +156,7 @@
                                                 <label class="form-label">Small Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of small" type="number"
-                                                        class="form-control" name="smallQty">
+                                                        class="form-control" name="smallQty" value="<%=proData.size.s.quantity %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -164,7 +168,7 @@
                                                 <label class="form-label">Medium Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of medium" type="number"
-                                                        class="form-control" name="mediumQty">
+                                                        class="form-control" name="mediumQty" value="<%=proData.size.m.quantity %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -176,7 +180,7 @@
                                                 <label class="form-label">Large Quantity</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="enter stock of large" type="number"
-                                                        class="form-control" name="largeQty">
+                                                        class="form-control" name="largeQty" value="<%=proData.size.l.quantity %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -188,17 +192,38 @@
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Sale Price</label>
                                                 <input type="text" placeholder="Enter the Sale Price"
-                                                    class="form-control" id="product_name" name="salePrice">
+                                                    class="form-control" id="product_name" name="salePrice" value="<%=proData.price.salePrice %>">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Regular Price</label>
                                                 <input type="text" placeholder="Enter the Regular Price"
-                                                    class="form-control" id="product_name" name="regularPrice">
+                                                    class="form-control" id="product_name" name="regularPrice" value="<%=proData.price.regularPrice %>">
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label class="form-label">Existing Images</label>
+                                    
+                                            <!-- Image Container 1 -->
+                                            <div class="existing-image-container mb-2">
+                                                <img src="/admin-assets/uploads/<%=proData.imagesUrl[0] %>" class="img-fluid" alt="Existing Image 1">
+                                            </div>
+                                    
+                                            <!-- Image Container 2 -->
+                                            <div class="existing-image-container mb-2">
+                                                <img src="/admin-assets/uploads/<%=proData.imagesUrl[1] %>" class="img-fluid" alt="Existing Image 2">
+                                            </div>
+                                    
+                                            <!-- Image Container 3 -->
+                                            <div class="existing-image-container">
+                                                <img src="/admin-assets/uploads/<%=proData.imagesUrl[2] %>" class="img-fluid" alt="Existing Image 3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="card mb-4">
                                         <div class="card-header">
                                             <h4>Media</h4>
@@ -212,7 +237,7 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        Add Product
+                                         Save Changes
                                     </button>
                                 </form>
 
@@ -262,7 +287,6 @@
                 var regularPrice = document.querySelector('input[name="regularPrice"]').value;
                 var images = document.querySelector('input[name="images"]').value;
                 var errorMessage = document.getElementById('errMessage');
-        
                 if (
                     productName === '' ||
                     categoryId === '' ||
@@ -281,18 +305,6 @@
                     return false;
                 }
         
-                // Check if quantities and prices are not negative
-                if (parseInt(smallQty) < 0 || parseInt(mediumQty) < 0 || parseInt(largeQty) < 0) {
-                    alert('Quantities cannot be negative');
-                    return false;
-                }
-        
-                if (parseInt(salePrice) < 0 || parseInt(regularPrice) < 0) {
-                    alert('Prices cannot be negative');
-                    return false;
-                }
-        
-                // Check if sale price is less than regular price
                 if (parseInt(salePrice) >= parseInt(regularPrice)) {
                     alert('Sale price must be less than regular price');
                     return false;
@@ -301,7 +313,6 @@
                 return true;
             }
         </script>
-        
 
 
         <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->

@@ -15,7 +15,7 @@ const productModel = require('../../models/productModel')
 
 
 const mongoose = require('mongoose')
-const { path } = require('../../routes/admin_routes/adminRoute')
+
 
 
 
@@ -26,7 +26,7 @@ const { path } = require('../../routes/admin_routes/adminRoute')
 //load product list page
 const loadProjectList = async (req, res) => {
     try {
-        const proData = await productModel.find({}).sort({ createdAt: 1 })
+        const proData = await productModel.find({ }).sort({ createdAt: -1 })
 
 
         res.render('admin/productList', { proData })
@@ -52,6 +52,31 @@ const loadAddProduct = async (req, res) => {
         console.log(error.message);
     }
 }
+const loadEditProduct = async (req, res) => {
+    try {
+        const id = req.query._id
+
+        const errMessage = req.query.errMessage || ''
+        const sccMessage = req.query.sccMessage || ''
+        const proData = await productModel.findOne({ _id: id })
+            .populate('category')
+            .populate('league')
+            .populate('team')
+            .populate('brand');
+            console.log('data after population  '+proData);
+        const catData = await categoryModel.find({}).sort({ name: 1 })
+        const leagueData = await leagueModel.find({}).sort({ name: 1 })
+        const teamData = await teamModel.find({}).sort({ name: 1 })
+        const brandData = await brandModel.find({}).sort({ name: 1 })
+
+        res.render('admin/editProduct', { catData, leagueData, teamData, brandData, errMessage, sccMessage, proData })
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 //category management ======================
 //load category page
 const loadCategory = async (req, res) => {
@@ -321,28 +346,28 @@ const updateTeamName = async (req, res) => {
     }
 };
 //block and ublock team
-const blockTeam = async (req, res) => {
-    try {
-        const teamId = req.query._id
-        await teamModel.updateOne({ _id: teamId }, { isActive: false })
-        await productModel.updateMany({ team: teamId }, { $set: { teamStatus: false } })
-        return res.redirect('/admin/category-management')
-    } catch (error) {
-        console.log(error.message);
-    }
+// const blockTeam = async (req, res) => {
+//     try {
+//         const teamId = req.query._id
+//         await teamModel.updateOne({ _id: teamId }, { isActive: false })
+//         await productModel.updateMany({ team: teamId }, { $set: { teamStatus: false } })
+//         return res.redirect('/admin/category-management')
+//     } catch (error) {
+//         console.log(error.message);
+//     }
 
-}
-const unblockTeam = async (req, res) => {
-    try {
-        const teamId = req.query._id
-        await teamModel.updateOne({ _id: teamId }, { isActive: true })
-        await productModel.updateMany({ team: teamId }, { $set: { teamStatus: true } })
-        return res.redirect('/admin/category-management')
-    } catch (error) {
-        console.log(error.message);
-    }
+// }
+// const unblockTeam = async (req, res) => {
+//     try {
+//         const teamId = req.query._id
+//         await teamModel.updateOne({ _id: teamId }, { isActive: true })
+//         await productModel.updateMany({ team: teamId }, { $set: { teamStatus: true } })
+//         return res.redirect('/admin/category-management')
+//     } catch (error) {
+//         console.log(error.message);
+//     }
 
-}
+// }
 
 //========================brand=management===============================
 
@@ -457,7 +482,7 @@ const insertProduct = async (req, res) => {
 
 
 
-            const imagePaths = req.files.map((file) => file.filename);
+            const images = req.files.map((file) => file.filename);
             // console.log(teamId+'teamID');
 
             const newProduct = new productModel({
@@ -487,7 +512,27 @@ const insertProduct = async (req, res) => {
     }
 }
 
+//block and unblock product
+const blockProduct=async(req,res)=>{
+    try {
+        let productId=req.query._id
+        let status=req.query.status
+       console.log(productId+status);
+        if(status=='block'){
 
+        await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
+
+        return res.redirect('/admin/product-list') 
+        }
+        else if(status='unblock'){
+            await productModel.updateOne({ _id: productId }, { $set: { isActive: true } })
+
+            return res.redirect('/admin/product-list') 
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -496,6 +541,6 @@ module.exports = {
     loadProjectList, loadAddProduct,
     loadCategory, addCategory, loadEditCategory, blockCat, unblockCat,
     updateCatName, insertLeague, blockLeague, unblockLeague,
-    insertTeam, updateLeagueName, blockTeam, unblockTeam, updateTeamName, insertBrand,
-    blockBrand, unblockBrand, updateBrandName, insertProduct
+    insertTeam, updateLeagueName, updateTeamName, insertBrand,
+    blockBrand, unblockBrand, updateBrandName, insertProduct, loadEditProduct,blockProduct
 }
