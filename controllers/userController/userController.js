@@ -1,6 +1,7 @@
-//requiring user model
-
+// user model
 const userModel = require('../../models/userModel')
+//product model
+const productModel = require('../../models/productModel')
 
 const bcrypt = require('bcrypt');
 
@@ -16,7 +17,8 @@ require('dotenv').config(); //required for accessing env variable
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        res.render('user/home', { user })
+        const pr = await productModel.find({ isActive: true }).populate('brand')
+        res.render('user/home', { user, pr })
     } catch (error) {
         console.log(error.message);
     }
@@ -110,7 +112,7 @@ const checkOtp = async (req, res) => {
     }
     if (req.session.otp == req.body.otp) {
 
-        const currentEmail = req.session.email
+
         const data = new userModel({
             name: req.session.fullname,
             email: req.session.email,
@@ -138,8 +140,14 @@ const checkOtp = async (req, res) => {
 //hashing function
 // Hash the user's password before saving to the database
 const hashPassword = async (password) => {
-    const saltRounds = 10;
-    return await bcrypt.hash(password, saltRounds);
+    try {
+        const saltRounds = 10;
+        return await bcrypt.hash(password, saltRounds);
+    } catch (error) {
+        console.log(error.message);
+
+    }
+
 };
 //===========================================
 
@@ -255,13 +263,13 @@ const resendOtp = async (req, res) => {
         const email = req.session.email;
         const otp = generateOTP();
         req.session.otp = otp;
-        console.log('resend generated OTP'+otp);
+        console.log('resend generated OTP' + otp);
 
         await sendOtp(email, otp);
 
         res.render('user/otp', { user, email: email, errMessage: '' });
     } catch (error) {
-     console.log(error.message);
+        console.log(error.message);
     }
 }
 //====================================
@@ -311,33 +319,9 @@ const checkuser = async (req, res) => {
     }
 
 }
-//load forgot password page
 
-const loadForgotPassword = async (req, res) => {
-    try {
-        const user = req.session.userEmail || ''
-        const message=req.query.fogp || 'before otp'
-        res.render('user/forgotPassword', {user,message})
 
-    } catch (error) {
-        console.log(error.message)
 
-    }
-}
-//sending an otp
-const forgotPass=async(req,res)=>{
-    try {
-        const email=req.body.email
-        const otp = generateOTP();
-        req.session.otp = otp;
-        console.log('forgot pass generated OTP'+otp);
-        await sendOtp(email, otp);
-        const message='otp send'
-        return res.redirect('/admin/forgot-password?fogp='+message)
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 
 
 
@@ -347,6 +331,6 @@ const forgotPass=async(req,res)=>{
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
-    loadForgotPassword, registerUser, checkuser, loadOtp, checkOtp, logout,
-    resendOtp,forgotPass
+     registerUser, checkuser, loadOtp, checkOtp, logout,
+    resendOtp,
 }

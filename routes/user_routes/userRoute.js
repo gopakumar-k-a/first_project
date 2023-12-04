@@ -3,27 +3,37 @@ const user=express()
 const userAuth=require('../../middleware/userAuth')
 
 
+const userProductController=require('../../controllers/userController/userProductController')
+
+
 
 const userController=require('../../controllers/userController/userController')
 
-
+//load homepage
 user.get('/',userController.loadHome)
+//load login page
 user.get('/login',userAuth.isLogout,userController.loadLogin)
+//check user data
 user.post('/login',userController.checkuser)
+//load register page
 user.get('/register',userAuth.isLogout,userAuth.isLogout,userController.loadRegister)
+//check register data
 user.post('/register',userController.registerUser)
-user.post('/resend-otp',userController.resendOtp)
-user.get('/about',userController.loadAbout)
-user.get('/contact',userController.loadContact)
-user.get('/forgot-password',userController.loadForgotPassword)
-user.post('/forgot-password',userController.forgotPass)
-
-// user.get('/otp',userController.loadOtp)
+//load otp page
+user.get('/otp',userController.loadOtp)
+//check otp
 user.post('/verifyotp',userController.checkOtp)
-
+//load resend otp page
+user.post('/resend-otp',userController.resendOtp)
+//load about page
+user.get('/about',userController.loadAbout)
+//load contact page
+user.get('/contact',userController.loadContact)
+//user logout
 user.get('/logout',userController.logout)
-// user.get('/loginCheck',userController.sLogin)
-// user.get('/checkRegister',userController)
+//single product view
+user.get('/single-product-view',userProductController.loadSingleProduct)
+
 
 
 module.exports=user

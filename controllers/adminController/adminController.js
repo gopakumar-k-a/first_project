@@ -85,7 +85,7 @@ const loadDashboard = async (req, res) => {
 
 const loadUsersList = async (req, res) => {
     try {
-        const userData=await userModel.find({isAdmin:false}).sort({createdAt:1})
+        const userData=await userModel.find({isAdmin:false}).sort({createdAt:-1})
         return res.render('admin/usersList',{userData})
     } catch (error) {
         console.log(error.message);

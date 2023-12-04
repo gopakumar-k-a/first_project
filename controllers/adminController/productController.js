@@ -536,11 +536,11 @@ const blockProduct=async(req,res)=>{
 
 
 
-
 module.exports = {
     loadProjectList, loadAddProduct,
     loadCategory, addCategory, loadEditCategory, blockCat, unblockCat,
     updateCatName, insertLeague, blockLeague, unblockLeague,
     insertTeam, updateLeagueName, updateTeamName, insertBrand,
-    blockBrand, unblockBrand, updateBrandName, insertProduct, loadEditProduct,blockProduct
+    blockBrand, unblockBrand, updateBrandName, insertProduct, loadEditProduct,blockProduct,
+    
 }
