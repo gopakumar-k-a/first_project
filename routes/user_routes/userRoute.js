@@ -4,10 +4,8 @@ const userAuth=require('../../middleware/userAuth')
 
 
 const userProductController=require('../../controllers/userController/userProductController')
-
-
-
 const userController=require('../../controllers/userController/userController')
+const userAddressController=require('../../controllers/userController/userAddressController')
 
 //load homepage
 user.get('/',userController.loadHome)
@@ -33,6 +31,14 @@ user.get('/contact',userController.loadContact)
 user.get('/logout',userController.logout)
 //single product view
 user.get('/single-product-view',userProductController.loadSingleProduct)
+//product listing
+user.get('/shop',userProductController.loadShop)
+//load user dashboard pages
+user.get('/user-dashboard',userController.loadUserDashbboard)
+//update user credentials
+user.post('/user-dashboard',userController.userUpdate)
+//add address
+user.post('/add-address',userAddressController.addAddress)
 
 
 

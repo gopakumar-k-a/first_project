@@ -33,12 +33,19 @@
                                 <div class="col-md-12 col-12 mb-20">
                                     <label>Email Address*</label>
                                     <input id="email" class="mb-0" type="email" placeholder="Enter the Email"
-                                        value="<%= currentEmail %>" name="email">
+                                        value="gopak91456@gmail.com" name="email">
+                                    <li id="erEmail" class="text-danger">
+
+                                    </li>
                                 </div>
                                 <div class="col-12 mb-20">
                                     <label>Password*</label>
-                                    <input id="password" class="mb-0" type="password" placeholder="Password"
+                                    <input id="password" value="123" class="mb-0" type="password" placeholder="Password"
                                         name="password">
+                                    <li id="erPass" class="text-danger">
+
+                                    </li>
+
                                 </div>
                                 <div class="col-md-8">
                                     <div class="check-box d-inline-block ml-0 ml-md-2 mt-10">
@@ -75,29 +82,45 @@
         function validateForm() {
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
-            var messageLi = document.getElementById('message-li');
+            var erEmail = document.getElementById('erEmail');
+            var erPass = document.getElementById('erPass');
 
-       
-            messageLi.innerHTML = '';
+            erEmail.innerHTML = '';
+            erPass.innerHTML = '';
 
             if (!email || !validateEmail(email)) {
-                messageLi.innerHTML = 'Please enter a valid email address.';
+                erEmail.innerHTML = 'Please enter a valid email address.';
                 return false;
             }
 
-        
             if (!password) {
-                messageLi.innerHTML = 'Please enter your password.';
+                erPass.innerHTML = 'Please enter your password.';
                 return false;
             }
 
-            // If all validations pass, submit the form
+      
             document.getElementById('loginForm').submit();
         }
+      
+        var enteredEmail = emailInput.value;
+
+  
+        localStorage.setItem('savedEmail', enteredEmail);
+
+   
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var savedEmail = localStorage.getItem('savedEmail');
+
+     
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+            }
+        });
 
         // Function to validate email format
         function validateEmail(email) {
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var emailRegex = /^[^\s@]+(\.[^\s@]+)*@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
     </script>

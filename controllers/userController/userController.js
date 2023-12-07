@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 
 const validator = require("validator");
 
-const nodemailer = require('nodemailer');
+const {generateOTP,sendOtp} = require('../../utility/nodeMailer');
 
 require('dotenv').config(); //required for accessing env variable
 
@@ -17,8 +17,9 @@ require('dotenv').config(); //required for accessing env variable
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        const pr = await productModel.find({ isActive: true }).populate('brand')
-        res.render('user/home', { user, pr })
+
+        const prData = await productModel.find({ isActive: true }).populate('brand')
+        res.render('user/home', { user, prData })
     } catch (error) {
         console.log(error.message);
     }
@@ -29,13 +30,14 @@ const loadHome = async (req, res) => {
 const loadLogin = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        const currentEmail = req.session.email || ''
-        // destroys email after storing to current email
+        const email = req.session.lEmail || ''
+        delete req.session.lEmail;
+        // destroys email after storing to email
 
         const message = req.query.message || ''
         const isLogin = req.session.isLogin || ''
         const sMessage = req.query.sMessage || ''
-        res.render('user/login', { currentEmail, message, isLogin, sMessage, user })
+        res.render('user/login', { message, isLogin, sMessage, user, email })
 
     } catch (error) {
         console.log(error.message)
@@ -97,6 +99,7 @@ const loadOtp = async (req, res) => {
         const email = req.session.email || ''
         res.render('user/otp', { email, errMessage, user })
 
+
     } catch (error) {
         console.log(error.message);
     }
@@ -152,46 +155,7 @@ const hashPassword = async (password) => {
 //===========================================
 
 
-//random otp generate function
-function generateOTP() {
-    // Generate a random number between 100000 (inclusive) and 999999 (exclusive)
-    return Math.floor(100000 + Math.random() * 900000).toString();
-}
 
-//node mailer function for sending otp to mail
-const sendOtp = async (email, otp) => {
-    try {
-
-
-
-        console.log('generated OTP' + otp)
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'OTP For your verification',
-            html: `<h style="color: blue;">Enter this OTP to register on jersy man</h>
-            <p>Your OTP is: <strong>${otp}</strong></p>`
-        };
-
-        transporter.sendMail(mailOptions)
-            .then((info) => {
-                console.log('Email sent:', info.response);
-            })
-            .catch((error) => {
-                console.error('Error sending email:', error.message);
-            });
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 //register user on the server
 const registerUser = async (req, res) => {
     try {
@@ -238,15 +202,22 @@ const registerUser = async (req, res) => {
                 req.session.email = email
                 req.session.phoneno = phoneno
                 req.session.password = hashedPass
+
+
+
                 const otp = generateOTP()
                 req.session.otp = otp
-                console.log(req.session + '  this is generated session');
-
-                // const currentEmail = email
                 await sendOtp(email, otp)
 
 
-                return res.render('user/otp', { user, email: '', errMessage: '' })
+
+                console.log(req.session + '  this is generated session');
+
+                // const currentEmail = email
+
+
+
+                return res.redirect('/otp')
 
             }
 
@@ -256,7 +227,7 @@ const registerUser = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//resend OTP
 const resendOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -278,6 +249,8 @@ const checkuser = async (req, res) => {
 
     try {
         const { email, password } = req.body
+        req.session.lEmail = email
+
 
         if (!email || !password) {
             const message = 'all fields must be filled'
@@ -289,7 +262,7 @@ const checkuser = async (req, res) => {
         console.log(isValidEmail + 'validate result')
         if (!isValidEmail) {
             const message = 'Please enter a valid email';
-            return res.redirect(`/login?message=${message}`)
+            return res.redirect(`/login?message=${message}&email=${email}`)
         }
 
 
@@ -299,9 +272,8 @@ const checkuser = async (req, res) => {
             const PasswordMatch = await bcrypt.compare(password, userMatch.password);
 
             if (PasswordMatch) {
-                const message = 'log in success'
                 req.session.userEmail = userMatch.email
-                return res.redirect(`/?message=${message}`)
+                return res.redirect('/')
 
             }
             else {
@@ -320,6 +292,102 @@ const checkuser = async (req, res) => {
 
 }
 
+//loading user dashboard
+const loadUserDashbboard = async (req, res) => {
+    try {
+        const user = req.session.userEmail || ''
+        const goto = req.query.goto || ''
+        const userData = await userModel.findOne({ email: user }) || ''
+        const message = req.query.message
+        const sMessage = req.query.sMessage || ''
+
+        const fullName = userData.name.split(' ');
+        const firstName = fullName[0]
+        const lastName = fullName[1]
+
+        if (goto == 'account overview') {
+           return res.render('user/userDashboard', { user, userData, firstName, lastName, message: message, sMessage: sMessage })
+        }
+        if(goto== 'user address'){
+         return res.render('user/userAddress',{user,userData,firstName, lastName, message: message, sMessage: sMessage})
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+//user credential update
+const userUpdate = async (req, res) => {
+    try {
+
+        const goto = req.query.goto
+        const id = req.query._id
+        console.log('this is ' + goto);
+        //updating password
+        if (goto == 'password update') {
+            const currentPassword = req.body.currentPassword
+            const newPassword = req.body.newPassword
+            const userMatch = await userModel.findOne({ _id: id })
+            if (userMatch) {
+                const PasswordMatch = await bcrypt.compare(currentPassword, userMatch.password);
+                if (PasswordMatch) {
+                    const hashedPass = await hashPassword(newPassword)
+                    console.log('this is hashed Pass'+hashedPass);
+                    await userModel.updateOne({ _id: id }, { $set: { password: hashedPass } })
+                    const sMessage = 'Password updated succesfully'
+                    return res.redirect(`/user-dashboard?goto=account+overview&sMessage=${encodeURIComponent(sMessage)}`);
+
+                } else {
+                    const message = 'wrong password'
+                    return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
+
+                }
+            } else {
+                res.send('user not found internal server error')
+            }
+
+
+
+        }
+        //updating name,and phone number
+        if (goto == 'user update') {
+            const firstname = req.body.firstname
+            const lastname = req.body.lastname
+            const email = req.body.email
+            const phoneno = req.body.phoneno
+            console.log('first name  ', firstname);
+            console.log('last name  ', lastname);
+            console.log('email ', email);
+            console.log('phone ', phoneno);
+
+
+            if (!firstname || !lastname || !email || !phoneno) {
+                const message = 'All fields must be filled';
+                console.log('All fields must be filled');
+                return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
+            }else {
+                const phoneMatch = await userModel.find({ phone: phoneno }).countDocuments();
+
+                if (phoneMatch > 1) {
+                    const message = 'Phone number already exists';
+                    return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
+                } else {
+                    const fullName=firstname+' '+lastname
+                    await userModel.updateOne({_id:id},{$set:{name:fullName,phone:phoneno}})
+                    const sMessage = 'credentials updated';
+                    return res.redirect(`/user-dashboard?goto=account+overview&sMessage=${encodeURIComponent(sMessage)}`);
+                }
+            }
+
+
+
+
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -331,6 +399,6 @@ const checkuser = async (req, res) => {
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
-     registerUser, checkuser, loadOtp, checkOtp, logout,
-    resendOtp,
+    registerUser, checkuser, loadOtp, checkOtp, logout,
+    resendOtp, loadUserDashbboard, userUpdate
 }

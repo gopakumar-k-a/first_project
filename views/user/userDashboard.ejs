@@ -1,0 +1,293 @@
+<%- include('header.ejs') %>
+    <!-- Header Area End Here -->
+    <!-- Begin Li's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active">Account Overview</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
+    <!-- Begin Li's Main Blog Page Area -->
+    <div class="li-main-blog-page li-main-blog-details-page pt-60 pb-60 pb-sm-45 pb-xs-45">
+        <div class="container">
+            <div class="row">
+                <!-- Begin Li's Blog Sidebar Area -->
+                <%- include('userSidebar.ejs') %>
+                    <!-- Li's Blog Sidebar Area End Here -->
+                    <!-- Begin Li's Main Content Area -->
+                    <div class="col-lg-9 order-lg-2 order-1">
+                        <div class="row li-main-content">
+                            <div class="col-lg-12">
+                                <div class="page-section mb-60">
+                                    <div class="container">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                                                <form action="/user-dashboard?goto=user+update&_id=<%=userData._id%>" method="post"
+                                                    id="register-form">
+                                                    <div class="login-form">
+                                                        <h4 class="login-title">Account Overview</h4>
+                                                        <li id="successMessage" class="text-center text-success">
+                                                            <%= sMessage %>
+                                                        </li>
+                                                        <script>
+
+                                                            document.addEventListener('DOMContentLoaded', function () {
+
+                                                                var successMessage = document.getElementById('successMessage');
+
+
+                                                                if (successMessage) {
+
+                                                                    setTimeout(function () {
+                                                                        successMessage.style.display = 'none';
+                                                                    }, 3000);
+                                                                }
+                                                            });
+                                                        </script>
+                                                        <div class="row">
+
+                                                            <div class="col-md-6 col-12 mb-20">
+
+                                                                <label>First Name *</label>
+                                                                <input class="mb-0" type="text"
+                                                                    placeholder="Enter Your First Name" name="firstname"
+                                                                    id="first-name" value="<%=firstName%>">
+                                                            </div>
+                                                            <div class="col-md-6 col-12 mb-20">
+                                                                <label>Last Name *</label>
+                                                                <input class="mb-0" type="text"
+                                                                    placeholder="Enter Your Last Name" name="lastname"
+                                                                    id="last-name" value="<%=lastName%>">
+                                                            </div>
+                                                            <div class="col-md-12 mb-20">
+
+                                                                <input class="mb-0" type="hidden"
+                                                                    placeholder="Enter Your Email Address" name="email"
+                                                                    id="address" value="<%=userData.email%>">
+                                                            </div>
+                                                            <div class="col-md-12 mb-20">
+                                                                <label>Phone Number *</label>
+                                                                <input class="mb-0" type="number"
+                                                                    placeholder="Enter Your Phone Number" name="phoneno"
+                                                                    id="phoneno" value="<%=userData.phone%>">
+                                                            </div>
+
+
+
+                                                            <div class="d-flex justify-content-center col-12 mb-20">
+                                                                <li class="text-center text-danger" id="message"></li>
+                                                                <li class="text-center text-danger">
+                                                                    <%= message %>
+                                                                </li>
+
+
+                                                            </div>
+
+                                                            <div class="col-12 d-flex justify-content-center">
+                                                                <button class="register-button mt-0" type="submit"
+                                                                    onclick="return validateForm()">Update</button>
+                                                            </div>
+                                                </form>
+                                                <div class="col-12 d-flex justify-content-end pt-3">
+                                                    <BUTTON class="register-button mt-0 ml-auto custom-width-button"
+                                                        onclick="hello(event)" title="quick view" class="quick-view-btn"
+                                                        data-toggle="modal" data-target="#exampleModalCenter">
+                                                        Change Password</button>
+                                                    </BUTTON>
+
+                                                    <script>
+                                                        function hello(event) {
+                                                            event.preventDefault();
+                                                        }
+                                                    </script>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- Li's Main Content Area End Here -->
+        </div>
+    </div>
+    </div>
+    <style>
+        .custom-width-button {
+            width: 200px;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            var firstName = document.getElementById('first-name').value.trim();
+            var lastName = document.getElementById('last-name').value.trim();
+            var email = document.getElementById('address').value.trim();
+            var phoneNumber = document.getElementById('phoneno').value.trim();
+            // var password = document.getElementById('password').value.trim();
+            // var confirmPassword = document.getElementById('cpassword').value.trim();
+            var message = document.getElementById('message');
+
+            if (!areAllFieldsFilled(firstName, lastName, email, phoneNumber)) {
+                setMessage('Please fill in all fields.');
+                return false;
+            }
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                setMessage('Invalid email address.');
+                return false;
+            }
+
+            // Validate phone number (must be 10 digits)
+            if (!isValidPhoneNumber(phoneNumber)) {
+                setMessage('Invalid phone number (must be 10 digits).');
+                return false;
+            }
+
+   
+            setMessage('');
+
+            Swal.fire({
+                title: 'Update credentials?',
+                text: 'Do you want to update your Credentials?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.value) {
+                  
+                    document.getElementById('register-form').submit();
+                } else {
+                  
+                    Swal.fire('Cancelled', 'Your credentials were not updated.', 'info');
+                }
+            });
+
+       
+            return false;
+        }
+
+
+        // Function to set the error message
+        function setMessage(text) {
+            document.getElementById('message').innerText = text;
+        }
+
+        // Function to check if all fields are filled
+        function areAllFieldsFilled(firstName, lastName, email, phoneNumber) {
+            return firstName !== '' && lastName !== '' &&
+                email !== '' && phoneNumber !== '';
+        }
+
+        // Function to validate email using regex
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Function to validate phone number (must be 10 digits)
+        function isValidPhoneNumber(phoneNumber) {
+            const phoneRegex = /^\d{10}$/;
+            return phoneRegex.test(phoneNumber);
+        }
+
+
+    </script>
+    <!-- --------------modal---------------- -->
+    <div class="modal fade modal-wrapper" id="exampleModalCenter">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="container">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                                <form action="/user-dashboard?goto=password+update&_id=<%=userData._id%>" method="post"
+                                    id="change-pass">
+                                    <div class="col-md-9 mb-20  mx-auto">
+
+                                        <label>Current Password *</label>
+                                        <input class="mb-0" type="password" placeholder="Enter Your Password"
+                                            name="currentPassword" id="currentPassword" value="123">
+                                    </div>
+                                    <div class=" col-md-9 mb-20 mx-auto">
+                                        <label>New Password *</label>
+                                        <input class="mb-0" type="password" placeholder="Enter Your Password"
+                                            name="newPassword" id="newPassword" value="1234">
+                                    </div>
+                                    <div class="col-md-9 mb-20 mx-auto">
+                                        <label>Confirm New Password *</label>
+                                        <input class="mb-0" type="password" placeholder="Confirm Your Password"
+                                            name="confirmNewPassword" id="confirmNewPassword" value="1234">
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button class="register-button mt-0" type="submit"
+                                            onclick="return validateModalForm()">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function validateModalForm() {
+            // Get form elements
+            var currentPassword = document.getElementById('currentPassword');
+            var newPassword = document.getElementById('newPassword');
+            var confirmNewPassword = document.getElementById('confirmNewPassword');
+
+            // Check if fields are filled
+            if (!currentPassword.value || !newPassword.value || !confirmNewPassword.value) {
+                alert('All fields must be filled.');
+                return false;
+            }
+
+            // Check if new password and confirm new password match
+            if (newPassword.value !== confirmNewPassword.value) {
+                alert('New password and confirm new password must match.');
+                return false;
+            }
+            if (newPassword.value == currentPassword.value || confirmNewPassword.value == currentPassword.value) {
+                alert('Current Password and new Password Should not be the same')
+                return false;
+            }
+            setMessage('');
+
+            Swal.fire({
+                title: 'Update Password?',
+                text: 'Do you want to update your Password?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.value) {
+                  
+                    document.getElementById('change-pass').submit();
+                } else {
+                  
+                    Swal.fire('Cancelled', 'Your Password were not updated.', 'info');
+                }
+            });
+
+       
+            return false;
+        }
+    </script>
+
+
+    <%- include('footer.ejs') %>

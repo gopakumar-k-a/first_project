@@ -29,7 +29,41 @@ const user=new mongoose.Schema({
     createdAt:{
         type:Date,
         default: () => Date.now()
-    }
+    },
+    address:[{
+        name:{
+            type:String,
+            required:true
+        },
+        phone:{
+            type:Number,
+            required:true
+        },
+        altPhone:{
+            type:Number,
+            required:true
+        },
+        houseName:{
+            type:String,
+            required:true
+        },
+        city:{
+            type:String,
+            required:true
+        },
+        state:{
+            type:String,
+            required:true
+        },
+        pincode:{
+            type:Number,
+            required:true
+        },
+        landMark:{
+            type:String,
+            required:true
+        }
+    }]
 
 })
 

@@ -1,0 +1,273 @@
+<%- include('header.ejs') %>
+    <!-- Header Area End Here -->
+    <!-- Begin Li's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active">Account Overview</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
+    <!-- Begin Li's Main Blog Page Area -->
+    <div class="li-main-blog-page li-main-blog-details-page pt-60 pb-60 pb-sm-45 pb-xs-45">
+        <div class="container">
+            <div class="row">
+                <!-- Begin Li's Blog Sidebar Area -->
+                <%- include('userSidebar.ejs') %>
+                    <!-- Li's Blog Sidebar Area End Here -->
+                    <!-- Begin Li's Main Content Area -->
+                    <div class="col-lg-9 order-lg-2 order-1">
+                        <div class="row li-main-content">
+                            <div class="col-lg-12">
+                                <div class="page-section mb-60">
+                                    <div class="container text-center">
+                                        <div class="row d-flex">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                                                <h4 class="login-title">Manage Address</h4>
+
+                                                <div class="col-12 d-flex justify-content-start pt-3">
+                                                    <button class="register-button mt-0 custom-width-button"
+                                                        onclick="hello(event)" title="quick view" class="quick-view-btn"
+                                                        data-toggle="modal" data-target="#exampleModalCenter">
+                                                        Add New Address
+                                                    </button>
+
+                                                    <script>
+                                                        function hello(event) {
+                                                            event.preventDefault();
+                                                        }
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- Li's Main Content Area End Here -->
+        </div>
+    </div>
+    </div>
+    <style>
+        .custom-width-button {
+            width: 200px;
+        }
+    </style>
+
+
+    <!-- --------------modal---------------- -->
+    <div class="modal fade modal-wrapper" id="exampleModalCenter">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content  text-center">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="checkout-area pt-60 pb-30">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <form action="/add-address" class="mx-auto" id="address-form" method="post"
+                                        onsubmit="return validateForm()">
+                                        <div class="checkbox-form">
+                                            <h3>Address Details</h3>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>First Name <span class="required">*</span></label>
+                                                        <input placeholder="eg: Dinesh" type="text" name="firstName"
+                                                            id="firstName">
+                                                        <li class="text-center text-danger" id="firstNameErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>Last Name </label>
+                                                        <input placeholder="eg: Ragav" type="text" name="lastName"
+                                                            id="lastName">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>Phone Number<span class="required">*</span></label>
+                                                        <input placeholder="Your 10 digit phone number" type="number"
+                                                            name="phone" id="phone">
+                                                        <li class="text-center text-danger" id="phoneErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>Alternate Number<span class="required">*</span></label>
+                                                        <input placeholder="Alternate 10 digit phone number"
+                                                            type="number" name="altPhone" id="altPhone">
+                                                        <li class="text-center text-danger" id="altPhoneErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="checkout-form-list">
+                                                        <label>House Name <span class="required">*</span></label>
+                                                        <input placeholder="Your House Name" type="text"
+                                                            name="houseName" id="houseName">
+                                                        <li class="text-center text-danger" id="houseNameErr"></li>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>City <span class="required">*</span></label>
+                                                        <input placeholder="eg: Kochi" type="text" name="city"
+                                                            id="city">
+                                                        <li class="text-center text-danger" id="cityErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>State <span class="required">*</span></label>
+                                                        <input placeholder="eg: Kerala" type="text" name="state"
+                                                            id="state">
+                                                        <li class="text-center text-danger" id="stateErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>Pincode <span class="required">*</span></label>
+                                                        <input placeholder="eg: 680664" type="number" name="pincode"
+                                                            id="pincode">
+                                                        <li class="text-center text-danger" id="pincodeErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="checkout-form-list">
+                                                        <label>Landmark <span class="required">*</span></label>
+                                                        <input placeholder="eg: Near Abu Backers" type="text"
+                                                            name="landMark" id="landMark">
+                                                        <li class="text-center text-danger" id="landMarkErr"></li>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <button class="register-button mt-0" type="submit">Add</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <script>
+                                        function validateForm() {
+                                            // Define validation rules for each field
+                                            var validationRules = {
+                                                'firstName': 'required',
+                                                'phone': 'phone',
+                                                'altPhone': 'phone',
+                                                'houseName': 'required',
+                                                'city': 'required',
+                                                'state': 'required',
+                                                'pincode': 'pincode',
+                                                'landMark': 'required'
+                                            };
+
+                                            // Reset error messages
+                                            resetErrors();
+
+                                            // Validate each field based on rules
+                                            var hasErrors = false;
+                                            for (var field in validationRules) {
+                                                var rule = validationRules[field];
+                                                var value = document.getElementById(field).value.trim();
+                                                var errorId = field + 'Err';
+
+                                                switch (rule) {
+                                                    case 'required':
+                                                        if (!value) {
+                                                            document.getElementById(errorId).innerText = 'Please fill the field.';
+                                                            hasErrors = true;
+                                                        }
+                                                        break;
+                                                    case 'phone':
+                                                        if (!isValidPhoneNumber(value)) {
+                                                            document.getElementById(errorId).innerText = 'Enter a valid phone number.';
+                                                            hasErrors = true;
+                                                        }
+                                                        break;
+                                                    case 'pincode':
+                                                        if (!isValidPincode(value)) {
+                                                            document.getElementById(errorId).innerText = 'Enter a valid pincode.';
+                                                            hasErrors = true;
+                                                        }
+                                                        break;
+                                                    // Add more validation rules as needed
+                                                }
+                                            }
+                                            var phone = document.getElementById('phone').value.trim();
+                                            var altPhone = document.getElementById('altPhone').value.trim();
+                                            if (phone === altPhone) {
+                                                document.getElementById('altPhoneErr').innerText = 'same as the phone number';
+                                                hasErrors = true;
+                                            }
+                                            if (!hasErrors) {
+                                                showConfirmationDialog();
+                                            }
+
+                                            return !hasErrors; // Prevent form submission if there are errors
+                                        }
+
+                                        function isValidPhoneNumber(phone) {
+                                            // Implement phone number validation logic here
+                                            // Return true if valid, false otherwise
+                                            return /^\d{10}$/.test(phone);
+                                        }
+
+                                        function isValidPincode(pincode) {
+                                            // Implement pincode validation logic here
+                                            // Return true if valid, false otherwise
+                                            return /^\d{6}$/.test(pincode);
+                                        }
+
+                                        function showConfirmationDialog() {
+                                            Swal.fire({
+                                                title: 'Add Address?',
+                                                text: 'Do you want to Add this Address?',
+                                                icon: 'question',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Yes, Add!',
+                                                cancelButtonText: 'No, cancel'
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    document.getElementById('address-form').submit();
+                                                } else {
+                                                    Swal.fire('Cancelled', 'Your Address was not added.', 'info');
+                                                }
+                                            });
+                                        }
+
+                                        function resetErrors() {
+                                            var fields = ['firstName', 'phone', 'altPhone', 'houseName', 'city', 'state', 'pincode', 'landMark'];
+                                            for (var i = 0; i < fields.length; i++) {
+                                                var fieldName = fields[i];
+                                                var errorId = fieldName + 'Err';
+                                                document.getElementById(errorId).innerText = '';
+                                            }
+                                        }
+                                    </script>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <%- include('footer.ejs') %>
