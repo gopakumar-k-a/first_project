@@ -31,7 +31,11 @@ const user=new mongoose.Schema({
         default: () => Date.now()
     },
     address:[{
-        name:{
+        firstName:{
+            type:String,
+            required:true
+        },
+        lastName:{
             type:String,
             required:true
         },
@@ -69,4 +73,4 @@ const user=new mongoose.Schema({
 
 
 
-module.exports=mongoose.model('users',user)
+module.exports=mongoose.model('user',user)

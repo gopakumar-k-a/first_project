@@ -267,12 +267,14 @@ const checkuser = async (req, res) => {
 
 
         const userMatch = await userModel.findOne({ email: email, isAdmin: false })
+     
 
         if (userMatch) {
             const PasswordMatch = await bcrypt.compare(password, userMatch.password);
 
             if (PasswordMatch) {
                 req.session.userEmail = userMatch.email
+                req.session.userId=userMatch._id
                 return res.redirect('/')
 
             }
@@ -292,8 +294,8 @@ const checkuser = async (req, res) => {
 
 }
 
-//loading user dashboard
-const loadUserDashbboard = async (req, res) => {
+//loading user dashboard pages
+const loadUserDashboard = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const goto = req.query.goto || ''
@@ -304,12 +306,13 @@ const loadUserDashbboard = async (req, res) => {
         const fullName = userData.name.split(' ');
         const firstName = fullName[0]
         const lastName = fullName[1]
+        console.log(userData);
 
         if (goto == 'account overview') {
-           return res.render('user/userDashboard', { user, userData, firstName, lastName, message: message, sMessage: sMessage })
+           return res.render('user/userDashboard', { user, userData,firstName,lastName, message: message, sMessage: sMessage })
         }
         if(goto== 'user address'){
-         return res.render('user/userAddress',{user,userData,firstName, lastName, message: message, sMessage: sMessage})
+         return res.render('user/userAddress',{user,userData, message: message, sMessage: sMessage})
         }
     } catch (error) {
         console.log(error.message);
@@ -371,8 +374,9 @@ const userUpdate = async (req, res) => {
                     const message = 'Phone number already exists';
                     return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
                 } else {
-                    const fullName=firstname+' '+lastname
-                    await userModel.updateOne({_id:id},{$set:{name:fullName,phone:phoneno}})
+                  const fullName=firstname+' '+lastname
+                    await userModel.updateOne({_id:id},{$set:{name:fullName,
+                        phone:phoneno}})
                     const sMessage = 'credentials updated';
                     return res.redirect(`/user-dashboard?goto=account+overview&sMessage=${encodeURIComponent(sMessage)}`);
                 }
@@ -395,10 +399,11 @@ const userUpdate = async (req, res) => {
 
 
 
+
 //================================================
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
     registerUser, checkuser, loadOtp, checkOtp, logout,
-    resendOtp, loadUserDashbboard, userUpdate
+    resendOtp, loadUserDashboard, userUpdate
 }

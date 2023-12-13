@@ -85,8 +85,24 @@ const loadDashboard = async (req, res) => {
 
 const loadUsersList = async (req, res) => {
     try {
-        const userData=await userModel.find({isAdmin:false}).sort({createdAt:-1})
-        return res.render('admin/usersList',{userData})
+        const page=req.query.page || 1
+        const count = await userModel.find().count()
+        const limit=5
+        const skip=(page-1)*limit
+     
+        const userData=await userModel.find({isAdmin:false}).sort({createdAt:-1}).
+        limit(limit).skip(skip)
+
+        const userIndices = userData.map((user, index) => index + 1 + skip);
+
+        return res.render('admin/usersList',{
+            userData:userData,
+            userIndices: userIndices,
+            pageCount:Math.ceil(count/limit),
+            currentPage:page,
+            limit:limit
+
+        })
     } catch (error) {
         console.log(error.message);
     }

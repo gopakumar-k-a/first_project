@@ -1,17 +1,11 @@
-const userModel = require('../models/userModel'); 
+// const userModel = require('../models/userModel'); 
 
 const isLogin = async (req, res, next) => {
     try {
         if (req.session.userEmail) {
-            const user = await userModel.findOne({ email: req.session.userEmail });
-            if (user && user.isActive) {
-                next();
-            } else {
-                req.session.destroy(); 
-                res.redirect('/login');
-            }
-        } else {
-            res.redirect('/login');
+            next()
+        }else{
+            res.redirect('/login')
         }
     } catch (err) {
         console.log(err.message);

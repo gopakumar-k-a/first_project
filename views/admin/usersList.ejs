@@ -88,14 +88,14 @@
                 <div class="card mb-4">
 
                     <%for(let i=0;i<userData.length;i++){%>
-                    <div class="card-body">
-                       
+                        <div class="card-body">
+
                             <article class="itemlist">
                                 <div class="row align-items-center">
                                     <div class="col col-check flex-grow-0">
 
                                         <h>
-                                            <%= i+1 %>
+                                            <%= userIndices[i] %>
                                         </h>
                                     </div>
                                     <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
@@ -150,8 +150,25 @@
                             </article>
                             <%}%><!-- itemlist  .// -->
 
-                    </div> <!-- card-body end// -->
+                        </div> <!-- card-body end// -->
                 </div> <!-- card end// -->
+                <div class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <%console.log(currentPage)%>
+                                <% for (let i=1; i <=pageCount; i++) { %>
+
+                                    <li class=" <%= i == currentPage ? 'page-item active' : 'page-item ' %>">
+                                        <a class="page-link" href="<%= `/admin/edit-users?page=${i}` %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+                           
+
+                        </ul>
+                    </nav>
+                </div>
             </section> <!-- content-main end// -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
@@ -190,7 +207,7 @@
                                 });
                             }
                             document.write(new Date().getFullYear())
-                        </script> ©, Evara - HTML Ecommerce Template .
+                        </script>
                     </div>
                     <div class="col-sm-6">
                         <div class="text-sm-end">

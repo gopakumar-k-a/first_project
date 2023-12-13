@@ -21,4 +21,7 @@ const loadShop=async(req,res)=>{
     }
 }
 
+
+
+
 module.exports={loadSingleProduct,loadShop}

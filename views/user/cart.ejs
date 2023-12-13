@@ -1,0 +1,331 @@
+<%- include('header.ejs') %>
+    <!-- Header Area End Here -->
+    <!-- Begin Li's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active">Shopping Cart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
+    <!--Shopping Cart Area Strat-->
+    <div class="Shopping-cart-area pt-60 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <form action="#">
+                        <%if(cartData.length===0){%>
+                            <h3>your cart is empty !
+                            </h3>
+                            <div class="row">
+                                <div class="col-12">
+                                    <a href="/">
+                                        <div class="coupon-all">
+
+                                            <div class="coupon2">
+                                                <input class="button" name="update_cart" value="Continue Shopping"
+                                                    type="button">
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <%}else{%>
+                        <div class="table-content table-responsive">
+                        
+
+                           
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="li-product-remove">remove</th>
+                                                <th class="li-product-thumbnail">images</th>
+                                                <th class="cart-product-name">Product</th>
+                                                <th class="cart-product-name">Size</th>
+                                                <th class="li-product-price">Unit Price</th>
+                                                <th class="li-product-quantity">Quantity</th>
+                                                <th class="li-product-subtotal">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%for(let i=0;i<cartData.length;i++){%>
+                                                <tr>
+                                                    <td class="li-product-remove">
+                                                        <a href="#" onclick="removeProduct('<%= cartData[i]._id %>')">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="li-product-thumbnail">
+                                                        <a href="#">
+                                                            <img src="/admin-assets/uploads/<%=cartData[i].productId.imagesUrl[1]%>"
+                                                                alt="Li's Product Image"
+                                                                style="width: 150px; height: 150px;">
+                                                        </a>
+                                                    </td>
+                                                    <td class="li-product-name"><a href="#">
+                                                            <%=cartData[i].productId.name%>
+                                                        </a></td>
+                                                    <td class="li-product-name"><a href="#">
+                                                            <%=cartData[i].size%>
+                                                        </a></td>
+                                                    <td class="li-product-price"><span class="amount" id="price<%=i%>">
+                                                            <%=cartData[i].productId.price.salePrice%>
+                                                        </span></td>
+                                                    <td class="quantity">
+                                                        <label>Quantity</label>
+                                                        <form action="#" class="cart-quantity" id="quantity-form">
+                                                            <div class="value-button" id="decrease"
+                                                                onclick="decreaseValue('<%= i %>');
+                                                        quantityChange('<%=cartData[i]._id%>','dec','<%=cartData[i].size%>')" value="Decrease Value">-
+                                                            </div>
+                                                            <span id="quantityshow<%= i %>">
+                                                                <%=cartData[i].quantity%>
+                                                            </span>
+                                                            <input type="number" id="number<%=i%>"
+                                                                value="<%=cartData[i].quantity%>" readonly hidden>
+                                                            <div class="value-button" id="increase"
+                                                                onclick="increaseValue('<%= cartData[i].productId.size[cartData[i].size].quantity %>','<%= i %>');
+                                                        quantityChange('<%=cartData[i]._id%>','inc','<%=cartData[i].size%>')" value="Increase Value">+
+                                                            </div>
+
+                                                            <input type="text"
+                                                                value="<%= cartData[i].productId.size[cartData[i].size].quantity %>"
+                                                                readonly>
+
+                                                        </form>
+                                                    </td>
+                                                    <td class="product-subtotal"><span class="amount"
+                                                            id="totalAmount<%=i%>"></span></td>
+                                                </tr>
+
+                                                <%}%>
+
+
+
+
+
+                                        </tbody>
+                                    </table>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-12">
+                                <div class="coupon-all">
+                                    <div class="coupon">
+                                        <input id="coupon_code" class="input-text" name="coupon_code" value=""
+                                            placeholder="Coupon code" type="text">
+                                        <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
+                                    </div>
+                                    <div class="coupon2">
+                                        <input class="button" name="update_cart" value="Update cart" type="submit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-5 ml-auto">
+                                <div class="cart-page-total">
+                                    <h2>Cart totals</h2>
+                                    <ul>
+                                        <li>Total <span id="cartTotal"></span></li>
+                                    </ul>
+                                    <a href="#">Proceed to checkout</a>
+                                </div>
+                            </div>
+                        </div>
+                        <%}%>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function calculateTotalPrice(unitPrice, quantity) {
+            return unitPrice * quantity;
+        }
+    
+        function updateCartTotal() {
+            var cartTotalElement = document.getElementById('cartTotal');
+            var cartTotal = 0;
+    
+            // Iterate through each product in the cart
+            <% for (let i = 0; i < cartData.length; i++) { %>
+                var unitPrice<%= i %> = parseFloat(document.getElementById(`price<%= i %>`).innerHTML);
+                var quantity<%= i %> = parseFloat(document.getElementById(`quantityshow<%= i %>`).innerHTML);
+                cartTotal += unitPrice<%= i %> * quantity<%= i %>;
+            <% } %>
+    
+            // Update the cart total in the HTML
+            cartTotalElement.textContent = '₹ ' + cartTotal.toFixed(2); // Format to two decimal places
+        }
+    
+        function updateTotal(index) {
+            var unitPrice = parseFloat(document.getElementById(`price${index}`).innerHTML);
+            var quantity = parseFloat(document.getElementById(`quantityshow${index}`).innerHTML);
+    
+            var totalAmountElement = document.getElementById(`totalAmount${index}`);
+            var totalAmount = calculateTotalPrice(unitPrice, quantity).toFixed(2);
+    
+            totalAmountElement.innerHTML = totalAmount;
+    
+            // After updating individual total, update the overall cart total
+            updateCartTotal();
+        }
+    
+        // Attach event listeners to quantity inputs
+        <% for (let i = 0; i < cartData.length; i++) { %>
+            document.getElementById(`quantityshow<%= i %>`).addEventListener("input", function () {
+                updateTotal('<%= i %>');
+            });
+        <% } %>
+    
+        // Update the cart total on window load
+        window.onload = function () {
+            <% for (let i = 0; i < cartData.length; i++) { %>
+                updateTotal('<%= i %>');
+            <% } %>
+            updateCartTotal();
+        };
+    
+        function increaseValue(maxQuantity, i) {
+            var max = parseInt(maxQuantity, 10);
+            var value = parseInt(document.getElementById(`number${i}`).value, 10);
+    
+            value = isNaN(value) ? 1 : value;
+            if (value < max) {
+                value++;
+            }
+    
+            document.getElementById(`number${i}`).value = value;
+            document.getElementById(`quantityshow${i}`).innerHTML = value;
+            updateTotal(i);
+        }
+    
+        function decreaseValue(i) {
+            var value = parseInt(document.getElementById(`number${i}`).value, 10);
+            value = isNaN(value) ? 0 : value;
+    
+            if (value > 1) {
+                value--;
+            }
+    
+            document.getElementById(`number${i}`).value = value;
+            document.getElementById(`quantityshow${i}`).innerHTML = value;
+            updateTotal(i);
+        }
+    
+        function quantityChange(cartId, operation, size) {
+            fetch(`/cart-quantity?cartId=${cartId}&operation=${operation}&size=${size}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.log('Error removing product:', error);
+                });
+        }
+    
+        function removeProduct(cartId) {
+            Swal.fire({
+                title: 'Remove Product?',
+                text: 'Do you want to Remove this Product From The Cart?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Remove!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.value) {
+                    fetch(`/remove-product?cartId=${cartId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(response => {
+                        window.location.reload();
+                    }).catch(error => {
+                        console.error('Error removing product:', error);
+                    });
+                } else {
+                    Swal.fire('Cancelled', 'Your is not Removed.', 'info');
+                }
+            });
+        }
+    </script>
+    
+
+   
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        .quantity-form {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .value-button {
+            display: inline-block;
+            border: 1px solid #ddd;
+            margin: 0px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 11px 0;
+            background: #eee;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .value-button:hover {
+            cursor: pointer;
+        }
+
+        .quantity-form #decrease {
+            margin-right: -4px;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .quantity-form #increase {
+            margin-left: -4px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .quantity-form #input-wrap {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        input#number {
+            text-align: center;
+            border: none;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            margin: 0px;
+            width: 40px;
+            height: 40px;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <!--Shopping Cart Area End-->
+    <%- include('footer.ejs') %>

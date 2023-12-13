@@ -24,6 +24,7 @@ app.use(session({
     saveUninitialized: false
     // Additional options can be configured as needed
   }));
+  app.use(express.json());
 
 
 

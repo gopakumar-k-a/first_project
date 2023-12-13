@@ -26,7 +26,7 @@ const mongoose = require('mongoose')
 //load product list page
 const loadProjectList = async (req, res) => {
     try {
-        const proData = await productModel.find({ }).sort({ createdAt: -1 })
+        const proData = await productModel.find({}).sort({ createdAt: -1 })
 
 
         res.render('admin/productList', { proData })
@@ -63,7 +63,7 @@ const loadEditProduct = async (req, res) => {
             .populate('league')
             .populate('team')
             .populate('brand');
-            console.log('data after population  '+proData);
+        // console.log('data after population  '+proData);
         const catData = await categoryModel.find({}).sort({ name: 1 })
         const leagueData = await leagueModel.find({}).sort({ name: 1 })
         const teamData = await teamModel.find({}).sort({ name: 1 })
@@ -165,9 +165,9 @@ const updateCatName = async (req, res) => {
 
         // Find the category by id
         const existingData = await categoryModel.find({ name: catName, _id: { $ne: id } });
-        console.log(existingData + '  this is ');
+        // console.log(existingData + '  this is ');
 
-        console.log(existingData.name + ' - update data');
+        // console.log(existingData.name + ' - update data');
 
         // Check if the new name is the same as the existing one
         if (existingData.length > 0) {
@@ -189,7 +189,7 @@ const updateCatName = async (req, res) => {
 const blockCat = async (req, res) => {
     try {
         const categoryId = req.query._id
-        console.log(categoryId + '   category id');
+        // console.log(categoryId + '   category id');
         await categoryModel.updateOne({ _id: categoryId }, { isActive: false });
         await productModel.updateMany({ _id: categoryId }, { $set: { catStatus: false } })
         return res.redirect('/admin/category-management')
@@ -202,7 +202,7 @@ const blockCat = async (req, res) => {
 const unblockCat = async (req, res) => {
     try {
         const categoryId = req.query._id
-        console.log(categoryId + '   category id');
+        // console.log(categoryId + '   category id');
         await categoryModel.updateOne({ _id: categoryId }, { isActive: true });
         await productModel.updateMany({ _id: categoryId }, { $set: { catStatus: false } })
         return res.redirect('/admin/category-management')
@@ -251,9 +251,9 @@ const updateLeagueName = async (req, res) => {
 
         // Find the category by id
         const existingData = await leagueModel.find({ name: leagueName, _id: { $ne: id } });
-        console.log(existingData + '  this is dataleague ');
+        // console.log(existingData + '  this is dataleague ');
 
-        console.log(existingData.name + ' dataleague name');
+        // console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
         if (existingData.length > 0) {
@@ -327,9 +327,9 @@ const updateTeamName = async (req, res) => {
         const id = req.body.id;
         // Find the category by id
         const existingData = await teamModel.find({ name: teamName, _id: { $ne: id } });
-        console.log(existingData + '  this is dataleague ');
+        // console.log(existingData + '  this is dataleague ');
 
-        console.log(existingData.name + ' dataleague name');
+        // console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
         if (existingData.length > 0) {
@@ -406,9 +406,9 @@ const updateBrandName = async (req, res) => {
         const id = req.body.id;
         // Find the category by id
         const existingData = await brandModel.find({ name: brandName, _id: { $ne: id } });
-        console.log(existingData + '  this is dataleague ');
+        // console.log(existingData + '  this is dataleague ');
 
-        console.log(existingData.name + ' dataleague name');
+        // console.log(existingData.name + ' dataleague name');
 
         // Check if the new name is the same as the existing one
         if (existingData.length > 0) {
@@ -440,7 +440,7 @@ const blockBrand = async (req, res) => {
 const unblockBrand = async (req, res) => {
     try {
         const brandId = req.query._id
-        console.log('this is brand id');
+        // console.log('this is brand id');
         await brandModel.updateOne({ _id: brandId }, { isActive: true })
         await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: false } })
         return res.redirect('/admin/category-management')
@@ -511,23 +511,61 @@ const insertProduct = async (req, res) => {
         console.log(error.message)
     }
 }
+const editProduct = async (req, res) => {
+    try {
+        const imagesToDelete = req.body.deleteImages
+        console.log('this is type of imagesToDelete  ' + imagesToDelete);
+        // if (imagesToDelete && imagesToDelete.length > 0) {
+        //     try {
+        //       const productId = req.query._id
+        //       const result = await productModel.updateOne(
+        //         { _id: productId },
+        //         { $pull: { imagesUrl: { $in: imagesToDelete } } }
+        //       );
+
+        //       if (result.nModified > 0) {
+        //         console.log('Images deleted successfully');
+        //       } else {
+        //         console.log('No images were deleted');
+        //       }
+        //     } catch (error) {
+        //       console.error('Error deleting images:', error);
+        //     }
+        //   }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//delete image
+const deleteImage = async (req, res) => {
+    try {
+        const id = req.query.pr_id;
+        const imagesUrl = req.query.img_url;
+        console.log('this is delete data' + '  ' + id + '  ' + imagesUrl);
+        await productModel.findByIdAndUpdate(id,{$pull:{imagesUrl:imagesUrl}})
+        res.status(200).json({ message: 'deleted successfully' });
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 //block and unblock product
-const blockProduct=async(req,res)=>{
+const blockProduct = async (req, res) => {
     try {
-        let productId=req.query._id
-        let status=req.query.status
-       console.log(productId+status);
-        if(status=='block'){
+        let productId = req.query._id
+        let status = req.query.status
+        if (status == 'block') {
 
-        await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
+            await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
 
-        return res.redirect('/admin/product-list') 
+            return res.redirect('/admin/product-list')
         }
-        else if(status='unblock'){
+        else if (status = 'unblock') {
             await productModel.updateOne({ _id: productId }, { $set: { isActive: true } })
 
-            return res.redirect('/admin/product-list') 
+            return res.redirect('/admin/product-list')
         }
     } catch (error) {
         console.log(error.message);
@@ -536,11 +574,13 @@ const blockProduct=async(req,res)=>{
 
 
 
+
 module.exports = {
-    loadProjectList, loadAddProduct,
-    loadCategory, addCategory, loadEditCategory, blockCat, unblockCat,
-    updateCatName, insertLeague, blockLeague, unblockLeague,
-    insertTeam, updateLeagueName, updateTeamName, insertBrand,
-    blockBrand, unblockBrand, updateBrandName, insertProduct, loadEditProduct,blockProduct,
-    
+    loadProjectList, loadAddProduct, loadCategory, addCategory,
+    loadEditCategory, blockCat, unblockCat, updateCatName,
+    insertLeague, blockLeague, unblockLeague, insertTeam,
+    updateLeagueName, updateTeamName, insertBrand, blockBrand,
+    unblockBrand, updateBrandName, insertProduct, loadEditProduct,
+    blockProduct, editProduct, deleteImage
+
 }

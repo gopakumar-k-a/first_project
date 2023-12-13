@@ -19,19 +19,19 @@
                     <div class="product-details-left">
                         <div class="product-details-images slider-navigation-1">
                             <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
+                                <a class="popup-img vbox-item MagicZoom"
                                     href="/admin-assets/uploads/<%=product.imagesUrl[0]%>" data-gall="myGallery">
                                     <img src="/admin-assets/uploads/<%=product.imagesUrl[0]%>" alt="product image">
                                 </a>
                             </div>
                             <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
+                                <a class="popup-img vbox-item MagicZoom"
                                     href="/admin-assets/uploads/<%=product.imagesUrl[1]%>" data-gall="myGallery">
                                     <img src="/admin-assets/uploads/<%=product.imagesUrl[1]%>" alt="product image">
                                 </a>
                             </div>
                             <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
+                                <a class="popup-img  vbox-item MagicZoom"
                                     href="/admin-assets/uploads/<%=product.imagesUrl[2]%>" data-gall="myGallery">
                                     <img src="/admin-assets/uploads/<%=product.imagesUrl[2]%>" alt="product image">
                                 </a>
@@ -61,7 +61,9 @@
                             <h2>
                                 <%=product.name%>
                             </h2>
-                            <span class="product-details-ref"><%=product.brand.name%></span>
+                            <span class="product-details-ref">
+                                <%=product.brand.name%>
+                            </span>
                             <div class="rating-box pt-20">
                                 <ul class="rating rating-with-review-item">
                                     <li><i class="fa fa-star-o"></i></li>
@@ -77,7 +79,8 @@
                                 <span class="new-price new-price-2">&#8377;<%=product.price.salePrice%></span>
                                 <span class="new-price new-price-2"
                                     style="text-decoration: line-through; color: rgb(73, 69, 69); font-size: 100%;">&#8377;
-                                    <%= product.price.regularPrice %></span>
+                                    <%= product.price.regularPrice %>
+                                </span>
 
                             </div>
                             <div class="product-desc">
@@ -89,26 +92,189 @@
                             </div>
                             <div class="product-variants">
                                 <div class="produt-variants-size">
-                                    <label>Dimension</label>
-                                    <select class="nice-select">
-                                        <option value="1" title="S" selected="selected">small</option>
-                                        <option value="2" title="M">Medium</option>
-                                        <option value="3" title="L">Large</option>
+                                    <label>Select Size</label>
+                                    <select class="nice-select" id="sizeSelect" name="size"
+                                        onchange="selectedSize(this)">
+                                        <option value="s" title="S">Small</option>
+                                        <option value="m" title="M" selected="selected">Medium</option>
+                                        <option value="l" title="L">Large</option>
                                     </select>
+                                    <input type="hidden" id="sQty" value="<%=product.size.s.quantity%>">
+                                    <input type="hidden" id="mQty" value="<%=product.size.m.quantity%>">
+                                    <input type="hidden" id="lQty" value="<%=product.size.l.quantity%>">
                                 </div>
                             </div>
                             <div class="single-add-to-cart">
-                                <form action="#" class="cart-quantity">
-                                    <div class="quantity">
-                                        <label>Quantity</label>
-                                        <div class="cart-plus-minus">
-                                            <input class="cart-plus-minus-box" value="1" type="text">
-                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                        </div>
-                                    </div>
-                                    <button class="add-to-cart" type="submit">Add to cart</button>
+                                <form action="#" class="cart-quantity" id="quantity-form">
+                                    <div class="value-button" id="decrease" onclick="decreaseValue()"
+                                        value="Decrease Value">-</div>
+                                    <input type="number" id="number" value="1" readonly>
+                                    <div class="value-button" id="increase" onclick="increaseValue()"
+                                        value="Increase Value">+</div>
+
+                                    <button id="addToCartBtn" class="add-to-cart" type=""
+                                        onclick="addToCart('<%=product._id%>',event)">Add to cart</button>
                                 </form>
+
+                                <style>
+                                    .quantity-form {
+                                        width: 300px;
+                                        margin: 0 auto;
+                                        text-align: center;
+                                        padding-top: 50px;
+                                    }
+
+                                    .value-button {
+                                        display: inline-block;
+                                        border: 1px solid #ddd;
+                                        margin: 0px;
+                                        width: 40px;
+                                        height: 40px;
+                                        text-align: center;
+                                        vertical-align: middle;
+                                        padding: 11px 0;
+                                        background: #eee;
+                                        -webkit-touch-callout: none;
+                                        -webkit-user-select: none;
+                                        -khtml-user-select: none;
+                                        -moz-user-select: none;
+                                        -ms-user-select: none;
+                                        user-select: none;
+                                    }
+
+                                    .value-button:hover {
+                                        cursor: pointer;
+                                    }
+
+                                    .quantity-form #decrease {
+                                        margin-right: -4px;
+                                        border-radius: 8px 0 0 8px;
+                                    }
+
+                                    .quantity-form #increase {
+                                        margin-left: -4px;
+                                        border-radius: 0 8px 8px 0;
+                                    }
+
+                                    .quantity-form #input-wrap {
+                                        margin: 0px;
+                                        padding: 0px;
+                                    }
+
+                                    input#number {
+                                        text-align: center;
+                                        border: none;
+                                        border-top: 1px solid #ddd;
+                                        border-bottom: 1px solid #ddd;
+                                        margin: 0px;
+                                        width: 40px;
+                                        height: 40px;
+                                    }
+
+                                    input[type=number]::-webkit-inner-spin-button,
+                                    input[type=number]::-webkit-outer-spin-button {
+                                        -webkit-appearance: none;
+                                        margin: 0;
+                                    }
+                                </style>
+                                <script>
+                                    
+                                    
+                                    var max=0;
+                                    var quantityInput = document.getElementById('quantityInput');
+                                    function selectedSize(selectElement) {
+                                    
+                                        var size = selectElement.value
+                                   
+                                        var maxQuantity = parseInt(document.getElementById(size + "Qty").value, 10)
+                                        console.log(maxQuantity);
+                                        max=maxQuantity
+                                          document.getElementById('number').value = 1;
+
+
+                                    }
+
+                                    function increaseValue() {
+                                     
+                                        console.log(max+'  inside increase');
+                                        var value = parseInt(document.getElementById('number').value, 10);
+                                        value = isNaN(value) ? 1 : value;
+                                        if(value>max){
+                                            value=max
+                                            
+                                        }
+                                        if(value<max){
+                                            value++;
+                                    
+                                        }
+                                        document.getElementById('number').value = value;
+                                    }
+
+                                    function decreaseValue() {
+                                        var value = parseInt(document.getElementById('number').value, 10);
+                                        value = isNaN(value) ? 0 : value;
+                                        value < 1 ? value = 1 : '';
+                                        if(value>1){
+                                            value--;
+                                        
+                                        }
+                                       
+                                        document.getElementById('number').value = value;
+                                    }
+
+
+
+
+
+                                    // function incrementQuantity(event) {
+                                    //    event.preventDefault()
+                                    //     console.log('inside increment');
+                                    //     var currentQuantity = parseInt(quantityInput.value, 10);
+                                    //     console.log('current quantity  ' + currentQuantity);
+                                    //     var maxQuantity = parseInt(quantityInput.getAttribute('data-max-quantity'), 10);
+
+                                    //     console.log('max quantity  ' + maxQuantity);
+
+                                    //     if (currentQuantity < maxQuantity) {
+                                    //         quantityInput.value = currentQuantity + 1;
+                                    //     }
+                                    // }
+
+                                    // function decrementQuantity(event) {
+                                    //     event.preventDefault()
+                                    //     console.log('asdfasdf');
+                                    //     var currentQuantity = parseInt(document.getElementById('quantityInput').value, 10);
+
+                                    //     if (currentQuantity > 1) {
+                                    //         quantityInput.value = currentQuantity - 1;
+                                    //     }
+                                    // }
+
+
+
+
+                                    //adding product to the cart
+                                    async function addToCart(prId, event) {
+                                        event.preventDefault()
+                                        try {
+                                            const productId = prId
+                                            const qty = parseInt(document.getElementById('number').value, 10);
+                                            const size=document.getElementById('sizeSelect').value
+                                            console.log('inside add to cart '+typeof(qty));
+                                            console.log('size '+size);
+                                            window.location.href = `/add-to-cart?productId=${prId}&qty=${qty}&size=${size}`;
+
+
+
+                                        } catch (error) {
+                                            console.error('Error:', error);
+                                        }
+                                    }
+                                    window.onload = function () {
+                                        var sizeElement = document.getElementById('sizeSelect')
+                                        selectedSize(sizeElement);
+                                    };
+                                </script>
                             </div>
                             <div class="product-additional-info pt-25">
                                 <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to
@@ -178,7 +344,9 @@
             <div class="tab-content">
                 <div id="description" class="tab-pane active show" role="tabpanel">
                     <div class="product-description">
-                        <span><%=product.description%></span>
+                        <span>
+                            <%=product.description%>
+                        </span>
                     </div>
                 </div>
                 <div id="product-details" class="tab-pane" role="tabpanel">
