@@ -14,7 +14,12 @@ const loadSingleProduct=async(req,res)=>{
 const loadShop=async(req,res)=>{
     try {
         const user = req.session.userEmail || ''
-        const prData=await productModel.find({}).populate('brand').populate('category').populate('team').populate('league')
+        const prData=await productModel.find({
+            isActive: true ,
+            catStatus:true,
+            leagueStatus:true,
+            brandStatus:true
+        }).populate('brand').populate('category').populate('team').populate('league')
         res.render('user/productListing',{user,prData})
     } catch (error) {
      console.log(error.message);   

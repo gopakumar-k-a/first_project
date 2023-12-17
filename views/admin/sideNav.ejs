@@ -10,13 +10,13 @@
     </div>
     <nav>
       <ul class="menu-aside">
-        <li class="menu-item active">
+        <li class="menu-item">
           <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
             <span class="text">Dashboard</span>
           </a>
         </li>
         <li class="menu-item has-submenu">
-          <a class="menu-link" href="/admin/product-list"> <i class="icon material-icons md-shopping_bag"></i>
+          <a class="menu-link" href="/admin/product-list" > <i class="icon material-icons md-shopping_bag"></i>
             <span class="text">Products</span>
           </a>
           <div class="submenu">
@@ -118,4 +118,20 @@
       <br>
       <br>
     </nav>
+    <script>
+      // Get the current pathname
+      const currentPath = window.location.pathname;
+    
+      // Find the corresponding link in the sidebar and add the "active" class
+      const links = document.querySelectorAll('.menu-link');
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentPath.startsWith(href)) {
+          link.parentNode.classList.add('active');
+        }
+      });
+      </script>
   </aside>
+
+
+  

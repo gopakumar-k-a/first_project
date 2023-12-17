@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-12">
                     <form action="#">
-                        <%if(cartData.length===0){%>
+                        <%if(cartData.products.length==0){%>
                             <h3>your cart is empty !
                             </h3>
                             <div class="row">
@@ -52,57 +52,59 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <%for(let i=0;i<cartData.length;i++){%>
+                                            <% cartData.products.forEach((product,index)=>{%>
                                                 <tr>
                                                     <td class="li-product-remove">
-                                                        <a href="#" onclick="removeProduct('<%= cartData[i]._id %>')">
+                                                        <a href="#" onclick="removeProduct('<%=index%>')">
                                                             <i class="fa fa-times"></i>
                                                         </a>
                                                     </td>
                                                     <td class="li-product-thumbnail">
                                                         <a href="#">
-                                                            <img src="/admin-assets/uploads/<%=cartData[i].productId.imagesUrl[1]%>"
+                                                            <img src="/admin-assets/uploads/<%=product.productId.imagesUrl[1]%>"
                                                                 alt="Li's Product Image"
                                                                 style="width: 150px; height: 150px;">
                                                         </a>
                                                     </td>
                                                     <td class="li-product-name"><a href="#">
-                                                            <%=cartData[i].productId.name%>
+                                                            <%=product.productId.name%>
                                                         </a></td>
                                                     <td class="li-product-name"><a href="#">
-                                                            <%=cartData[i].size%>
+                                                            <%=product.size%>
                                                         </a></td>
-                                                    <td class="li-product-price"><span class="amount" id="price<%=i%>">
-                                                            <%=cartData[i].productId.price.salePrice%>
+                                                    <td class="li-product-price"><span class="amount" id="price<%=index%>">
+                                                            <%=product.productId.price.salePrice%>
                                                         </span></td>
+                                                    <!-- ----quantitiy--------- -->
                                                     <td class="quantity">
                                                         <label>Quantity</label>
-                                                        <form action="#" class="cart-quantity" id="quantity-form">
+                                                      <form action="#" class="cart-quantity" id="quantity-form">
                                                             <div class="value-button" id="decrease"
-                                                                onclick="decreaseValue('<%= i %>');
-                                                        quantityChange('<%=cartData[i]._id%>','dec','<%=cartData[i].size%>')" value="Decrease Value">-
+                                                                onclick="decreaseValue('<%=index%>')
+                                                        quantityChange('<%=product.productId._id%>','dec','<%=product.size%>')" value="Decrease Value">-
                                                             </div>
-                                                            <span id="quantityshow<%= i %>">
-                                                                <%=cartData[i].quantity%>
+                                                            <span id="quantityshow<%= index %>">
+                                                                <%=product.quantity%>
                                                             </span>
-                                                            <input type="number" id="number<%=i%>"
-                                                                value="<%=cartData[i].quantity%>" readonly hidden>
+                                                            <input type="number" id="number<%=index%>"
+                                                                value="<%=product.quantity%>" hidden>
                                                             <div class="value-button" id="increase"
-                                                                onclick="increaseValue('<%= cartData[i].productId.size[cartData[i].size].quantity %>','<%= i %>');
-                                                        quantityChange('<%=cartData[i]._id%>','inc','<%=cartData[i].size%>')" value="Increase Value">+
+                                                                onclick="increaseValue('<%= product.productId.size[product.size].quantity %>','<%=index%>')
+                                                        quantityChange('<%=product.productId._id%>','inc','<%=product.size%>')" value="Increase Value">+
                                                             </div>
+                                                           
 
                                                             <input type="text"
-                                                                value="<%= cartData[i].productId.size[cartData[i].size].quantity %>"
-                                                                readonly>
+                                                            value="                   stock left :<%= product.productId.size[product.size].quantity %>"
+                                                            readonly  hidden>
 
                                                         </form>
                                                     </td>
                                                     <td class="product-subtotal"><span class="amount"
-                                                            id="totalAmount<%=i%>"></span></td>
+                                                            id="totalAmount<%=index%>"></span></td>
                                                 </tr>
 
-                                                <%}%>
+                                                <%})%>
 
 
 
@@ -132,7 +134,7 @@
                                     <ul>
                                         <li>Total <span id="cartTotal"></span></li>
                                     </ul>
-                                    <a href="#">Proceed to checkout</a>
+                                    <a href="/checkout">Proceed to checkout</a>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +154,7 @@
             var cartTotal = 0;
     
             // Iterate through each product in the cart
-            <% for (let i = 0; i < cartData.length; i++) { %>
+            <% for (let i = 0; i < cartData.products.length; i++) { %>
                 var unitPrice<%= i %> = parseFloat(document.getElementById(`price<%= i %>`).innerHTML);
                 var quantity<%= i %> = parseFloat(document.getElementById(`quantityshow<%= i %>`).innerHTML);
                 cartTotal += unitPrice<%= i %> * quantity<%= i %>;
@@ -176,7 +178,7 @@
         }
     
         // Attach event listeners to quantity inputs
-        <% for (let i = 0; i < cartData.length; i++) { %>
+        <% for (let i = 0; i < cartData.products.length; i++) { %>
             document.getElementById(`quantityshow<%= i %>`).addEventListener("input", function () {
                 updateTotal('<%= i %>');
             });
@@ -184,7 +186,7 @@
     
         // Update the cart total on window load
         window.onload = function () {
-            <% for (let i = 0; i < cartData.length; i++) { %>
+            <% for (let i = 0; i < cartData.products.length; i++) { %>
                 updateTotal('<%= i %>');
             <% } %>
             updateCartTotal();
@@ -217,8 +219,8 @@
             updateTotal(i);
         }
     
-        function quantityChange(cartId, operation, size) {
-            fetch(`/cart-quantity?cartId=${cartId}&operation=${operation}&size=${size}`, {
+        function quantityChange(productId, operation, size) {
+            fetch(`/cart-quantity?productId=${productId}&operation=${operation}&size=${size}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

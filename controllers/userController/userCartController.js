@@ -7,10 +7,9 @@ const loadCart = async (req, res) => {
         const user = req.session.userEmail || ''
         const userId = req.session.userId || ''
 
-        const cartData = await cartModel.find({ userId: userId }).populate('productId').populate('userId')
+        const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId')
 
-
-        await res.render('user/cart', { user, cartData })
+        res.render('user/cart', { user, cartData })
     } catch (error) {
         console.log(error.message);
     }
@@ -23,43 +22,44 @@ const addTocart = async (req, res) => {
         const productId = req.query.productId
         const quantity = parseInt(req.query.qty, 10);
         const size = req.query.size
+        console.log(size + ' this is size');
+        const cartData = await cartModel.findOne({ userId: userId });
 
-        const cartData = await cartModel.find({ productId: productId, userId: userId });
-        console.log(cartData + '  this is cartdata');
-        if (cartData.length > 0) {
-            // Product with the same productId is found in the cart
-            const productWithSameSize = cartData.find(item => item.size === size);
-            console.log(productWithSameSize + '  product with same size');
-            if (productWithSameSize) {
-                // Product with the same size is found, update the quantity
-                await cartModel.updateOne(
-                    { userId: userId, productId: productId, size: size },
-                    { $inc: { quantity: quantity } }
-                );
-                res.redirect('/user-cart')
+        if (cartData) {
+            const existingProductWithSameSize = cartData.products.find(item => item.productId.toString() === productId && item.size === size);
+
+            if (existingProductWithSameSize) {
+                console.log('Product with the same size found.');
+                existingProductWithSameSize.quantity += quantity;
             } else {
-                // Product with the same productId is found but not with the same size, add a new item
-                const newData = new cartModel({
-                    userId: userId,
+                console.log('Product with a different size or new product.');
+
+
+                const newProduct = {
                     productId: productId,
                     quantity: quantity,
-                    size: size,
-                });
-                await newData.save();
-                res.redirect('/user-cart')
+                    size: size
+                };
+
+                cartData.products.push(newProduct);
             }
+
+            await cartData.save();
         } else {
-            const data = new cartModel({
+
+            const newUserCartData = new cartModel({
                 userId: userId,
-                productId: productId,
-                quantity: quantity,
-                size: size
-            })
-            await data.save()
-            res.redirect('/user-cart')
+                products: [{
+                    productId: productId,
+                    quantity: quantity,
+                    size: size
+                }]
+            });
+
+            await newUserCartData.save();
         }
 
-
+        res.redirect('/user-cart');
 
     } catch (error) {
         console.log(error.message);
@@ -68,9 +68,13 @@ const addTocart = async (req, res) => {
 //remove quantity from cart
 const removeProduct = async (req, res) => {
     try {
+        const userId = req.session.userId
         const cartId = req.query.cartId
-        console.log('cart removing id  ' + cartId);
-        await cartModel.findByIdAndDelete(cartId)
+        const cartData = await cartModel.findOne({ userId: userId });
+        // await cartModel.findByIdAndDelete(cartId)
+        cartData.products.splice(cartId, 1)
+        await cartData.save()
+        console.log(cartId);
         res.status(200).json({ message: 'Document deleted successfully' });
     } catch (error) {
         console.log(error.message);
@@ -79,30 +83,40 @@ const removeProduct = async (req, res) => {
 //increment or decerment quantity in cart
 const cartQuantity = async (req, res) => {
     try {
-        const cartId = req.query.cartId
-        const operation = req.query.operation
-        const size = req.query.size
-        const cartQuantityObject = await cartModel.findOne({ _id: cartId }).populate('productId');
-        const stockLeft = cartQuantityObject.productId.size[size].quantity
-        const cartQuantity = cartQuantityObject.quantity;
 
+        const userId = req.session.userId
+        const { productId, operation, size } = req.query
 
+        // console.log('Query:', req.query);
+    
 
+        const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId')
 
-        if (operation == 'inc' && cartQuantity < stockLeft) {
-            await cartModel.updateOne({ _id: cartId }, { $inc: { quantity: 1 } })
+        
+        const matchSize = cartData.products.find((product) => product.productId._id.toString() == productId && product.size == size)
+        const maxQuantityOfProduct=await matchSize.productId.size[size].quantity
+        const currentQuantityInCart= matchSize.quantity
+
+        if (matchSize) {
+
+            if (operation == 'inc' && currentQuantityInCart<maxQuantityOfProduct) {
+                matchSize.quantity += 1
+            } else if (operation == 'dec' && currentQuantityInCart>1) {
+                matchSize.quantity -= 1
+            }
+            await cartData.save()
+
+            res.status(200)
+
         }
-        if (operation == 'dec' && cartQuantity > 1) {
-            await cartModel.updateOne({ _id: cartId }, { $inc: { quantity: -1 } })
-        }
 
 
-        res.status(200).json({ message: 'quantity updated successfully' });
 
 
     } catch (error) {
         console.log(error.message);
     }
 }
+
 
 module.exports = { loadCart, addTocart, removeProduct, cartQuantity }

@@ -7,6 +7,7 @@ const userProductController=require('../../controllers/userController/userProduc
 const userController=require('../../controllers/userController/userController')
 const userAddressController=require('../../controllers/userController/userAddressController')
 const userCartController=require('../../controllers/userController/userCartController')
+const userOrderController=require('../../controllers/userController/userOrderController')
 //load homepage
 user.get('/',userController.loadHome)
 //load login page
@@ -53,6 +54,13 @@ user.get('/add-to-cart',userAuth.isLogin,userCartController.addTocart)
 user.delete('/remove-product',userAuth.isLogin,userCartController.removeProduct)
 //to increment or decrement value in cart
 user.patch('/cart-quantity',userAuth.isLogin,userCartController.cartQuantity)
+//load checkout page
+user.get('/checkout',userAuth.isLogin,userOrderController.loadCheckout)
+//place order
+user.post('/place-order',userAuth.isLogin,userOrderController.placeOrder)
+//cancel  the order
+user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
+
 
 
 

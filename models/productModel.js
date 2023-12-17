@@ -79,10 +79,6 @@ const productSchema = new mongoose.Schema({
         type:Boolean,
         default:true
     },
-    teamStatus:{
-        type:Boolean,
-        default:true
-    },
     brandStatus:{
         type:Boolean,
         default:true

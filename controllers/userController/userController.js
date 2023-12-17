@@ -2,6 +2,8 @@
 const userModel = require('../../models/userModel')
 //product model
 const productModel = require('../../models/productModel')
+//order model
+const orderModel=require('../../models/orderModel')
 
 const bcrypt = require('bcrypt');
 
@@ -18,7 +20,12 @@ const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
 
-        const prData = await productModel.find({ isActive: true }).populate('brand')
+        const prData = await productModel.find({ 
+            isActive: true ,
+            catStatus:true,
+            leagueStatus:true,
+            brandStatus:true
+        }).populate('brand')
         res.render('user/home', { user, prData })
     } catch (error) {
         console.log(error.message);
@@ -297,6 +304,7 @@ const checkuser = async (req, res) => {
 //loading user dashboard pages
 const loadUserDashboard = async (req, res) => {
     try {
+        const userId=req.session.userId
         const user = req.session.userEmail || ''
         const goto = req.query.goto || ''
         const userData = await userModel.findOne({ email: user }) || ''
@@ -306,6 +314,7 @@ const loadUserDashboard = async (req, res) => {
         const fullName = userData.name.split(' ');
         const firstName = fullName[0]
         const lastName = fullName[1]
+        
         console.log(userData);
 
         if (goto == 'account overview') {
@@ -313,6 +322,11 @@ const loadUserDashboard = async (req, res) => {
         }
         if(goto== 'user address'){
          return res.render('user/userAddress',{user,userData, message: message, sMessage: sMessage})
+        }
+        if(goto=='user orders'){
+            const orderData=await orderModel.find({userId:userId}).populate('items.productId').sort({orderedAt:-1})
+            // console.log(orderData[0].items[0].productId);
+           return res.render('user/userOrders',{user,userData, message: message, sMessage: sMessage,orderData})
         }
     } catch (error) {
         console.log(error.message);

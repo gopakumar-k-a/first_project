@@ -80,7 +80,7 @@
                                 <h4>Edit Product</h4>
                             </div>
                             <div class="card-body">
-
+                           
 
 
                                 <form action="/admin/edit-product?_id=<%=proData._id%>" method="post"
@@ -100,24 +100,29 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
-                                        <input type="text" class="form-control" id="product_name" name="productName"
+                                        <input type="text" class="form-control" id="product_name" 
                                             value="<%=proData.category.name%>" readonly>
-                                        <select class="form-select" name="categoryId">
-                                            <%for(let i=0;i<catData.length;i++){%>
-                                                <option value="<%= catData[i]._id %>">
+                                        <select class="form-select" name="categoryId" id="current-categoryname">
+                                            <% for(let i=0; i < catData.length; i++) { %>
+                                                <option value="<%= catData[i]._id %>" id="categoryname"
+                                                    <%=catData[i]._id.toString()===proData.category._id.toString()
+                                                    ? 'selected' : '' %>
+                                                    >
                                                     <%= catData[i].name %>
                                                 </option>
-                                                <%}%>
-
+                                                <% } %>
                                         </select>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">League</label>
-                                        <input type="text" class="form-control" id="product_name" name="productName"
+                                        <input type="text" class="form-control" id="product_name" 
                                             value="<%=proData.league.name%>" readonly>
                                         <select class="form-select" name="leagueId">
                                             <%for(let i=0;i<leagueData.length;i++){%>
-                                                <option value="<%= leagueData[i]._id %>">
+                                                <option value="<%= leagueData[i]._id %>" 
+                                                    <%=leagueData[i]._id.toString()===proData.league._id.toString()
+                                                    ? 'selected' : '' %>
+                                                    >
                                                     <%= leagueData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -126,11 +131,14 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Team</label>
-                                        <input type="text" class="form-control" id="product_name" name="productName"
+                                        <input type="text" class="form-control" id="product_name" 
                                             value="<%=proData.team.name%>" readonly>
                                         <select class="form-select" name="teamId">
                                             <%for(let i=0;i<teamData.length;i++){%>
-                                                <option value="<%= teamData[i]._id %>">
+                                                <option value="<%= teamData[i]._id %>"
+                                                    <%=teamData[i]._id.toString()===proData.team._id.toString()
+                                                    ? 'selected' : '' %>
+                                                    >
                                                     <%= teamData[i].name %>
                                                 </option>
                                                 <%}%>
@@ -139,12 +147,17 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Brand</label>
-                                        <input type="text" class="form-control" id="product_name" name="productName"
+                                        <input type="text" class="form-control" id="product_name" 
                                             value="<%=proData.brand.name%>" readonly>
                                         <select class="form-select" name="brandId">
                                             <%for(let i=0;i<brandData.length;i++){%>
-                                                <option value="<%= brandData[i]._id %>">
+                                                <option value="<%= brandData[i]._id %>"
+                                                    <%=brandData[i]._id.toString()===proData.brand._id.toString()
+                                                    ? 'selected' : '' %>
+                                                    >
                                                     <%= brandData[i].name %>
+                                                  
+                                                      
                                                 </option>
                                                 <%}%>
 
@@ -217,7 +230,7 @@
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <label class="form-label">Existing Images</label>
-<%%>
+
 
                                             <%proData.imagesUrl.forEach((imagesUrl,index)=>{%>
                                                 <div class="existing-image-container mb-2">
@@ -229,59 +242,7 @@
                                                 </div>
                                                 <%})%>
                                                     <input type="text" id="productid" value="<%= proData._id %>">
-                                                    <script>
-                                                        async function hello(index) {
-                                                            try {
-                                                                const image = document.getElementById(`image${index}`).value
-                                                                const id = document.getElementById('productid').value
-
-
-                                                                const response = await fetch(`/admin/edit-product?pr_id=${id}&img_url=${image}`, {
-                                                                    method: "DELETE",
-                                                                    headers: {
-                                                                        "Content-Type": "application/json",
-                                                                    },
-                                                                });
-                                                                if (response.ok) {
-                                                                    const result = await response.json();
-                                                                    console.log("Success:", result);
-                                                                    window.location.reload();
-                                                                } else {
-                                                                    console.error("Error:", response.statusText);
-                                                                }
-                                                            } catch (error) {
-                                                                console.error("Error:", error);
-                                                            }
-                                                        }
-
-
-
-
-
-
-
-                                                        function deleteImage(index) {
-                                                           
-                                                            Swal.fire({
-                                                                title: 'Delete This Image?',
-                                                                text: 'Do you want to Delete this Image?',
-                                                                icon: 'question',
-                                                                showCancelButton: true,
-                                                                confirmButtonText: 'Yes, Delete!',
-                                                                cancelButtonText: 'No, cancel'
-                                                            }).then((result) => {
-                                                                if (result.value) {
-                                                                    hello(index)
-
-                                                                } else {
-                                                                    Swal.fire('Cancelled', 'Your Image was not Deleted.', 'info');
-                                                                }
-                                                            });
-
-
-
-                                                        }
-                                                    </script>
+                                                   
 
 
                                         </div>
@@ -294,7 +255,7 @@
                                         <div class="card-body">
                                             <div class="input-upload">
                                                 <img src="/admin-assets/imgs/theme/upload.svg" alt="">
-                                                <input class="form-control" type="file" multiple name="images"
+                                                <input class="form-control" type="file" multiple name="newimages"
                                                     accept="image/*">
 
                                             </div>
@@ -312,7 +273,61 @@
                     </div>
 
                 </div>
-            </section> <!-- content-main end// -->
+            </section>
+            <script>
+                async function hello(index) {
+                    try {
+                        const image = document.getElementById(`image${index}`).value
+                        const id = document.getElementById('productid').value
+
+
+                        const response = await fetch(`/admin/edit-product?pr_id=${id}&img_url=${image}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log("Success:", result);
+                            window.location.reload();
+                        } else {
+                            console.error("Error:", response.statusText);
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                }
+
+
+
+
+
+
+
+                function deleteImage(index) {
+
+                    Swal.fire({
+                        title: 'Delete This Image?',
+                        text: 'Do you want to Delete this Image?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Delete!',
+                        cancelButtonText: 'No, cancel'
+                    }).then((result) => {
+                        if (result.value) {
+                            hello(index)
+
+                        } else {
+                            Swal.fire('Cancelled', 'Your Image was not Deleted.', 'info');
+                        }
+                    });
+
+
+
+                }
+            </script>
+             <!-- content-main end// -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">

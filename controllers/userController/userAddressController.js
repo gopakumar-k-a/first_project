@@ -6,6 +6,7 @@ const addAddress = async (req, res) => {
         const { firstName, lastName, phone, altPhone, houseName,
             city, state, pincode, landMark } = req.body
         const id = req.query._id
+        const from=req.query.from
         const userMatch = await userModel.findOne({ _id: id })
        if(userMatch){
         const newAddress = {
@@ -21,11 +22,15 @@ const addAddress = async (req, res) => {
         };
        userMatch.address.push(newAddress)
        await userMatch.save()
+       if(from=='checkout'){
+        res.redirect('/checkout')
+       }
         res.redirect('/user-dashboard?goto=user+address')
        }
        else{
         res.send('user not found')
        }
+      
     
 
     } catch (error) {

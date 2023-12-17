@@ -11,6 +11,8 @@ const teamModel = require('../../models/teamModel')
 const brandModel = require('../../models/brandModel')
 //product model
 const productModel = require('../../models/productModel')
+//orderModel
+const orderModel= require('../../models/orderModel')
 
 
 
@@ -52,6 +54,7 @@ const loadAddProduct = async (req, res) => {
         console.log(error.message);
     }
 }
+//load edit product page
 const loadEditProduct = async (req, res) => {
     try {
         const id = req.query._id
@@ -63,7 +66,7 @@ const loadEditProduct = async (req, res) => {
             .populate('league')
             .populate('team')
             .populate('brand');
-        // console.log('data after population  '+proData);
+        console.log('data after population  '+proData.name +typeof(proData.name));
         const catData = await categoryModel.find({}).sort({ name: 1 })
         const leagueData = await leagueModel.find({}).sort({ name: 1 })
         const teamData = await teamModel.find({}).sort({ name: 1 })
@@ -442,7 +445,7 @@ const unblockBrand = async (req, res) => {
         const brandId = req.query._id
         // console.log('this is brand id');
         await brandModel.updateOne({ _id: brandId }, { isActive: true })
-        await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: false } })
+        await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: true } })
         return res.redirect('/admin/category-management')
     } catch (error) {
         console.log(error.message);
@@ -450,10 +453,28 @@ const unblockBrand = async (req, res) => {
 
 }
 
-// const convertFilePathForFrontend=async(filePath)=> {
-//     const newPath = filePath.replace(/^public\//, '');
-//     return newPath;
-// }
+//block and unblock product
+const blockProduct = async (req, res) => {
+    try {
+        let productId = req.query._id
+        let status = req.query.status
+        if (status == 'block') {
+
+            await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
+            
+
+            return res.redirect('/admin/product-list')
+        }
+        else if (status = 'unblock') {
+            await productModel.updateOne({ _id: productId }, { $set: { isActive: true } })
+
+            return res.redirect('/admin/product-list')
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -513,25 +534,55 @@ const insertProduct = async (req, res) => {
 }
 const editProduct = async (req, res) => {
     try {
-        const imagesToDelete = req.body.deleteImages
-        console.log('this is type of imagesToDelete  ' + imagesToDelete);
-        // if (imagesToDelete && imagesToDelete.length > 0) {
-        //     try {
-        //       const productId = req.query._id
-        //       const result = await productModel.updateOne(
-        //         { _id: productId },
-        //         { $pull: { imagesUrl: { $in: imagesToDelete } } }
-        //       );
+        const id=req.query._id
+      const newImages=req.files.map((file)=>file.filename)
+      const {
+        productName,
+        categoryId,
+        leagueId,
+        teamId,
+        brandId,
+        productDesc,
+        smallQty,
+        mediumQty,
+        largeQty,
+        salePrice,
+        regularPrice,
+    } = req.body;
+ 
+console.log(req.body);
 
-        //       if (result.nModified > 0) {
-        //         console.log('Images deleted successfully');
-        //       } else {
-        //         console.log('No images were deleted');
-        //       }
-        //     } catch (error) {
-        //       console.error('Error deleting images:', error);
-        //     }
-        //   }
+   
+      if(newImages.length>0){
+        await productModel.updateOne(
+            { _id: id }, 
+            { $push: { imagesUrl: { $each: newImages } } }
+          );
+      }
+       await productModel.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            name: productName,
+            category: categoryId,
+            league: leagueId,
+            team: teamId,
+            brand: brandId,
+            description: productDesc,
+            size: {
+              s: { quantity: smallQty },
+              m: { quantity: mediumQty },
+              l: { quantity: largeQty },
+            },
+            price: { salePrice, regularPrice },
+          },
+        }// This option returns the updated document
+      );
+      
+
+const sccMessage='product data updated successfully'
+    //   res.render('admin/editProduct',{message:'user credentials updated'})
+      res.redirect('/admin/edit-product?_id='+id+'&sccMessage='+sccMessage)
     } catch (error) {
         console.log(error.message);
     }
@@ -551,26 +602,7 @@ const deleteImage = async (req, res) => {
     }
 }
 
-//block and unblock product
-const blockProduct = async (req, res) => {
-    try {
-        let productId = req.query._id
-        let status = req.query.status
-        if (status == 'block') {
 
-            await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
-
-            return res.redirect('/admin/product-list')
-        }
-        else if (status = 'unblock') {
-            await productModel.updateOne({ _id: productId }, { $set: { isActive: true } })
-
-            return res.redirect('/admin/product-list')
-        }
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 
 
 

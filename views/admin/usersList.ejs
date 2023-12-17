@@ -2,6 +2,8 @@
     <div class="screen-overlay"></div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <%- include('sideNav.ejs') %>
         <main class="main-wrap">
             <header class="main-header navbar">
@@ -86,14 +88,11 @@
                     </div>
                 </div>
                 <div class="card mb-4">
-
-                    <%for(let i=0;i<userData.length;i++){%>
+                    <% for (let i=0; i < userData.length; i++) { %>
                         <div class="card-body">
-
                             <article class="itemlist">
                                 <div class="row align-items-center">
                                     <div class="col col-check flex-grow-0">
-
                                         <h>
                                             <%= userIndices[i] %>
                                         </h>
@@ -111,65 +110,178 @@
                                             </div>
                                         </a>
                                     </div>
-                                    <!-- <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>$34.50</span> </div> -->
-
-                                    <% if(userData[i].isActive==true){%>
+                                    <% if (userData[i].isActive==true) { %>
                                         <div class="col-lg-2 col-sm-2 col-4 col-status">
                                             <span class="badge rounded-pill alert-success">Active</span>
                                         </div>
-                                        <%}else{%>
+                                        <% } else { %>
                                             <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                                <span class="badge rounded-pill alert-danger">blocked</span>
+                                                <span class="badge rounded-pill alert-danger">Blocked</span>
                                             </div>
-                                            <%}%>
+                                            <% } %>
                                                 <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                                    <span>
-
-                                                    </span>
+                                                    <!-- Placeholder for content -->
                                                 </div>
-                                                <% if(userData[i].isActive==true){%>
-                                                    <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-
-
-
-                                                        <button onclick="confirmBlock('<%= userData[i]._id %>')"
-                                                            type="button" class="btn btn-danger">Block
-                                                        </button>
+                                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+                                                    <div class="btn-group" role="group" aria-label="User Actions">
+                                                        <button type="button" class="btn btn-primary w3-button w3-black"
+                                                            style="width: 70%;"
+                                                            onclick="document.getElementById('detailsModal<%=i%>').style.display='block'">Details</button>
+                                                        <% if (userData[i].isActive==true) { %>
+                                                            <button onclick="confirmBlock('<%= userData[i]._id %>')"
+                                                                type="button" class="btn btn-danger ml-3">Block</button>
+                                                            <% } else { %>
+                                                                <button
+                                                                    onclick="confirmUnblock('<%= userData[i]._id %>')"
+                                                                    type="button"
+                                                                    class="btn btn-success">Unblock</button>
+                                                                <% } %>
                                                     </div>
-                                                    <%}else{%>
-                                                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                                            <button onclick="confirmUnblock('<%= userData[i]._id %>')"
-                                                                type="button" class="btn btn-success">Unblock
-                                                            </button>
-
-                                                            <%}%>
-                                                        </div>
-
-
+                                                </div>
                                 </div> <!-- row .// -->
                             </article>
-                            <%}%><!-- itemlist  .// -->
-
                         </div> <!-- card-body end// -->
-                </div> <!-- card end// -->
-                <div class="pagination-area mt-30 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <%console.log(currentPage)%>
-                                <% for (let i=1; i <=pageCount; i++) { %>
-
-                                    <li class=" <%= i == currentPage ? 'page-item active' : 'page-item ' %>">
-                                        <a class="page-link" href="<%= `/admin/edit-users?page=${i}` %>">
-                                            <%= i %>
-                                        </a>
-                                    </li>
-                                    <% } %>
-                           
-
-                        </ul>
-                    </nav>
+                        <% } %><!-- itemlist  .// -->
                 </div>
-            </section> <!-- content-main end// -->
+
+
+                <!-- ----users list -----modal--------- -->
+                <% for (let i=0; i < userData.length; i++) { %>
+                    <div class="w3-container">
+                        
+
+                        <!-- -----------modal --start----------- -->
+
+                        <div id="detailsModal<%=i%>" class="w3-modal">
+                            <div class="w3-modal-content w3-animate-zoom" style="width: 80%; max-width: 800px;">
+                                <header class="w3-container" style="background-color: yellow;">
+                                    <span onclick="document.getElementById('detailsModal<%=i%>').style.display='none'"
+                                        class="w3-button w3-display-topright">&times;</span>
+                                    <h2>User Details</h2>
+                                </header>
+                                <div class="w3-container">
+                                    <!-- Your content goes here -->
+                                    <h5><strong>Name: </strong><span>
+                                            <%=userData[i].name%>
+                                        </span></h5>
+                                    <p></p>
+                                    <p></p>
+                                    <h5><strong>Email: </strong><span>
+                                            <%=userData[i].email%>
+                                        </span></h5>
+                                    <p></p>
+                                    <p></p>
+                                    <h5><strong>Phone: </strong><span>
+                                            <%=userData[i].phone%>
+                                        </span></h5>
+                                    <p></p>
+                                    <p></p>
+                                    <% if (userData[i].address && userData[i].address.length> 0) { %>
+                                        <h5><strong>Address:</strong></h5>
+                                        <p><strong>First Name:</strong>
+                                            <%= userData[i].address[0].firstName %>
+                                        </p>
+                                        <p><strong>Last Name:</strong>
+                                            <%= userData[i].address[0].lastName %>
+                                        </p>
+                                        <p><strong>Phone:</strong>
+                                            <%= userData[i].address[0].phone %>
+                                        </p>
+                                        <p><strong>Alt Phone:</strong>
+                                            <%= userData[i].address[0].altPhone %>
+                                        </p>
+                                        <p><strong>House Name:</strong>
+                                            <%= userData[i].address[0].houseName %>
+                                        </p>
+                                        <p><strong>City:</strong>
+                                            <%= userData[i].address[0].city %>
+                                        </p>
+                                        <p><strong>State:</strong>
+                                            <%= userData[i].address[0].state %>
+                                        </p>
+                                        <p><strong>Pincode:</strong>
+                                            <%= userData[i].address[0].pincode %>
+                                        </p>
+                                        <p><strong>Landmark:</strong>
+                                            <%= userData[i].address[0].landMark %>
+                                        </p>
+                                        <% } else { %>
+                                            <p>No address information available.</p>
+                                            <% } %>
+                                                <form action="/admin/order-details" method="post">
+                                                    <input type="text" value="<%=userData[i]._id%>" name="_id" hidden>
+
+                                                    <button class="btn btn-success" style="color: white;"
+                                                        type="submit">Order Details</button>
+                                                </form>
+
+                                                <p></p>
+                                                <p></p>
+
+
+                                </div>
+                                <!-- <footer class="w3-container w3-teal" ">
+                                <p>Modal Footer</p>
+                            </footer> -->
+                            </div>
+                        </div>
+
+                        <%}%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            <!-- card end// -->
+                            <div class="pagination-area mt-30 mb-50">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                        <%console.log(currentPage)%>
+                                            <% for (let i=1; i <=pageCount; i++) { %>
+
+                                                <li
+                                                    class=" <%= i == currentPage ? 'page-item active' : 'page-item ' %>">
+                                                    <a class="page-link" href="<%= `/admin/edit-users?page=${i}` %>">
+                                                        <%= i %>
+                                                    </a>
+                                                </li>
+                                                <% } %>
+
+
+                                    </ul>
+                                </nav>
+                            </div>
+
+
+            </section>
+
+
+            <!-- ---------modal-------------------- -->
+
+
+
+
+
+
+
+
+            <!-- content-main end// -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">

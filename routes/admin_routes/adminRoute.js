@@ -3,6 +3,8 @@ const admin = express()
 const adminController = require('../../controllers/adminController/adminController')
 
 const productController = require('../../controllers/adminController/productController')
+
+const orderController=require('../../controllers/adminController/orderController')
 //requiring storage engine for multer
 const upload = require('../../multer')
 //admin auth
@@ -35,9 +37,9 @@ admin.post('/add-product', adminAuth.isLogin, upload.array('images', 3), product
 //block and unblock product
 admin.get('/block-product', adminAuth.isLogin, productController.blockProduct)
 //edit product
-admin.post('/edit-product',upload.array('newImages'),productController.editProduct)
+admin.post('/edit-product',adminAuth.isLogin,upload.array('newimages',3),productController.editProduct)
 //deleting images 
-admin.delete('/edit-product',productController.deleteImage)
+admin.delete('/edit-product',adminAuth.isLogin,productController.deleteImage)
 //===========product management====================
 
 //load product management page
@@ -87,6 +89,10 @@ admin.post('/edit-brand', adminAuth.isLogin, productController.updateBrandName)
 admin.get('/block-brand', adminAuth.isLogin, productController.blockBrand)
 //unblocking brand
 admin.get('/unblock-brand', adminAuth.isLogin, productController.unblockBrand)
+//load user order details
+admin.post('/order-details',adminAuth.isLogin,orderController.loadOrderDetails)
+//change order Status
+admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrderStatus)
 
 
 //---------------------------product-management-------------------

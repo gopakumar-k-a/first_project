@@ -98,10 +98,14 @@
                                         <option value="s" title="S">Small</option>
                                         <option value="m" title="M" selected="selected">Medium</option>
                                         <option value="l" title="L">Large</option>
+
                                     </select>
-                                    <input type="hidden" id="sQty" value="<%=product.size.s.quantity%>">
-                                    <input type="hidden" id="mQty" value="<%=product.size.m.quantity%>">
-                                    <input type="hidden" id="lQty" value="<%=product.size.l.quantity%>">
+
+                                    <input type="text" id="sQty" value="<%=product.size.s.quantity%>" hidden>
+                                    <input type="text" id="mQty" value="<%=product.size.m.quantity%>" hidden>
+                                    <input type="text" id="lQty" value="<%=product.size.l.quantity%>" hidden>
+                                    <label>Quantity Left: <label id="quantityLeft">1</label></label>
+                                    <p id="hurry" style="color: red; display:none">hurry only few stocks left !</p>
                                 </div>
                             </div>
                             <div class="single-add-to-cart">
@@ -178,34 +182,63 @@
                                     }
                                 </style>
                                 <script>
-                                    
-                                    
-                                    var max=0;
+
+
+                                    var max = 0;
                                     var quantityInput = document.getElementById('quantityInput');
                                     function selectedSize(selectElement) {
-                                    
+
                                         var size = selectElement.value
-                                   
+                                        var quantityLeft = document.getElementById('quantityLeft')
+                                        var hurryMessage=document.getElementById('hurry')
+                                        var addToCartBtn=document.getElementById('addToCartBtn')
+                                        var quantityChangeBtn=document.getElementById('quantity-form')
+
                                         var maxQuantity = parseInt(document.getElementById(size + "Qty").value, 10)
+                                        quantityLeft.innerHTML = maxQuantity
+                                    
+                                        if (maxQuantity <= 10) {
+                                            // Change style to red
+                                            quantityLeft.style.color = 'red';
+                                            hurryMessage.style.display='block'
+                                            addToCartBtn.style.display='block'
+                                            quantityChangeBtn.style.display='block'
+                                        }
+                                        if(maxQuantity>10){
+                                            quantityLeft.style.color = 'black';
+                                            hurryMessage.style.display='none'
+                                            addToCartBtn.style.display='block'
+                                            quantityChangeBtn.style.display='block'
+                                        }
+
+                                        if (maxQuantity === 0) {
+                                            // Display "Out of Stock"
+                                            quantityLeft.innerHTML = 'Out of Stock';
+                                            quantityLeft.style.color = 'red'; 
+                                            hurryMessage.style.display='none'
+                                            addToCartBtn.style.display='none'
+                                            quantityChangeBtn.style.display='none'
+                                        }
                                         console.log(maxQuantity);
-                                        max=maxQuantity
-                                          document.getElementById('number').value = 1;
+                                        max = maxQuantity
+                                        document.getElementById('number').value = 1;
+
 
 
                                     }
 
                                     function increaseValue() {
-                                     
-                                        console.log(max+'  inside increase');
+
+                                        console.log(max + '  inside increase');
                                         var value = parseInt(document.getElementById('number').value, 10);
                                         value = isNaN(value) ? 1 : value;
-                                        if(value>max){
-                                            value=max
-                                            
+                                        if (value > max) {
+                                            value = max
+
                                         }
-                                        if(value<max){
+                                        if (value < max) {
                                             value++;
-                                    
+
                                         }
                                         document.getElementById('number').value = value;
                                     }
@@ -214,11 +247,11 @@
                                         var value = parseInt(document.getElementById('number').value, 10);
                                         value = isNaN(value) ? 0 : value;
                                         value < 1 ? value = 1 : '';
-                                        if(value>1){
+                                        if (value > 1) {
                                             value--;
-                                        
+
                                         }
-                                       
+
                                         document.getElementById('number').value = value;
                                     }
 
@@ -259,9 +292,9 @@
                                         try {
                                             const productId = prId
                                             const qty = parseInt(document.getElementById('number').value, 10);
-                                            const size=document.getElementById('sizeSelect').value
-                                            console.log('inside add to cart '+typeof(qty));
-                                            console.log('size '+size);
+                                            const size = document.getElementById('sizeSelect').value
+                                            console.log('inside add to cart ' + typeof (qty));
+                                            console.log('size ' + size);
                                             window.location.href = `/add-to-cart?productId=${prId}&qty=${qty}&size=${size}`;
 
 

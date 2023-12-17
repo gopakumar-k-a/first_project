@@ -42,41 +42,46 @@
                                                         <hr>
 
                                                         <!-- Loop through user addresses and display each one -->
-                                                        <% userData.address.forEach((address, index)=> { %>
-                                                            <div class="card mb-3">
-                                                                <div class="card-body">
-                                                                    <input type="text" value="<%= index %>"
-                                                                        id="indexOfAddress" hidden>
-                                                                    <h5 class="card-title">Address <%= index + 1 %>
-                                                                    </h5>
-                                                                    <p class="card-text">
-                                                                        <%= address.firstName %>
-                                                                            <%= address.lastName %>, <%=
-                                                                                    address.houseName %>,
-                                                                                    <%= address.city %>,
-                                                                                        <%= address.state %>,<%=
-                                                                                                address.landMark %>,<%=
-                                                                                                    address.pincode %>
-                                                                    </p>
-                                                                    <p class="card-text"><strong>Phone:</strong>
-                                                                        <%= address.phone %>
-                                                                    </p>
-                                                                    <p class="card-text"><strong>Alternate
-                                                                            Phone:</strong>
-                                                                        <%= address.altPhone %>
-                                                                    </p>
-                                                                    <h6>
-                                                                        <a class="product_name"
-                                                                            href="/edit-user-address?index=<%=index%>">edit</a>
-                                                                        <span class="mx-2">|</span>
-                                                                        <a class="product_name" href="#"
-                                                                            onclick="deleteAddress()">delete</a>
-                                                                    </h6>
+                                                        <div class="row">
+                                                            <% userData.address.forEach((address, index)=> { %>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <input type="text" value="<%= index %>"
+                                                                                id="indexOfAddress" hidden>
+                                                                            <h5 class="card-title">Address <%= index + 1
+                                                                                    %>
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                <%= address.firstName %>
+                                                                                    <%= address.lastName %>,
+                                                                                        <%= address.houseName %>, <%=
+                                                                                                address.city %>,
+                                                                                                <%= address.state %>,
+                                                                                                    <%= address.landMark
+                                                                                                        %>,
+                                                                                                        <%= address.pincode
+                                                                                                            %>
+                                                                            </p>
+                                                                            <p class="card-text"><strong>Phone:</strong>
+                                                                                <%= address.phone %>
+                                                                            </p>
+                                                                            <p class="card-text"><strong>Alternate
+                                                                                    Phone:</strong>
+                                                                                <%= address.altPhone %>
+                                                                            </p>
+                                                                            <h6>
+                                                                                <a class="product_name"
+                                                                                    href="/edit-user-address?index=<%= index %>">edit</a>
+                                                                                <span class="mx-2">|</span>
+                                                                                <a class="product_name" href="#"
+                                                                                    onclick="deleteAddress()">delete</a>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-
-
-                                                            <% }); %>
+                                                                <% }); %>
+                                                        </div>
                                                     </div>
                                                     <script>
                                                         // Function to open the edit modal
