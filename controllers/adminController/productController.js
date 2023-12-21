@@ -1,6 +1,3 @@
-
-//admin data and userdata
-const userModel = require('../../models/userModel')
 //cateogry data(cricket ,football)
 const categoryModel = require('../../models/categoryModel')
 //league data(nations ,club)
@@ -11,12 +8,7 @@ const teamModel = require('../../models/teamModel')
 const brandModel = require('../../models/brandModel')
 //product model
 const productModel = require('../../models/productModel')
-//orderModel
-const orderModel= require('../../models/orderModel')
 
-
-
-const mongoose = require('mongoose')
 
 
 
@@ -28,10 +20,31 @@ const mongoose = require('mongoose')
 //load product list page
 const loadProjectList = async (req, res) => {
     try {
-        const proData = await productModel.find({}).sort({ createdAt: -1 })
+        const page = req.query.page || 1
+        const count = await productModel.find().count()
+        const limit = 5
+        const skip = (page - 1) * limit
+        const proData = await productModel.find({}).sort({ createdAt: -1 }).limit(limit).skip(skip)
+
+        const prIndices = proData.map((user, index) => index + 1 + skip);
+
+        // res.render('admin/productList', { proData })
 
 
-        res.render('admin/productList', { proData })
+
+        // const userData = await userModel.find({ isAdmin: false }).sort({ createdAt: -1 }).
+        //     limit(limit).skip(skip)
+
+        // const userIndices = proData.map((user, index) => index + 1 + skip);
+
+        return res.render('admin/productList', {
+            proData: proData,
+            prIndices: prIndices,
+            pageCount: Math.ceil(count / limit),
+            currentPage: page,
+            limit: limit
+
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -66,7 +79,7 @@ const loadEditProduct = async (req, res) => {
             .populate('league')
             .populate('team')
             .populate('brand');
-        console.log('data after population  '+proData.name +typeof(proData.name));
+        // console.log('data after population  '+proData.name +typeof(proData.name));
         const catData = await categoryModel.find({}).sort({ name: 1 })
         const leagueData = await leagueModel.find({}).sort({ name: 1 })
         const teamData = await teamModel.find({}).sort({ name: 1 })
@@ -431,7 +444,7 @@ const updateBrandName = async (req, res) => {
 const blockBrand = async (req, res) => {
     try {
         const brandId = req.query._id
-        console.log('this is brand id');
+        // console.log('this is brand id');
         await brandModel.updateOne({ _id: brandId }, { isActive: false })
         await productModel.updateMany({ brand: brandId }, { $set: { brandStatus: false } })
         return res.redirect('/admin/category-management')
@@ -461,7 +474,7 @@ const blockProduct = async (req, res) => {
         if (status == 'block') {
 
             await productModel.updateOne({ _id: productId }, { $set: { isActive: false } })
-            
+
 
             return res.redirect('/admin/product-list')
         }
@@ -534,55 +547,55 @@ const insertProduct = async (req, res) => {
 }
 const editProduct = async (req, res) => {
     try {
-        const id=req.query._id
-      const newImages=req.files.map((file)=>file.filename)
-      const {
-        productName,
-        categoryId,
-        leagueId,
-        teamId,
-        brandId,
-        productDesc,
-        smallQty,
-        mediumQty,
-        largeQty,
-        salePrice,
-        regularPrice,
-    } = req.body;
- 
-console.log(req.body);
+        const id = req.query._id
+        const newImages = req.files.map((file) => file.filename)
+        const {
+            productName,
+            categoryId,
+            leagueId,
+            teamId,
+            brandId,
+            productDesc,
+            smallQty,
+            mediumQty,
+            largeQty,
+            salePrice,
+            regularPrice,
+        } = req.body;
 
-   
-      if(newImages.length>0){
-        await productModel.updateOne(
-            { _id: id }, 
-            { $push: { imagesUrl: { $each: newImages } } }
-          );
-      }
-       await productModel.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            name: productName,
-            category: categoryId,
-            league: leagueId,
-            team: teamId,
-            brand: brandId,
-            description: productDesc,
-            size: {
-              s: { quantity: smallQty },
-              m: { quantity: mediumQty },
-              l: { quantity: largeQty },
-            },
-            price: { salePrice, regularPrice },
-          },
-        }// This option returns the updated document
-      );
-      
+        // console.log(req.body);
 
-const sccMessage='product data updated successfully'
-    //   res.render('admin/editProduct',{message:'user credentials updated'})
-      res.redirect('/admin/edit-product?_id='+id+'&sccMessage='+sccMessage)
+
+        if (newImages.length > 0) {
+            await productModel.updateOne(
+                { _id: id },
+                { $push: { imagesUrl: { $each: newImages } } }
+            );
+        }
+        await productModel.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    name: productName,
+                    category: categoryId,
+                    league: leagueId,
+                    team: teamId,
+                    brand: brandId,
+                    description: productDesc,
+                    size: {
+                        s: { quantity: smallQty },
+                        m: { quantity: mediumQty },
+                        l: { quantity: largeQty },
+                    },
+                    price: { salePrice, regularPrice },
+                },
+            }// This option returns the updated document
+        );
+
+
+        const sccMessage = 'product data updated successfully'
+        //   res.render('admin/editProduct',{message:'user credentials updated'})
+        res.redirect('/admin/edit-product?_id=' + id + '&sccMessage=' + sccMessage)
     } catch (error) {
         console.log(error.message);
     }
@@ -592,10 +605,16 @@ const sccMessage='product data updated successfully'
 const deleteImage = async (req, res) => {
     try {
         const id = req.query.pr_id;
-        const imagesUrl = req.query.img_url;
-        console.log('this is delete data' + '  ' + id + '  ' + imagesUrl);
-        await productModel.findByIdAndUpdate(id,{$pull:{imagesUrl:imagesUrl}})
-        res.status(200).json({ message: 'deleted successfully' });
+        const imageIndexToDelete = parseInt(req.query.img_index, 10);
+        const product = await productModel.findById(id);
+        if (product && product.imagesUrl) {
+            product.imagesUrl.splice(imageIndexToDelete, 1);
+            await product.save();
+            res.status(200).json({ message: 'Image deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Product not found or image not deleted' });
+        }
+
 
     } catch (error) {
         console.log(error.message);

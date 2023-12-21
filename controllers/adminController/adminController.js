@@ -16,7 +16,7 @@ const loadLogin = async (req, res) => {
     }
 }
 //logut admin
-const logout=async(req,res)=>{
+const logout = async (req, res) => {
     try {
         req.session.destroy()
         return res.redirect('/admin')
@@ -29,17 +29,11 @@ const checkAdmin = async (req, res) => {
 
     try {
         const { email, password } = req.body
-        // console.log('this is email '+email);
-        // console.log('this is password '+password);
-
         if (!email || !password) {
             const message = 'all fields must be filled'
             return res.render('admin/adminLogin', { message })
         }
-
-        // console.log(email + ' email')
-        const isValidEmail = validator.isEmail(email); //validating email
-        console.log(isValidEmail + 'validate result')
+        const isValidEmail = validator.isEmail(email);
         if (!isValidEmail) {
             const message = 'Please enter a valid email';
             return res.render('admin/adminLogin', { message })
@@ -47,13 +41,12 @@ const checkAdmin = async (req, res) => {
 
 
         const userMatch = await userModel.findOne({ email: email, isAdmin: true })
-        console.log(userMatch + '  this is userData');
 
-        if (userMatch) {
+        if (userMatch.isAdmin==true) {
             const PasswordMatch = await bcrypt.compare(password, userMatch.password);
 
             if (PasswordMatch) {
-                req.session.isAdmin=email
+                req.session.isAdmin = email
                 return res.render('admin/adminDashboard')
 
             }
@@ -62,8 +55,7 @@ const checkAdmin = async (req, res) => {
                 return res.render('admin/adminLogin', { message })
             }
 
-        }
-        else {
+        }else {
             const message = 'incorrect email or password'
             return res.render('admin/adminLogin', { message })
         }
@@ -85,22 +77,22 @@ const loadDashboard = async (req, res) => {
 
 const loadUsersList = async (req, res) => {
     try {
-        const page=req.query.page || 1
+        const page = req.query.page || 1
         const count = await userModel.find().count()
-        const limit=5
-        const skip=(page-1)*limit
-     
-        const userData=await userModel.find({isAdmin:false}).sort({createdAt:-1}).
-        limit(limit).skip(skip)
+        const limit = 5
+        const skip = (page - 1) * limit
+
+        const userData = await userModel.find({ isAdmin: false }).sort({ createdAt: -1 }).
+            limit(limit).skip(skip)
 
         const userIndices = userData.map((user, index) => index + 1 + skip);
 
-        return res.render('admin/usersList',{
-            userData:userData,
+        return res.render('admin/usersList', {
+            userData: userData,
             userIndices: userIndices,
-            pageCount:Math.ceil(count/limit),
-            currentPage:page,
-            limit:limit
+            pageCount: Math.ceil(count / limit),
+            currentPage: page,
+            limit: limit
 
         })
     } catch (error) {
@@ -108,21 +100,24 @@ const loadUsersList = async (req, res) => {
     }
 }
 
-const blockUser=async (req,res)=>{
+const blockUser = async (req, res) => {
     try {
-        const id=req.query._id
-        await userModel.updateOne({_id:id},{$set:{isActive:false}})
-        return res.redirect('/admin/edit-users')
+        const id = req.query._id
+
+        await userModel.updateOne({ _id: id }, { $set: { isActive: false } })
+
+        res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const unBlockUser=async (req,res)=>{
+const unBlockUser = async (req, res) => {
     try {
-        const id=req.query._id
-        await userModel.updateOne({_id:id},{$set:{isActive:true}})
-        return res.redirect('/admin/edit-users')
+        const id = req.query._id
+        // console.log('hoiiosifopsdifopsdiopfosdi');
+        await userModel.updateOne({ _id: id }, { $set: { isActive: true } })
+        res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
     }
@@ -132,6 +127,6 @@ const unBlockUser=async (req,res)=>{
 
 
 module.exports = {
-    loadLogin, loadDashboard, checkAdmin, loadUsersList,blockUser,
-    unBlockUser,logout
+    loadLogin, loadDashboard, checkAdmin, loadUsersList, blockUser,
+    unBlockUser, logout
 }

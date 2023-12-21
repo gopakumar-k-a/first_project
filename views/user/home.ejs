@@ -121,12 +121,14 @@
                                             </div>
                                             <h4>
                                                 <a class="product_name" href="/single-product-view?_id=<%=prData[i]._id%>" title="<%= prData[i].name %>">
-                                                    <%= prData[i].name.length > 60 ? prData[i].name.substring(0, 60) + '...' : prData[i].name %>
+                                                    <%= prData[i].name.length > 50 ? prData[i].name.substring(0, 50) + '...' : prData[i].name %>
                                                 </a>
                                             </h4>
                                             <div class="price-box">
-                                                <span class="new-price">&#8377;<%= prData[i].price.salePrice %></span>
+                                                <span class="new-price" style="font-size: 18px;font-weight: 900;">&#8377;<%= prData[i].price.salePrice %></span>
+                                                <span class="old-price" style="font-size: 15px;">&#8377;<%= prData[i].price.regularPrice %></span>
                                             </div>
+                                            
                                         </div>
                                         <div class="add-actions">
                                             <ul class="add-actions-link">

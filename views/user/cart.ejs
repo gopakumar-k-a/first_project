@@ -18,6 +18,7 @@
             <div class="row">
                 <div class="col-12">
                     <form action="#">
+            <% if (cartData && cartData!=null) { %>
                         <%if(cartData.products.length==0){%>
                             <h3>your cart is empty !
                             </h3>
@@ -105,7 +106,9 @@
                                                 </tr>
 
                                                 <%})%>
+                                        <%}%>
 
+                                               
 
 
 
@@ -138,13 +141,31 @@
                                 </div>
                             </div>
                         </div>
-                        <%}%>
+                        <%}else{%>
+                            <h3>your cart is empty !
+                            </h3>
+                            <div class="row">
+                                <div class="col-12">
+                                    <a href="/">
+                                        <div class="coupon-all">
+
+                                            <div class="coupon2">
+                                                <input class="button" name="update_cart" value="Continue Shopping"
+                                                    type="button">
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <%}%>
                     </form>
+                   
                 </div>
             </div>
         </div>
     </div>
     <script>
+ <% if (cartData && cartData!=null) { %>
         function calculateTotalPrice(unitPrice, quantity) {
             return unitPrice * quantity;
         }
@@ -154,6 +175,7 @@
             var cartTotal = 0;
     
             // Iterate through each product in the cart
+            
             <% for (let i = 0; i < cartData.products.length; i++) { %>
                 var unitPrice<%= i %> = parseFloat(document.getElementById(`price<%= i %>`).innerHTML);
                 var quantity<%= i %> = parseFloat(document.getElementById(`quantityshow<%= i %>`).innerHTML);
@@ -260,6 +282,7 @@
                 }
             });
         }
+        <%}%>
     </script>
     
 

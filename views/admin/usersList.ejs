@@ -298,7 +298,22 @@
                                     confirmButtonText: 'Yes, block it!'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href = "/admin/block-user?_id=" + userId;
+
+                                        
+                                        fetch("/admin/block-user?_id=" + userId, {
+                                          method: 'PATCH',
+                                          headers: {
+                                            'Content-Type': 'application/json',
+                                          },
+                                        }).then(response => response.json())
+                                          .then(data => {
+                                            console.log(data.message);
+                                            window.location.reload();
+                                          })
+                                          .catch(error => {
+                                            console.log('Error updating cart quantity:', error);
+                                          });
+        
                                     }
                                 });
                             }
@@ -314,7 +329,21 @@
                                     confirmButtonText: 'Yes, unblock it!'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href = "/admin/unblock-user?_id=" + userId;
+
+                                        fetch("/admin/unblock-user?_id=" + userId, {
+                                          method: 'PATCH',
+                                          headers: {
+                                            'Content-Type': 'application/json',
+                                          },
+                                        }).then(response => response.json())
+                                          .then(data => {
+                                            console.log(data.message);
+                                            window.location.reload();
+                                          })
+                                          .catch(error => {
+                                            console.log('Error updating cart quantity:', error);
+                                          });
+        
                                     }
                                 });
                             }

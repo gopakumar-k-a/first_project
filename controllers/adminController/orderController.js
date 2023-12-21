@@ -37,8 +37,28 @@ const changeOrderStatus = async (req, res) => {
     }
 }
 
+const loadAllOrders=async(req,res)=>{
+    try {
+        const page=req.query.page || 1
+        const count = await orderModel.find().count()
+        const limit=10
+        const skip=(page-1)*limit
+        const orderData=await orderModel.find({}).sort({orderedAt:-1}).limit(limit).skip(skip)
+        const userIndices = orderData.map((user, index) => index + 1 + skip);
+   
+        // console.log(orderData);
+        res.render('admin/allOrders',{orderData,
+            userIndices: userIndices,
+            pageCount:Math.ceil(count/limit),
+            currentPage:page,
+            limit:limit})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 module.exports = {
-    loadOrderDetails, changeOrderStatus
+    loadOrderDetails, changeOrderStatus,loadAllOrders
 }

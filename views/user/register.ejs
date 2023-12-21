@@ -17,50 +17,48 @@
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
-                    <form action="/register" method="post" id="register-form">
+                    <form action="/register" method="post" id="register-form" onsubmit="return validateForm()">
                         <div class="login-form">
                             <h4 class="login-title">Sign Up</h4>
                             <div class="row">
                                 <div class="col-md-6 col-12 mb-20">
                                     <label>First Name *</label>
-                                    <input class="mb-0" type="text" placeholder="Enter Your First Name"
-                                        name="firstname" id="first-name">
+                                    <input class="mb-0" type="text" placeholder="Enter Your First Name" name="firstName" id="first-name">
+                                    <li class="text-center text-danger" id="first-nameErr"></li>
                                 </div>
                                 <div class="col-md-6 col-12 mb-20">
                                     <label>Last Name *</label>
-                                    <input class="mb-0" type="text" placeholder="Enter Your Last Name" name="lastname" id="last-name">
+                                    <input class="mb-0" type="text" placeholder="Enter Your Last Name" name="lastName" id="last-name">
+                                    <li class="text-center text-danger" id="last-nameErr"></li>
                                 </div>
                                 <div class="col-md-12 mb-20">
                                     <label>Email Address*</label>
-                                    <input class="mb-0" type="email" placeholder="Enter Your Email Address"
-                                        name="email" id="address">
+                                    <input class="mb-0" type="email" placeholder="Enter Your Email Address" name="email" id="address">
+                                    <li class="text-center text-danger" id="addressErr"></li>
                                 </div>
                                 <div class="col-md-12 mb-20">
                                     <label>Phone Number *</label>
-                                    <input class="mb-0" type="number" placeholder="Enter Your Phone Number"
-                                        name="phoneno" id="phoneno">
+                                    <input class="mb-0" type="number" placeholder="Enter Your Phone Number" name="phoneno" id="phoneno">
+                                    <li class="text-center text-danger" id="phonenoErr"></li>
                                 </div>
                                 <div class="col-md-6 mb-20">
                                     <label>Password *</label>
-                                    <input class="mb-0" type="password" placeholder="Enter Your Password"
-                                        name="password" id="password">
+                                    <input class="mb-0" type="password" placeholder="Enter Your Password" name="password" id="password">
                                 </div>
                                 <div class="col-md-6 mb-20">
                                     <label>Confirm Password *</label>
-                                    <input class="mb-0" type="password" placeholder="Confirm Your Password"
-                                        name="cpassword" id="cpassword">
+                                    <input class="mb-0" type="password" placeholder="Confirm Your Password" name="cpassword" id="cpassword">
                                 </div>
+                                <li class="text-center text-danger" id="passwordErr"></li>
+                                <li class="text-center text-danger" id="cpasswordErr"></li>
                                 <div class="d-flex justify-content-center col-12 mb-20">
-                                    <li class="text-center text-danger"><%= message %></li>
-                                    <li id="message" class="text-center text-danger"></li>
-                              
+                                    <li class="text-center text-danger" id="message"><%= message %></li>
                                 </div>
                                 <div class="col-md-12 mt-10 mb-20 text-dark font-weight-bold text-left text-md-right">
                                     <a href="/login">already have an account? logIn</a>
-                            </div>
-
+                                </div>
                                 <div class="col-12 d-flex justify-content-center">
-                                    <button class="register-button mt-0" type="submit" onclick="return validateForm()">Sign Up</button>
+                                    <button class="register-button mt-0" type="submit" >Sign Up</button>
                                 </div>
                             </div>
                         </div>
@@ -69,70 +67,114 @@
             </div>
         </div>
     </div>
+   
+
+
+
     <script>
-    function validateForm() {
-        var firstName = document.getElementById('first-name').value.trim();
-        var lastName = document.getElementById('last-name').value.trim();
-        var email = document.getElementById('address').value.trim();
-        var phoneNumber = document.getElementById('phoneno').value.trim();
-        var password = document.getElementById('password').value.trim();
-        var confirmPassword = document.getElementById('cpassword').value.trim();
-        var message = document.getElementById('message');
-
-        if (!areAllFieldsFilled(firstName, lastName, email, phoneNumber, password, confirmPassword)) {
-            setMessage('Please fill in all fields.');
-            return false;
+        function validateForm() {
+            resetErrors();
+    
+            var firstName = document.getElementById('first-name').value.trim();
+            var lastName = document.getElementById('last-name').value.trim();
+            var email = document.getElementById('address').value.trim();
+            var phoneNumber = document.getElementById('phoneno').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var confirmPassword = document.getElementById('cpassword').value.trim();
+            var message = document.getElementById('message');
+    
+            if (!areAllFieldsFilled(firstName, lastName, email, phoneNumber, password, confirmPassword)) {
+                setMessage('Please fill in all fields.');
+                return false;
+            }
+    
+            // Validate first name and last name (at least three characters)
+            if (!isValidName(firstName, 3)) {
+                setError('first-name', 'First Name must be at least three characters.');
+                return false;
+            }
+    
+            if (!isValidName(lastName, 3)) {
+                setError('last-name', 'Last Name must be at least three characters.');
+                return false;
+            }
+    
+            // Validate email format
+            if (!isValidEmail(email)) {
+                setError('address', 'Invalid email address.');
+                return false;
+            }
+    
+            // Validate phone number (must be 10 digits)
+            if (!isValidPhoneNumber(phoneNumber)) {
+                setError('phoneno', 'Invalid phone number (must be 10 digits).');
+                return false;
+            }
+    
+            // Validate password (at least 8 characters, one uppercase, one lowercase, one special character)
+            if (!isValidPassword(password)) {
+                setError('password', 'Password must be at least 8 characters long with at least one uppercase, one lowercase, and one special character.');
+                return false;
+            }
+    
+            // Validate password and confirm password match
+            if (password !== confirmPassword) {
+                setError('cpassword', 'Password and Confirm Password must match.');
+                return false;
+            }
+    
+            // If all validations pass, the form will be submitted
+            return true;
         }
-
-        // Validate email format
-        if (!isValidEmail(email)) {
-            setMessage('Invalid email address.');
-            return false;
+    
+        // Function to set the error message
+        function setMessage(text) {
+            document.getElementById('message').innerText = text;
         }
-
-        // Validate phone number (must be 10 digits)
-        if (!isValidPhoneNumber(phoneNumber)) {
-            setMessage('Invalid phone number (must be 10 digits).');
-            return false;
+    
+        // Function to set error message for a specific field
+        function setError(field, text) {
+            document.getElementById(field + 'Err').innerText = text;
         }
-
-        // Validate password and confirm password match
-        if (password !== confirmPassword) {
-            setMessage('Password and Confirm Password must match.');
-            return false;
+    
+        // Function to check if all fields are filled
+        function areAllFieldsFilled(firstName, lastName, email, phoneNumber, password, confirmPassword) {
+            return firstName !== '' && lastName !== '' &&
+                email !== '' && phoneNumber !== '' &&
+                password !== '' && confirmPassword !== '';
         }
-
-        // Clear any previous error messages
-        setMessage('');
-
-        // If all validations pass, the form will be submitted
-        return true;
-    }
-
-    // Function to set the error message
-    function setMessage(text) {
-        document.getElementById('message').innerText = text;
-    }
-
-    // Function to check if all fields are filled
-    function areAllFieldsFilled(firstName, lastName, email, phoneNumber, password, confirmPassword) {
-        return firstName !== '' && lastName !== '' &&
-            email !== '' && phoneNumber !== '' &&
-            password !== '' && confirmPassword !== '';
-    }
-
-    // Function to validate email using regex
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    // Function to validate phone number (must be 10 digits)
-    function isValidPhoneNumber(phoneNumber) {
-        const phoneRegex = /^\d{10}$/;
-        return phoneRegex.test(phoneNumber);
-    }
-
+    
+        // Function to validate name (at least n characters)
+        function isValidName(name, n) {
+            return name.length >= n;
+        }
+    
+        // Function to validate email using regex
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    
+        // Function to validate phone number (must be 10 digits)
+        function isValidPhoneNumber(phoneNumber) {
+            const phoneRegex = /^\d{10}$/;
+            return phoneRegex.test(phoneNumber);
+        }
+    
+        // Function to validate password (at least 8 characters, one uppercase, one lowercase, one special character)
+        function isValidPassword(password) {
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return passwordRegex.test(password);
+        }
+    
+        // Function to reset all error messages
+        function resetErrors() {
+            var errorFields = document.querySelectorAll('.text-danger');
+            errorFields.forEach(function (field) {
+                field.innerText = '';
+            });
+        }
     </script>
+    
     <!-- Login Content Area End Here -->
     <%- include('footer.ejs') %>

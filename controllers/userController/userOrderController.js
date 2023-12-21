@@ -11,10 +11,7 @@ const loadCheckout = async (req, res) => {
         const userId = req.session.userId
         const user = req.session.userEmail || ''
         const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId').populate('userId')
-
-        // console.log('this is length of cartData  '+cartData.products);
-        // console.log(cartData);
-        // console.log(cartData.userId+' this is userId data');
+        console.log('this is cart Data  '+ cartData);
         res.render('user/checkout', { user, cartData })
     } catch (error) {
         console.log(error.message);

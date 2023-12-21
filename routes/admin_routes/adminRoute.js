@@ -1,5 +1,9 @@
 const express = require('express')
 const admin = express()
+
+const session = require('express-session');
+require('dotenv').config();
+
 const adminController = require('../../controllers/adminController/adminController')
 
 const productController = require('../../controllers/adminController/productController')
@@ -9,6 +13,10 @@ const orderController=require('../../controllers/adminController/orderController
 const upload = require('../../multer')
 //admin auth
 const adminAuth = require('../../middleware/adminAuth')
+
+
+
+
 
 //load login page page
 admin.get('/', adminAuth.isLogout, adminController.loadLogin)
@@ -21,9 +29,9 @@ admin.get('/dashboard', adminAuth.isLogin, adminAuth.isLogin, adminController.lo
 //load users list
 admin.get('/edit-users', adminAuth.isLogin, adminController.loadUsersList)
 //block user
-admin.get('/block-user', adminAuth.isLogin, adminController.blockUser)
+admin.patch('/block-user', adminAuth.isLogin, adminController.blockUser)
 //unblock user
-admin.get('/unblock-user', adminAuth.isLogin, adminController.unBlockUser)
+admin.patch('/unblock-user', adminAuth.isLogin, adminController.unBlockUser)
 
 
 
@@ -93,6 +101,8 @@ admin.get('/unblock-brand', adminAuth.isLogin, productController.unblockBrand)
 admin.post('/order-details',adminAuth.isLogin,orderController.loadOrderDetails)
 //change order Status
 admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrderStatus)
+//all order list 
+admin.get('/all-orders',adminAuth.isLogin,orderController.loadAllOrders)
 
 
 //---------------------------product-management-------------------

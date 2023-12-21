@@ -236,12 +236,12 @@
                                                 <div class="existing-image-container mb-2">
                                                     <img src="/admin-assets/uploads/<%=imagesUrl %>" class="img-fluid"
                                                         alt="Existing Image 1">
-                                                    <input id="image<%= index %>" type="text" value="<%= imagesUrl %>">
+                                                    <input id="image<%= index %>" type="text" value="<%= imagesUrl %>" hidden>
                                                     <button type="button" class="btn btn-primary"
                                                         onclick="deleteImage('<%= index %>')">Delete</button>
                                                 </div>
                                                 <%})%>
-                                                    <input type="text" id="productid" value="<%= proData._id %>">
+                                                    <input type="text" id="productid" value="<%= proData._id %>" hidden>
                                                    
 
 
@@ -279,9 +279,10 @@
                     try {
                         const image = document.getElementById(`image${index}`).value
                         const id = document.getElementById('productid').value
+                        const img_index=index
 
 
-                        const response = await fetch(`/admin/edit-product?pr_id=${id}&img_url=${image}`, {
+                        const response = await fetch(`/admin/edit-product?pr_id=${id}&img_index=${img_index}`, {
                             method: "DELETE",
                             headers: {
                                 "Content-Type": "application/json",

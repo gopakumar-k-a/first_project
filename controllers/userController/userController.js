@@ -3,13 +3,13 @@ const userModel = require('../../models/userModel')
 //product model
 const productModel = require('../../models/productModel')
 //order model
-const orderModel=require('../../models/orderModel')
+const orderModel = require('../../models/orderModel')
 
 const bcrypt = require('bcrypt');
 
 const validator = require("validator");
 
-const {generateOTP,sendOtp} = require('../../utility/nodeMailer');
+const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
 
 require('dotenv').config(); //required for accessing env variable
 
@@ -20,12 +20,12 @@ const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
 
-        const prData = await productModel.find({ 
-            isActive: true ,
-            catStatus:true,
-            leagueStatus:true,
-            brandStatus:true
-        }).populate('brand')
+        const prData = await productModel.find({
+            isActive: true,
+            catStatus: true,
+            leagueStatus: true,
+            brandStatus: true
+        }).populate('brand').sort({ createdAt: -1 }).limit(6)
         res.render('user/home', { user, prData })
     } catch (error) {
         console.log(error.message);
@@ -69,9 +69,24 @@ const loadRegister = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const message = req.query.message || ''
+        if (req.session.forgotOtp) {
+            req.session.forgotOtp = null
+        }
         res.render('user/register', { message, user })
     } catch (error) {
         console.log(error.message)
+    }
+}
+//load forgot password
+const loadForgotPassword = async (req, res) => {
+    try {
+        if (req.session.registerOtp) {
+            req.session.registerOtp = null
+        }
+        const user = req.session.userEmail || ''
+        return res.render('user/forgotPassword', { user, message: '', otpCheck: '' })
+    } catch (error) {
+        console.log();
     }
 }
 
@@ -112,37 +127,119 @@ const loadOtp = async (req, res) => {
     }
 }
 
+
+//send otp
+const sendForgotOtp = async (req, res) => {
+    try {
+        const { email } = req.body
+        const matchUser = await userModel.findOne({ email: email })
+        console.log(matchUser + '  this is match user');
+        if (!matchUser) {
+            res.status(400).json({ message: 'user Not Found !' })
+        } else {
+            req.session.forgotOtp = true
+            const otp = generateOTP()
+            req.session.FOtp = otp
+            req.session.FEmail = email
+            await sendOtp(email, otp)
+            res.status(200).json({ message: 'An Otp is send to Your Email' })
+        }
+
+
+
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 //checking otp
 
 const checkOtp = async (req, res) => {
-    const user = req.session.userEmail || ''
-    if (!req.body.otp) {
-        const errMessage = 'all fields must be filled'
-        return res.render('user/otp', { errMessage, email: '', user })
+
+
+    try {
+        const user = req.session.userEmail || ''
+        console.log('inside check otp');
+        const otpFromPage = req.body.otp
+        if (!req.body.otp) {
+            const errMessage = 'all fields must be filled'
+            return res.render('user/otp', { errMessage, email: '', user })
+        }
+
+
+
+        //for register user checking
+        if (req.session.registerOtp != null) {
+            if (req.session.ROtp != otpFromPage) {
+                const errMessage = 'incorrect OTP'
+                return res.render('user/otp', { errMessage, email: '', user })
+            }
+
+
+            if (req.session.ROtp == otpFromPage) {
+
+
+                const data = new userModel({
+                    name: req.session.fullname,
+                    email: req.session.email,
+                    phone: req.session.phoneno,
+                    password: req.session.password
+                })
+                await data.save()
+                delete req.session.fullname;
+                delete req.session.email;
+                delete req.session.phoneno;
+                delete req.session.password;
+                delete req.session.ROtp;
+                delete req.session.registerOtp
+
+                const sMessage = 'Registration Successfull'
+                return res.redirect(`/login?sMessage=${encodeURIComponent(sMessage)}`);
+
+            }
+
+        }
+        //for change password checking
+        if (req.session.forgotOtp != null) {
+            console.log('inside forgot otp check');
+            if (req.session.FOtp != otpFromPage) {
+                const errMessage = 'incorrect OTP'
+                return res.render('user/otp', { errMessage, email: '', user })
+            }
+            if (req.session.FOtp == otpFromPage) {
+                console.log('otp is matching');
+
+
+                res.render('user/forgotPassword', { user, message: '', otpCheck: 'success' })
+            }
+        }
+
+
+    } catch (error) {
+        console.log(error.message);
     }
-    if (req.session.otp == req.body.otp) {
 
+}
+//changing password by adding new password using otp
 
-        const data = new userModel({
-            name: req.session.fullname,
-            email: req.session.email,
-            phone: req.session.phoneno,
-            password: req.session.password
-        })
-        await data.save()
-        delete req.session.fullname;
-        delete req.session.email;
-        delete req.session.phoneno;
-        delete req.session.password;
-        delete req.session.otp;
+const changePassword = async (req, res) => {
+    try {
+        console.log(req.body);
+        console.log(req.session.FEmail + 'this is session email');
 
-        const sMessage = 'Registration Successfull'
-        return res.redirect(`/login?sMessage=${encodeURIComponent(sMessage)}`);
+        const userPass = req.body.password
+        const forgotPassEmail = req.session.FEmail
+        const hashedPass = await hashPassword(userPass)
+        const userData = await userModel.findOneAndUpdate({ email: forgotPassEmail }, { password: hashedPass })
+        delete req.session.ROtp
+        console.log('inside changePassword');
+        if (userData) {
+            res.status(200).json({ message: 'success' })
+        }
 
-    }
-    else {
-        const errMessage = 'incorrect OTP'
-        return res.render('user/otp', { errMessage, email: '', user })
+    } catch (error) {
+
     }
 }
 
@@ -166,69 +263,49 @@ const hashPassword = async (password) => {
 //register user on the server
 const registerUser = async (req, res) => {
     try {
-
-        const firstname = req.body.firstname
-        const lastname = req.body.lastname
+        console.log('inside register user');
+        const firstname = req.body.firstName
+        const lastname = req.body.lastName
         const email = req.body.email
         const phoneno = req.body.phoneno
-        const password = req.body.password
-        const cpassword = req.body.cpassword
-        const user = req.session.userEmail || ''
 
-        if (!firstname || !lastname || !email || !phoneno || !password || !cpassword) {
-            const message = 'All fields must be filled';
+        const user = req.session.userEmail || ''
+        const userPass = req.body.password
+
+        const userMatch = await userModel.find({ email: email })
+        const phoneMatch = await userModel.find({ phone: phoneno })
+        console.log(userMatch.email + 'this is matched mail')
+
+
+        if (userMatch.length > 0) {
+            const message = 'email already exists'
             return res.render(`user/register`, { message, user });
         }
-        else if (cpassword != password) {
-            const message = 'password is not matching'
-            console.log(user)
-            return res.render(`user/register`, { message, user });
+        else if (phoneMatch.length > 0) {
+            return res.render(`user/register`, { message: 'phone no already in use', user });
         }
         else {
-            const userPass = req.body.password
+            const hashedPass = await hashPassword(userPass)
+            const fullname = firstname + ' ' + lastname
+            console.log('this is first name');
+            console.log(firstname);
 
-            const userMatch = await userModel.find({ email: email })
-            const phoneMatch = await userModel.find({ phone: phoneno })
-            console.log(userMatch.email + 'this is matched mail')
+            req.session.fullname = fullname
+            req.session.email = email
+            req.session.phoneno = phoneno
+            req.session.password = hashedPass
 
+            const otp = generateOTP()
+            req.session.ROtp = otp
+            await sendOtp(email, otp)
+            //register session
+            req.session.registerOtp = true
 
-            if (userMatch.length > 0) {
-                const message = 'email already exists'
-                return res.render(`user/register`, { message, user });
-            }
-            else if (phoneMatch.length > 0) {
-                return res.render(`user/register`, { message: 'phone no already in use', user });
-            }
-            else {
-                const hashedPass = await hashPassword(userPass)
-                const fullname = firstname + ' ' + lastname
-
-
-
-                req.session.fullname = fullname
-                req.session.email = email
-                req.session.phoneno = phoneno
-                req.session.password = hashedPass
-
-
-
-                const otp = generateOTP()
-                req.session.otp = otp
-                await sendOtp(email, otp)
-
-
-
-                console.log(req.session + '  this is generated session');
-
-                // const currentEmail = email
-
-
-
-                return res.redirect('/otp')
-
-            }
+            return res.redirect('/otp')
 
         }
+
+
     }
     catch (error) {
         console.log(error.message)
@@ -238,14 +315,22 @@ const registerUser = async (req, res) => {
 const resendOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        const email = req.session.email;
         const otp = generateOTP();
-        req.session.otp = otp;
-        console.log('resend generated OTP' + otp);
+        if (req.session.registerOtp) {
+            const email = req.session.email;
+            req.session.ROtp = otp;
+            await sendOtp(email, otp);
+        }
+        if (req.session.forgotOtp) {
+            const FEmail = req.session.FEmail
+            req.session.FOtp = otp
+            await sendOtp(FEmail, otp)
+        }
 
-        await sendOtp(email, otp);
 
-        res.render('user/otp', { user, email: email, errMessage: '' });
+
+
+        res.render('user/otp', { user, email: user, errMessage: '' });
     } catch (error) {
         console.log(error.message);
     }
@@ -257,43 +342,33 @@ const checkuser = async (req, res) => {
     try {
         const { email, password } = req.body
         req.session.lEmail = email
-
-
         if (!email || !password) {
             const message = 'all fields must be filled'
             return res.redirect(`/login?message=${message}`)
         }
-
-        console.log(email + ' email')
-        const isValidEmail = validator.isEmail(email); //validating email
+        const isValidEmail = validator.isEmail(email);
         console.log(isValidEmail + 'validate result')
         if (!isValidEmail) {
             const message = 'Please enter a valid email';
             return res.redirect(`/login?message=${message}&email=${email}`)
         }
-
-
-        const userMatch = await userModel.findOne({ email: email, isAdmin: false })
-     
-
+        const userMatch = await userModel.findOne({ email: email,isAdmin:false })
         if (userMatch) {
-            const PasswordMatch = await bcrypt.compare(password, userMatch.password);
-
-            if (PasswordMatch) {
-                req.session.userEmail = userMatch.email
-                req.session.userId=userMatch._id
-                return res.redirect('/')
-
+            if (userMatch.isActive == true) {
+                const passwordMatch = await bcrypt.compare(password, userMatch.password);
+                if (passwordMatch) {
+                    req.session.userEmail = userMatch.email;
+                    req.session.userId = userMatch._id;
+                    return res.redirect('/');
+                } else {
+                    return res.redirect(`/login?message=incorrect password`);
+                }
             }
-            else {
-                const message = 'incorrect password'
-                return res.redirect(`/login?message=${message}`)
+            else if (userMatch.isActive == false) {
+                return res.redirect(`/login?message=Cannot Login You are Blocked by the Admin`);
             }
-
-        }
-        else {
-            const message = 'incorrect email or password'
-            return res.redirect(`/login?message=${message}`)
+        } else {
+            return res.redirect(`/login?message=incorrect email or password`);
         }
     } catch (error) {
         console.log(error.message);
@@ -304,7 +379,7 @@ const checkuser = async (req, res) => {
 //loading user dashboard pages
 const loadUserDashboard = async (req, res) => {
     try {
-        const userId=req.session.userId
+        const userId = req.session.userId
         const user = req.session.userEmail || ''
         const goto = req.query.goto || ''
         const userData = await userModel.findOne({ email: user }) || ''
@@ -314,24 +389,25 @@ const loadUserDashboard = async (req, res) => {
         const fullName = userData.name.split(' ');
         const firstName = fullName[0]
         const lastName = fullName[1]
-        
+
         console.log(userData);
 
         if (goto == 'account overview') {
-           return res.render('user/userDashboard', { user, userData,firstName,lastName, message: message, sMessage: sMessage })
+            return res.render('user/userDashboard', { user, userData, firstName, lastName, message: message, sMessage: sMessage })
         }
-        if(goto== 'user address'){
-         return res.render('user/userAddress',{user,userData, message: message, sMessage: sMessage})
+        if (goto == 'user address') {
+            return res.render('user/userAddress', { user, userData, message: message, sMessage: sMessage })
         }
-        if(goto=='user orders'){
-            const orderData=await orderModel.find({userId:userId}).populate('items.productId').sort({orderedAt:-1})
-            // console.log(orderData[0].items[0].productId);
-           return res.render('user/userOrders',{user,userData, message: message, sMessage: sMessage,orderData})
+        if (goto == 'user orders') {
+            const orderData = await orderModel.find({ userId: userId }).populate('items.productId').sort({ orderedAt: -1 })
+            return res.render('user/userOrders', { user, userData, message: message, sMessage: sMessage, orderData })
         }
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
 //user credential update
 const userUpdate = async (req, res) => {
     try {
@@ -348,7 +424,7 @@ const userUpdate = async (req, res) => {
                 const PasswordMatch = await bcrypt.compare(currentPassword, userMatch.password);
                 if (PasswordMatch) {
                     const hashedPass = await hashPassword(newPassword)
-                    console.log('this is hashed Pass'+hashedPass);
+                    console.log('this is hashed Pass' + hashedPass);
                     await userModel.updateOne({ _id: id }, { $set: { password: hashedPass } })
                     const sMessage = 'Password updated succesfully'
                     return res.redirect(`/user-dashboard?goto=account+overview&sMessage=${encodeURIComponent(sMessage)}`);
@@ -371,26 +447,25 @@ const userUpdate = async (req, res) => {
             const lastname = req.body.lastname
             const email = req.body.email
             const phoneno = req.body.phoneno
-            console.log('first name  ', firstname);
-            console.log('last name  ', lastname);
-            console.log('email ', email);
-            console.log('phone ', phoneno);
-
 
             if (!firstname || !lastname || !email || !phoneno) {
                 const message = 'All fields must be filled';
                 console.log('All fields must be filled');
                 return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
-            }else {
+            } else {
                 const phoneMatch = await userModel.find({ phone: phoneno }).countDocuments();
 
                 if (phoneMatch > 1) {
                     const message = 'Phone number already exists';
                     return res.redirect(`/user-dashboard?goto=account+overview&message=${encodeURIComponent(message)}`);
                 } else {
-                  const fullName=firstname+' '+lastname
-                    await userModel.updateOne({_id:id},{$set:{name:fullName,
-                        phone:phoneno}})
+                    const fullName = firstname + ' ' + lastname
+                    await userModel.updateOne({ _id: id }, {
+                        $set: {
+                            name: fullName,
+                            phone: phoneno
+                        }
+                    })
                     const sMessage = 'credentials updated';
                     return res.redirect(`/user-dashboard?goto=account+overview&sMessage=${encodeURIComponent(sMessage)}`);
                 }
@@ -419,5 +494,6 @@ const userUpdate = async (req, res) => {
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
     registerUser, checkuser, loadOtp, checkOtp, logout,
-    resendOtp, loadUserDashboard, userUpdate
+    resendOtp, loadUserDashboard, userUpdate, loadForgotPassword,
+    sendForgotOtp, changePassword
 }

@@ -12,14 +12,16 @@
     </div>
     <!-- Li's Breadcrumb Area End Here -->
     <!--Checkout Area Strat-->
-    <%if(cartData.products.length> 0){%>
-        <div class="checkout-area pt-60 pb-30">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="coupon-accordion">
-                            <!--Accordion Start-->
-                            <!-- <h3>Returning customer? <span id="showlogin">Click here to login</span></h3>
+
+    <% if (cartData && cartData!=null) { %>
+        <% if (typeof cartData === 'object' && cartData !== null && Array.isArray(cartData.products) && cartData.products.length > 0) { %>
+            <div class="checkout-area pt-60 pb-30">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="coupon-accordion">
+                                <!--Accordion Start-->
+                                <!-- <h3>Returning customer? <span id="showlogin">Click here to login</span></h3>
                                 <div id="checkout-login" class="coupon-content">
                                     <div class="coupon-info">
                                         <p class="coupon-text">Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est sit amet ipsum luctus.</p>
@@ -43,284 +45,293 @@
                                         </form>
                                     </div>
                                 </div> -->
-                            <!--Accordion End-->
-                            <!--Accordion Start-->
-                            <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
-                            <div id="checkout_coupon" class="coupon-checkout-content">
-                                <div class="coupon-info">
-                                    <form action="#">
-                                        <p class="checkout-coupon">
-                                            <input placeholder="Coupon code" type="text">
-                                            <input value="Apply Coupon" type="submit">
-                                        </p>
-                                    </form>
+                                <!--Accordion End-->
+                                <!--Accordion Start-->
+                                <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
+                                <div id="checkout_coupon" class="coupon-checkout-content">
+                                    <div class="coupon-info">
+                                        <form action="#">
+                                            <p class="checkout-coupon">
+                                                <input placeholder="Coupon code" type="text">
+                                                <input value="Apply Coupon" type="submit">
+                                            </p>
+                                        </form>
+                                    </div>
                                 </div>
+                                <!--Accordion End-->
                             </div>
-                            <!--Accordion End-->
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-12">
-                        <div class="page-section mb-60">
-                            <div class="container text-center">
-                                <div class="row d-flex">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="page-section mb-60">
+                                <div class="container text-center">
+                                    <div class="row d-flex">
 
-                                    <div class="col-sm-12 col-md-12 col-lg-8 col-xs-12">
-                                        <!-- Adjusted col-lg-6 to col-lg-8 for increased width -->
-                                        <h4 class="login-title">Manage Address</h4>
+                                        <div class="col-sm-12 col-md-12 col-lg-8 col-xs-12">
+                                            <!-- Adjusted col-lg-6 to col-lg-8 for increased width -->
+                                            <h4 class="login-title">Manage Address</h4>
 
-                                        <div class="col-12 d-flex justify-content-start pt-3">
+                                            <div class="col-12 d-flex justify-content-start pt-3">
 
-                                            <div class="container mt-5">
-                                                <button class="register-button mt-0 custom-width-button"
-                                                    onclick="hello(event)" title="quick view" class="quick-view-btn"
-                                                    data-toggle="modal" data-target="#exampleModalCenter">
-                                                    Add New Address
-                                                </button>
-                                                <h3 class="mt-3">Addresses</h3>
-                                                <hr>
+                                                <div class="container mt-5">
+                                                    <button class="register-button mt-0 custom-width-button"
+                                                        onclick="hello(event)" title="quick view" class="quick-view-btn"
+                                                        data-toggle="modal" data-target="#exampleModalCenter">
+                                                        Add New Address
+                                                    </button>
+                                                    <h3 class="mt-3">Addresses</h3>
+                                                    <hr>
 
-                                                <!-- Loop through user addresses and display each one -->
-                                                <div class="row">
+                                                    <!-- Loop through user addresses and display each one -->
+                                                    <div class="row">
 
-                                                    <% cartData.userId.address.forEach((address, index)=> { %>
-                                                        <input type="radio" name="indexOfAddress" class="radio-label"
-                                                            value="<%=index%>" <% if (index===0) { %>checked<% } %>>
+                                                        <% cartData.userId.address.forEach((address, index)=> { %>
+                                                            <input type="radio" name="indexOfAddress"
+                                                                class="radio-label" value="<%=index%>" <% if (index===0)
+                                                                { %>checked<% } %>>
 
 
-                                                            <div class="col-md-12 mb-3">
+                                                                <div class="col-md-12 mb-3">
 
-                                                                <div class="card">
-                                                                    <div class="card-body">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
 
-                                                                        <input type="text" value="<%= index %>"
-                                                                            id="indexOfAddress" hidden>
-                                                                        <h5 class="card-title">Address <%= index + 1 %>
-                                                                        </h5>
-                                                                        <p class="card-text">
-                                                                            <%= address.firstName %>
-                                                                                <%= address.lastName %>,
-                                                                                    <%= address.houseName %>, <%=
-                                                                                            address.city %>,
-                                                                                            <%= address.state %>, <%=
-                                                                                                    address.landMark %>,
-                                                                                                    <%= address.pincode
-                                                                                                        %>
-                                                                        </p>
+                                                                            <input type="text" value="<%= index %>"
+                                                                                id="indexOfAddress" hidden>
+                                                                            <h5 class="card-title">Address <%= index + 1
+                                                                                    %>
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                <%= address.firstName %>
+                                                                                    <%= address.lastName %>,
+                                                                                        <%= address.houseName %>, <%=
+                                                                                                address.city %>,
+                                                                                                <%= address.state %>,
+                                                                                                    <%= address.landMark
+                                                                                                        %>,
+                                                                                                        <%= address.pincode
+                                                                                                            %>
+                                                                            </p>
 
-                                                                        <p class="card-text"><strong>Phone:</strong>
-                                                                            <%= address.phone %>
-                                                                        </p>
-                                                                        <p class="card-text"><strong>Alternate
-                                                                                Phone:</strong>
-                                                                            <%= address.altPhone %>
-                                                                        </p>
-                                                                        <h6>
-                                                                            <a class="product_name"
-                                                                                href="/edit-user-address?index=<%= index %>">edit</a>
-                                                                            <span class="mx-2">|</span>
-                                                                            <a class="product_name" href="#"
-                                                                                onclick="deleteAddress()">delete</a>
-                                                                        </h6>
+                                                                            <p class="card-text"><strong>Phone:</strong>
+                                                                                <%= address.phone %>
+                                                                            </p>
+                                                                            <p class="card-text"><strong>Alternate
+                                                                                    Phone:</strong>
+                                                                                <%= address.altPhone %>
+                                                                            </p>
+                                                                            <h6>
+                                                                                <a class="product_name"
+                                                                                    href="/edit-user-address?index=<%= index %>">edit</a>
+                                                                                <span class="mx-2">|</span>
+                                                                                <a class="product_name" href="#"
+                                                                                    onclick="deleteAddress()">delete</a>
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <% }); %>
+                                                                <% }); %>
+                                                    </div>
+
+
                                                 </div>
+                                                <style>
+                                                    input[type="radio"] {
+                                                        width: 16px;
+                                                        /* Set the width */
+                                                        height: 16px;
+                                                        /* Set the height */
+                                                    }
+
+                                                    /* Optionally, you can style the label for better appearance */
+                                                    .radio-label {
+                                                        display: inline-block;
+                                                        padding: 5px 10px;
+                                                        cursor: pointer;
+                                                        border: 1px solid #ccc;
+                                                        border-radius: 4px;
+                                                        margin-right: 10px;
+                                                    }
+
+                                                    /* Style the radio button when selected */
+                                                    input[type="radio"]:checked+label {
+                                                        background-color: #007bff;
+                                                        color: #fff;
+                                                    }
+                                                </style>
+
+                                                <script>
+                                                    // Function to open the edit modal
+                                                    function openEditModal(index) {
+
+                                                        var modalId = '#exampleModalEdit' + index;
+
+                                                        // Trigger Bootstrap modal display
+                                                        $(modalId).modal('show');
+                                                    }
 
 
+
+
+                                                    function hello(event) {
+                                                        event.preventDefault();
+                                                    }
+                                                </script>
                                             </div>
-                                            <style>
-                                                input[type="radio"] {
-                                                    width: 16px;
-                                                    /* Set the width */
-                                                    height: 16px;
-                                                    /* Set the height */
-                                                }
-
-                                                /* Optionally, you can style the label for better appearance */
-                                                .radio-label {
-                                                    display: inline-block;
-                                                    padding: 5px 10px;
-                                                    cursor: pointer;
-                                                    border: 1px solid #ccc;
-                                                    border-radius: 4px;
-                                                    margin-right: 10px;
-                                                }
-
-                                                /* Style the radio button when selected */
-                                                input[type="radio"]:checked+label {
-                                                    background-color: #007bff;
-                                                    color: #fff;
-                                                }
-                                            </style>
-
-                                            <script>
-                                                // Function to open the edit modal
-                                                function openEditModal(index) {
-
-                                                    var modalId = '#exampleModalEdit' + index;
-
-                                                    // Trigger Bootstrap modal display
-                                                    $(modalId).modal('show');
-                                                }
-
-
-
-
-                                                function hello(event) {
-                                                    event.preventDefault();
-                                                }
-                                            </script>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="your-order">
+                                <h3>Your order</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="cart-product-name"></th>
+                                                <th class="cart-product-name">Product</th>
 
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <div class="your-order">
-                            <h3>Your order</h3>
-                            <div class="your-order-table table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="cart-product-name"></th>
-                                            <th class="cart-product-name">Product</th>
-
-                                            <th class="cart-product-total">Quantity</th>
-                                            <th class="cart-product-total">Total</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- loop area -->
-                                        <% for (let i=0; i < cartData.products.length; i++) { %>
-                                            <tr class="cart_item">
-                                                <td>
-                                                    <img src="/admin-assets/uploads/<%= cartData.products[i].productId.imagesUrl[0] %>"
-                                                        alt="product image" style="width: 80px; height: 80px;">
-                                                </td>
-
-                                                <td class="cart-product-name">
-                                                    <%= cartData.products[i].productId.name %>
-
-
-
-                                                </td>
-
-
-                                                <td>
-                                                    <strong class="product-quantity"> × <%=
-                                                            cartData.products[i].quantity %>
-                                                    </strong>
-                                                    <input type="text" value="<%= cartData.products[i].quantity%>"
-                                                        id="quantity<%=i%>" hidden>
-                                                </td>
-                                                <td class="cart-product-total">
-                                                    <span class="amount" id="totalProductPrice<%=i%>">
-                                                        <input type="text"
-                                                            value="<%=cartData.products[i].productId.price.regularPrice%>"
-                                                            id="unitPrice<%=i%>" hidden>
-
-                                                    </span>
-                                                    <input type="text" id="totalProductPriceHidden<%=i%>" hidden>
-                                                </td>
+                                                <th class="cart-product-total">Quantity</th>
+                                                <th class="cart-product-total">Total</th>
 
                                             </tr>
-                                            <% } %>
+                                        </thead>
+                                        <tbody>
+                                            <%if(cartData!=null){%>
+                                            <!-- loop area -->
+                                            <% for (let i=0; i < cartData.products.length; i++) { %>
+                                                <tr class="cart_item">
+                                                    <td>
+                                                        <img src="/admin-assets/uploads/<%= cartData.products[i].productId.imagesUrl[0] %>"
+                                                            alt="product image" style="width: 80px; height: 80px;">
+                                                    </td>
 
-                                                <!-- ------ -->
-                                    </tbody>
-                                    <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // Calculate and set the total product price for each item
-                                            for (let i = 0; i < <%= cartData.products.length %>; i++) {
-                                            const unitPrice = parseFloat(document.getElementById(`unitPrice${i}`).value);
-                                            const quantity = parseInt(document.getElementById(`quantity${i}`).value, 10);
-                                            const totalProductPrice = unitPrice * quantity;
-                                            document.getElementById(`totalProductPrice${i}`).innerHTML = totalProductPrice.toFixed(2);
-                                            document.getElementById(`totalProductPriceHidden${i}`).value = totalProductPrice.toFixed(2);
-                                        }
+                                                    <td class="cart-product-name">
+                                                        <%= cartData.products[i].productId.name %>
+
+
+
+                                                    </td>
+
+
+                                                    <td>
+                                                        <strong class="product-quantity"> × <%=
+                                                                cartData.products[i].quantity %>
+                                                        </strong>
+                                                        <input type="text" value="<%= cartData.products[i].quantity%>"
+                                                            id="quantity<%=i%>" hidden>
+                                                    </td>
+                                                    <td class="cart-product-total">
+                                                        <span class="amount" id="totalProductPrice<%=i%>">
+                                                            <input type="text"
+                                                                value="<%=cartData.products[i].productId.price.regularPrice%>"
+                                                                id="unitPrice<%=i%>" hidden>
+
+                                                        </span>
+                                                        <input type="text" id="totalProductPriceHidden<%=i%>" hidden>
+                                                    </td>
+
+                                                </tr>
+                                                <% } %>
+                                    <%}%>
+
+                                                    <!-- ------ -->
+                                        </tbody>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                // Calculate and set the total product price for each item
+                                                for (let i = 0; i < <%= cartData.products.length %>; i++) {
+                                                const unitPrice = parseFloat(document.getElementById(`unitPrice${i}`).value);
+                                                const quantity = parseInt(document.getElementById(`quantity${i}`).value, 10);
+                                                const totalProductPrice = unitPrice * quantity;
+                                                document.getElementById(`totalProductPrice${i}`).innerHTML = totalProductPrice.toFixed(2);
+                                                document.getElementById(`totalProductPriceHidden${i}`).value = totalProductPrice.toFixed(2);
+                                            }
                                 })
-                                    </script>
-                                    <tfoot>
-                                        <tr class="cart-subtotal">
-                                            <th>Cart Subtotal</th>
-                                            <td><span class="amount"></span></td>
-                                            <td><span class="amount"></span></td>
-                                            <td><span class="amount" id="subTotal"></span></td>
-                                        </tr>
-                                        <tr class="order-total">
-                                            <th>Order Total</th>
-                                            <td><span class="amount"></span></td>
-                                            <td><span class="amount"></span></td>
-                                            <td><strong><span class="amount" id="total"
-                                                        name="orderTotal"></span></strong>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    var productPrice = 0;
-                                    let subTotal = document.getElementById('subTotal');
-                                    let total = document.getElementById('total')
+                                        </script>
+                                        <tfoot>
+                                            <tr class="cart-subtotal">
+                                                <th>Cart Subtotal</th>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount" id="subTotal"></span></td>
+                                            </tr>
+                                            <tr class="order-total">
+                                                <th>Order Total</th>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount"></span></td>
+                                                <td><strong><span class="amount" id="total"
+                                                            name="orderTotal"></span></strong>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <script>
 
-                                    for (let i = 0; i < <%= cartData.products.length %>; i++) {
-                                    let hiddenValue = document.getElementById(`totalProductPriceHidden${i}`).value;
-                                    let parsedValue = parseFloat(hiddenValue);
-                                    productPrice += parsedValue;
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const addressErr = document.getElementById('addressErr')
+                                        addressErr.style.display = 'none';
+                                        var productPrice = 0;
+                                        let subTotal = document.getElementById('subTotal');
+                                        let total = document.getElementById('total')
 
-                                }
+                                        for (let i = 0; i < <%= cartData.products.length %>; i++) {
+                                        let hiddenValue = document.getElementById(`totalProductPriceHidden${i}`).value;
+                                        let parsedValue = parseFloat(hiddenValue);
+                                        productPrice += parsedValue;
 
-                                subTotal.innerHTML = productPrice.toFixed(2);
-                                total.innerHTML = productPrice.toFixed(2);
+                                    }
+
+                                    subTotal.innerHTML = productPrice.toFixed(2);
+                                    total.innerHTML = productPrice.toFixed(2);
                             });
-                            </script>
-                            <div class="payment-method">
-                                <div class="payment-accordion">
-                                    <div id="accordion">
-                                        <div class="card">
-                                            <div class="card-header" id="#payment-1">
-                                                <h5 class="panel-title">
-                                                    <input type="radio" name="paymentMethod" value="cod" checked>
-                                                    <a class="" data-toggle="collapse" data-target="#collapseOne"
-                                                        aria-expanded="true" aria-controls="collapseOne">
-                                                        Cash On Delivery
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>"Shop now, pay later! Enjoy the convenience of Cash on Delivery."
-                                                    </p>
+                                </script>
+                                <div class="payment-method">
+                                    <div class="payment-accordion">
+                                        <div id="accordion">
+                                            <div class="card">
+                                                <div class="card-header" id="#payment-1">
+                                                    <h5 class="panel-title">
+                                                        <input type="radio" name="paymentMethod" value="cod" checked>
+                                                        <a class="" data-toggle="collapse" data-target="#collapseOne"
+                                                            aria-expanded="true" aria-controls="collapseOne">
+                                                            Cash On Delivery
+                                                        </a>
+                                                    </h5>
+                                                </div>
+                                                <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <p>"Shop now, pay later! Enjoy the convenience of Cash on
+                                                            Delivery."
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header" id="#payment-2">
-                                                <h5 class="panel-title">
-                                                    <!-- change this value in future -->
-                                                    <input type="radio" name="paymentMethod" value="cod">
-                                                    <a class="collapsed" data-toggle="collapse"
-                                                        data-target="#collapseTwo" aria-expanded="false"
-                                                        aria-controls="collapseTwo">
-                                                        UPI
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>"Upholding trust in every tap – UPI, where security meets
-                                                        simplicity."</p>
+                                            <div class="card">
+                                                <div class="card-header" id="#payment-2">
+                                                    <h5 class="panel-title">
+                                                        <!-- change this value in future -->
+                                                        <input type="radio" name="paymentMethod" value="cod">
+                                                        <a class="collapsed" data-toggle="collapse"
+                                                            data-target="#collapseTwo" aria-expanded="false"
+                                                            aria-controls="collapseTwo">
+                                                            UPI
+                                                        </a>
+                                                    </h5>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <p>"Upholding trust in every tap – UPI, where security meets
+                                                            simplicity."</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- <div class="card">
+                                            <!-- <div class="card">
                                         <div class="card-header" id="#payment-3">
                                             <h5 class="panel-title">
                                                 <input type="radio" name="paymentMethod">
@@ -338,288 +349,95 @@
                                             </div>
                                         </div>
                                     </div> -->
-                                    </div>
-                                    <div class="order-button-payment">
-                                        <input value="Place order" type="submit" onclick="confirmOrder()">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <%}else{%>
-            <div class="container mt-5">
-                <div class="card bg-light text-center border-0 custom-card-height p-5">
-                    <h5 class="card-title mb-4">Your Cart is Empty Add Items To Your Cart</h5>
-                    <p class="card-text">Please add items to your cart to proceed to checkout.</p>
-                    <!-- You can customize the message and style as needed -->
-                </div>
-            </div>
+                                            <li id="addressErr" class="fade-out text-danger text-center"
+                                                style="display: none;">
+                                                please add a address before proceeding</li>
+                                            <style>
+                                                .fade-out {
+                                                    opacity: 100;
+                                                    transition: opacity 0.5s ease-out;
+                                                    /* You can adjust the duration and timing function */
+                                                }
+                                            </style>
+                                        </div>
 
-            <%}%>
-                <style>
-                    .custom-card-height {
-                        height: 300px;
-                        /* Adjust the height as per your preference */
-                    }
-                </style>
-                <script>
+                                        <div class="order-button-payment">
+                                            <input value="Place order" type="submit" onclick="checkAddress()">
+                                        </div>
+                                        <script>
+                                            const addressErr = document.getElementById('addressErr');
+                                            function checkAddress() {
+                                                const userAddressLength = <%= cartData ?cartData.userId.address.length: 0 %>;
+                                                if (userAddressLength > 0) {
+                                                    confirmOrder();
+                                                } else {
+                                                    addressErr.style.display = 'block';
+                                                    setTimeout(() => {
+                                                        addressErr.classList.add('fade-out');
 
-                    //conform place order
-                    function confirmOrder() {
+                                                        setTimeout(() => {
+                                                            addressErr.style.display = 'none';
+                                                            addressErr.classList.remove('fade-out');
+                                                        }, 500); // Use the same duration as the transition in CSS
+                                                    }, 3000);
+                                                }
+                                            }
 
+                                            function confirmOrder() {
 
-
-
-
-                        Swal.fire({
-                            title: 'Place Order?',
-                            text: 'Do you want to place this order?',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes, Order!',
-                            cancelButtonText: 'No, cancel'
-                        }).then((result) => {
-                            if (result.value) {
-
-                                const total = document.getElementById('total').innerHTML
-                                const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-                                const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
-
-                                const data = {
-                                    paymentMethod: selectedPaymentMethod,
-                                    totalAmount: total,
-                                    indexOfAddress: indexOfUserAddress,
-                                };
-
-                                fetch('/place-order', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(data),
-                                }).then(response => response.json())
-                                    .then(data => {
-                                        console.log(data.message);
-
-                                        window.location.href = '/user-dashboard?goto=user+orders';
+                                                addressErr.style.display = 'none'
 
 
 
-                                    })
-                                    .catch(error => {
-                                        console.log('Error updating cart quantity:', error);
-                                    });
+                                                Swal.fire({
+                                                    title: 'Place Order?',
+                                                    text: 'Do you want to place this order?',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'Yes, Order!',
+                                                    cancelButtonText: 'No, cancel'
+                                                }).then((result) => {
+                                                    if (result.value) {
 
-                            } else {
-                                Swal.fire('Cancelled', 'Your order was not placed.', 'info');
-                            }
-                        });
+                                                        const total = document.getElementById('total').innerHTML
+                                                        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                                                        const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
 
-                    }
-                </script>
+                                                        const data = {
+                                                            paymentMethod: selectedPaymentMethod,
+                                                            totalAmount: total,
+                                                            indexOfAddress: indexOfUserAddress,
+                                                        };
 
-                <!-- ----------modal------------------ -->
-                <style>
-                    .custom-swal-text {
-                        color: black;
-                    }
+                                                        fetch('/place-order', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(data),
+                                                        }).then(response => response.json())
+                                                            .then(data => {
+                                                                console.log(data.message);
 
-                    .custom-width-button {
-                        width: 200px;
-                    }
-
-                    .custom-swal-popup {
-                        background-color: #d8ae04;
-                        /* Green */
-                        color: white;
-                    }
-
-                    .custom-swal-title {
-                        color: white;
-                    }
-
-                    .custom-swal-confirm-button {
-                        background-color: #45a049;
-                        /* Darker green */
-                        color: white;
-                    }
-
-                    .custom-swal-confirm-button,
-                    .custom-swal-deny-button,
-                    .custom-swal-cancel-button {
-                        background-color: #fed700;
-                        /* Custom yellow color */
-                        color: white;
-                    }
-                </style>
-
-                <script>
-                    function deleteAddress() {
-
-                        Swal.fire({
-                            title: 'Delete Address?',
-                            text: 'Do you want to Delete this Address?',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes, Delete!',
-                            cancelButtonText: 'No, cancel'
-                        }).then((result) => {
-                            if (result.value) {
-                                const indexOfAddress = document.getElementById('indexOfAddress').value
-                                fetch(`/edit-user-address?index=${indexOfAddress}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                }).then(response => response.json())
-                                    .then(data => {
-                                        console.log(data.message)
-                                        window.location.reload();
-                                    })
-                                    .catch(error => console.log('cannot delete the file', error))
-
-                            } else {
-                                Swal.fire('Cancelled', 'Your Address was not Deleted.', 'info');
-                            }
-                        });
+                                                                window.location.href = '/user-dashboard?goto=user+orders';
 
 
 
-                    }
-                </script>
+                                                            })
+                                                            .catch(error => {
+                                                                console.log('Error updating cart quantity:', error);
+                                                            });
 
+                                                    } else {
+                                                        Swal.fire('Cancelled', 'Your order was not placed.', 'info');
+                                                    }
+                                                });
 
+                                            }
+                                        </script>
 
+                                        <div class="order-button-payment">
 
-
-
-
-                <!-- --------------modal----for adding product------------ -->
-
-                <div class="modal fade modal-wrapper" id="exampleModalCenter">
-                    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                        <div class="modal-content  text-center">
-                            <div class="modal-body">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <div class="checkout-area pt-60 pb-30">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-12">
-                                                <form action="/add-address?_id=<%=cartData.userId._id%>&from=checkout"
-                                                    class="mx-auto" id="address-form" method="post">
-                                                    <div class="checkbox-form">
-                                                        <h3>Address Details</h3>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>First Name <span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="eg: Dinesh" type="text"
-                                                                        name="firstName" id="firstName">
-                                                                    <li class="text-center text-danger"
-                                                                        id="firstNameErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>Last Name </label>
-                                                                    <input placeholder="eg: Ragav" type="text"
-                                                                        name="lastName" id="lastName">
-
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>Phone Number<span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="Your 10 digit phone number"
-                                                                        type="number" name="phone" id="phone">
-                                                                    <li class="text-center text-danger" id="phoneErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>Alternate Number<span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="Alternate 10 digit phone number"
-                                                                        type="number" name="altPhone" id="altPhone">
-                                                                    <li class="text-center text-danger"
-                                                                        id="altPhoneErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="checkout-form-list">
-                                                                    <label>House Name <span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="Your House Name" type="text"
-                                                                        name="houseName" id="houseName">
-                                                                    <li class="text-center text-danger"
-                                                                        id="houseNameErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>City <span class="required">*</span></label>
-                                                                    <input placeholder="eg: Kochi" type="text"
-                                                                        name="city" id="city">
-                                                                    <li class="text-center text-danger" id="cityErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>State <span class="required">*</span></label>
-                                                                    <input placeholder="eg: Kerala" type="text"
-                                                                        name="state" id="state">
-                                                                    <li class="text-center text-danger" id="stateErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>Pincode <span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="eg: 680664" type="number"
-                                                                        name="pincode" id="pincode">
-                                                                    <li class="text-center text-danger" id="pincodeErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="checkout-form-list">
-                                                                    <label>Landmark <span
-                                                                            class="required">*</span></label>
-                                                                    <input placeholder="eg: Near Abu Backers"
-                                                                        type="text" name="landMark" id="landMark">
-                                                                    <li class="text-center text-danger"
-                                                                        id="landMarkErr">
-                                                                    </li>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 d-flex justify-content-center">
-                                                                <button onclick="return validateForm()"
-                                                                    class="register-button mt-0"
-                                                                    type="button">Add</button>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </form>
-
-
-
-
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -627,101 +445,359 @@
                         </div>
                     </div>
                 </div>
-                <script>
-                    function validateForm() {
-                        // Define validation rules for each field
-                        var validationRules = {
-                            'firstName': 'required',
-                            'phone': 'phone',
-                            'altPhone': 'phone',
-                            'houseName': 'required',
-                            'city': 'required',
-                            'state': 'required',
-                            'pincode': 'pincode',
-                            'landMark': 'required'
-                        };
+            </div>
+        <%}else{%>
 
-                        // Reset error messages
-                        resetErrors();
 
-                        // Validate each field based on rules
-                        var hasErrors = false;
-                        for (var field in validationRules) {
-                            var rule = validationRules[field];
-                            var value = document.getElementById(field).value.trim();
-                            var errorId = field + 'Err';
 
-                            switch (rule) {
-                                case 'required':
-                                    if (!value) {
-                                        document.getElementById(errorId).innerText = 'Please fill the field.';
+                <div class="container mt-5">
+                    <div class="card bg-light text-center border-0 custom-card-height p-5">
+                        <h5 class="card-title mb-4">Your Cart is Empty Add Items To Your Cart</h5>
+                        <p class="card-text">Please add items to your cart to proceed to checkout.</p>
+                        <!-- You can customize the message and style as needed -->
+                    </div>
+                </div>
+
+        <%}%>
+
+    <%}else{%>
+                        <div class="container mt-5">
+                            <div class="card bg-light text-center border-0 custom-card-height p-5">
+                                <h5 class="card-title mb-4">Your Cart is Empty Add Items To Your Cart</h5>
+                                <p class="card-text">Please add items to your cart to proceed to checkout.</p>
+                                <!-- You can customize the message and style as needed -->
+                            </div>
+                        </div>
+    <%}%>
+
+                            <style>
+                                .custom-card-height {
+                                    height: 300px;
+                                    /* Adjust the height as per your preference */
+                                }
+                            </style>
+
+
+                            <!-- ----------modal------------------ -->
+                            <style>
+                                .custom-swal-text {
+                                    color: black;
+                                }
+
+                                .custom-width-button {
+                                    width: 200px;
+                                }
+
+                                .custom-swal-popup {
+                                    background-color: #d8ae04;
+                                    /* Green */
+                                    color: white;
+                                }
+
+                                .custom-swal-title {
+                                    color: white;
+                                }
+
+                                .custom-swal-confirm-button {
+                                    background-color: #45a049;
+                                    /* Darker green */
+                                    color: white;
+                                }
+
+                                .custom-swal-confirm-button,
+                                .custom-swal-deny-button,
+                                .custom-swal-cancel-button {
+                                    background-color: #fed700;
+                                    /* Custom yellow color */
+                                    color: white;
+                                }
+                            </style>
+
+                            <script>
+                                function deleteAddress() {
+
+                                    Swal.fire({
+                                        title: 'Delete Address?',
+                                        text: 'Do you want to Delete this Address?',
+                                        icon: 'question',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Yes, Delete!',
+                                        cancelButtonText: 'No, cancel'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            const indexOfAddress = document.getElementById('indexOfAddress').value
+                                            fetch(`/edit-user-address?index=${indexOfAddress}`, {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            }).then(response => response.json())
+                                                .then(data => {
+                                                    console.log(data.message)
+                                                    window.location.reload();
+                                                })
+                                                .catch(error => console.log('cannot delete the file', error))
+
+                                        } else {
+                                            Swal.fire('Cancelled', 'Your Address was not Deleted.', 'info');
+                                        }
+                                    });
+
+
+
+                                }
+                            </script>
+
+
+
+
+
+
+
+                            <!-- --------------modal----for adding product------------ -->
+
+                            <div class="modal fade modal-wrapper" id="exampleModalCenter">
+                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                    <div class="modal-content  text-center">
+                                        <div class="modal-body">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <div class="checkout-area pt-60 pb-30">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-12">
+                                                            <% if (cartData && cartData!=null) { %> <form
+                                                                action="/add-address?_id=<%=cartData.userId._id%>&from=checkout"
+                                                                class="mx-auto" id="address-form" method="post">
+                                                                <%}%>
+                                                                <div class="checkbox-form">
+                                                                    <h3>Address Details</h3>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>First Name <span
+                                                                                        class="required">*</span></label>
+                                                                                <input placeholder="eg: Dinesh"
+                                                                                    type="text" name="firstName"
+                                                                                    id="firstName">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="firstNameErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>Last Name </label>
+                                                                                <input placeholder="eg: Ragav"
+                                                                                    type="text" name="lastName"
+                                                                                    id="lastName">
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>Phone Number<span
+                                                                                        class="required">*</span></label>
+                                                                                <input
+                                                                                    placeholder="Your 10 digit phone number"
+                                                                                    type="number" name="phone"
+                                                                                    id="phone">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="phoneErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>Alternate Number<span
+                                                                                        class="required">*</span></label>
+                                                                                <input
+                                                                                    placeholder="Alternate 10 digit phone number"
+                                                                                    type="number" name="altPhone"
+                                                                                    id="altPhone">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="altPhoneErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>House Name <span
+                                                                                        class="required">*</span></label>
+                                                                                <input placeholder="Your House Name"
+                                                                                    type="text" name="houseName"
+                                                                                    id="houseName">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="houseNameErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>City <span
+                                                                                        class="required">*</span></label>
+                                                                                <input placeholder="eg: Kochi"
+                                                                                    type="text" name="city" id="city">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="cityErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>State <span
+                                                                                        class="required">*</span></label>
+                                                                                <input placeholder="eg: Kerala"
+                                                                                    type="text" name="state" id="state">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="stateErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>Pincode <span
+                                                                                        class="required">*</span></label>
+                                                                                <input placeholder="eg: 680664"
+                                                                                    type="number" name="pincode"
+                                                                                    id="pincode">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="pincodeErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="checkout-form-list">
+                                                                                <label>Landmark <span
+                                                                                        class="required">*</span></label>
+                                                                                <input
+                                                                                    placeholder="eg: Near Abu Backers"
+                                                                                    type="text" name="landMark"
+                                                                                    id="landMark">
+                                                                                <li class="text-center text-danger"
+                                                                                    id="landMarkErr">
+                                                                                </li>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="col-12 d-flex justify-content-center">
+                                                                            <button onclick="return validateForm()"
+                                                                                class="register-button mt-0"
+                                                                                type="button">Add</button>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+
+
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                function validateForm() {
+                                    // Define validation rules for each field
+                                    var validationRules = {
+                                        'firstName': 'required',
+                                        'phone': 'phone',
+                                        'altPhone': 'phone',
+                                        'houseName': 'required',
+                                        'city': 'required',
+                                        'state': 'required',
+                                        'pincode': 'pincode',
+                                        'landMark': 'required'
+                                    };
+
+                                    // Reset error messages
+                                    resetErrors();
+
+                                    // Validate each field based on rules
+                                    var hasErrors = false;
+                                    for (var field in validationRules) {
+                                        var rule = validationRules[field];
+                                        var value = document.getElementById(field).value.trim();
+                                        var errorId = field + 'Err';
+
+                                        switch (rule) {
+                                            case 'required':
+                                                if (!value) {
+                                                    document.getElementById(errorId).innerText = 'Please fill the field.';
+                                                    hasErrors = true;
+                                                }
+                                                break;
+                                            case 'phone':
+                                                if (!isValidPhoneNumber(value)) {
+                                                    document.getElementById(errorId).innerText = 'Enter a valid phone number.';
+                                                    hasErrors = true;
+                                                }
+                                                break;
+                                            case 'pincode':
+                                                if (!isValidPincode(value)) {
+                                                    document.getElementById(errorId).innerText = 'Enter a valid pincode.';
+                                                    hasErrors = true;
+                                                }
+                                                break;
+                                            // Add more validation rules as needed
+                                        }
+                                    }
+                                    var phone = document.getElementById('phone').value.trim();
+                                    var altPhone = document.getElementById('altPhone').value.trim();
+                                    if (phone === altPhone) {
+                                        document.getElementById('altPhoneErr').innerText = 'same as the phone number';
                                         hasErrors = true;
                                     }
-                                    break;
-                                case 'phone':
-                                    if (!isValidPhoneNumber(value)) {
-                                        document.getElementById(errorId).innerText = 'Enter a valid phone number.';
-                                        hasErrors = true;
+                                    if (!hasErrors) {
+                                        showConfirmationDialog();
                                     }
-                                    break;
-                                case 'pincode':
-                                    if (!isValidPincode(value)) {
-                                        document.getElementById(errorId).innerText = 'Enter a valid pincode.';
-                                        hasErrors = true;
+
+                                    return !hasErrors; // Prevent form submission if there are errors
+                                }
+
+                                function isValidPhoneNumber(phone) {
+                                    // Implement phone number validation logic here
+                                    // Return true if valid, false otherwise
+                                    return /^\d{10}$/.test(phone);
+                                }
+
+                                function isValidPincode(pincode) {
+                                    // Implement pincode validation logic here
+                                    // Return true if valid, false otherwise
+                                    return /^\d{6}$/.test(pincode);
+                                }
+
+                                function showConfirmationDialog() {
+                                    Swal.fire({
+                                        title: 'Add Address?',
+                                        text: 'Do you want to Add this Address?',
+                                        icon: 'question',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Yes, Add!',
+                                        cancelButtonText: 'No, cancel'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            document.getElementById('address-form').submit();
+                                        } else {
+                                            Swal.fire('Cancelled', 'Your Address was not added.', 'info');
+                                        }
+                                    });
+                                }
+
+                                function resetErrors() {
+                                    var fields = ['firstName', 'phone', 'altPhone', 'houseName', 'city', 'state', 'pincode', 'landMark'];
+                                    for (var i = 0; i < fields.length; i++) {
+                                        var fieldName = fields[i];
+                                        var errorId = fieldName + 'Err';
+                                        document.getElementById(errorId).innerText = '';
                                     }
-                                    break;
-                                // Add more validation rules as needed
-                            }
-                        }
-                        var phone = document.getElementById('phone').value.trim();
-                        var altPhone = document.getElementById('altPhone').value.trim();
-                        if (phone === altPhone) {
-                            document.getElementById('altPhoneErr').innerText = 'same as the phone number';
-                            hasErrors = true;
-                        }
-                        if (!hasErrors) {
-                            showConfirmationDialog();
-                        }
-
-                        return !hasErrors; // Prevent form submission if there are errors
-                    }
-
-                    function isValidPhoneNumber(phone) {
-                        // Implement phone number validation logic here
-                        // Return true if valid, false otherwise
-                        return /^\d{10}$/.test(phone);
-                    }
-
-                    function isValidPincode(pincode) {
-                        // Implement pincode validation logic here
-                        // Return true if valid, false otherwise
-                        return /^\d{6}$/.test(pincode);
-                    }
-
-                    function showConfirmationDialog() {
-                        Swal.fire({
-                            title: 'Add Address?',
-                            text: 'Do you want to Add this Address?',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes, Add!',
-                            cancelButtonText: 'No, cancel'
-                        }).then((result) => {
-                            if (result.value) {
-                                document.getElementById('address-form').submit();
-                            } else {
-                                Swal.fire('Cancelled', 'Your Address was not added.', 'info');
-                            }
-                        });
-                    }
-
-                    function resetErrors() {
-                        var fields = ['firstName', 'phone', 'altPhone', 'houseName', 'city', 'state', 'pincode', 'landMark'];
-                        for (var i = 0; i < fields.length; i++) {
-                            var fieldName = fields[i];
-                            var errorId = fieldName + 'Err';
-                            document.getElementById(errorId).innerText = '';
-                        }
-                    }
-                </script>
-                <%- include('footer.ejs') %>
+                                }
+                            </script>
+                            <%- include('footer.ejs') %>

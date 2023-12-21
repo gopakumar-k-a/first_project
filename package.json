@@ -18,8 +18,10 @@
     "express-session": "^1.17.3",
     "mongoose": "^8.0.2",
     "multer": "^1.4.5-lts.1",
+    "nocache": "^4.0.0",
     "node-email-validation": "^1.0.4",
     "nodemailer": "^6.9.7",
+    "sharp": "^0.33.1",
     "uuid": "^9.0.1",
     "validator": "^13.11.0"
   }

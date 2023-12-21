@@ -1,13 +1,22 @@
 const express=require('express')
 const user=express()
 const userAuth=require('../../middleware/userAuth')
-
-
 const userProductController=require('../../controllers/userController/userProductController')
 const userController=require('../../controllers/userController/userController')
 const userAddressController=require('../../controllers/userController/userAddressController')
 const userCartController=require('../../controllers/userController/userCartController')
 const userOrderController=require('../../controllers/userController/userOrderController')
+const session = require('express-session');
+require('dotenv').config();
+
+
+
+
+user.use(userAuth.isUserBlock)
+
+
+
+
 //load homepage
 user.get('/',userController.loadHome)
 //load login page
@@ -24,6 +33,13 @@ user.get('/otp',userController.loadOtp)
 user.post('/verifyotp',userController.checkOtp)
 //load resend otp page
 user.post('/resend-otp',userController.resendOtp)
+//load forgot password page
+user.get('/forgot-password',userController.loadForgotPassword)
+//change password
+user.patch('/changePass',userController.changePassword)
+
+//send otp after checking email for forgot password
+user.post('/forgot-password-send-otp',userController.sendForgotOtp)
 //load about page
 user.get('/about',userController.loadAbout)
 //load contact page

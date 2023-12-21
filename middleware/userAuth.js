@@ -1,4 +1,25 @@
-// const userModel = require('../models/userModel'); 
+const userModel = require('../models/userModel'); 
+
+const isUserBlock=async(req,res,next)=>{
+    try {
+        if(req.session.userId){
+            const userId=req.session.userId
+            const useData=await userModel.findById(userId)
+            if(useData.isActive==true){
+                next()
+            }else{
+                req.session.userEmail=null
+                req.session.userId=null
+               next()
+            }
+        }else{
+            next()
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 const isLogin = async (req, res, next) => {
     try {
@@ -26,4 +47,8 @@ const isLogout = async (req, res, next) => {
     }
 };
 
-module.exports = { isLogin, isLogout };
+
+
+
+
+module.exports = { isLogin, isLogout,isUserBlock };

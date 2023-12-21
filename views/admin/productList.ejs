@@ -198,6 +198,36 @@
                                 <% } %>
                         </tbody>
                     </table>
+                    <div class="pagination-area mt-30 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                                <%if(currentPage>1){%>
+                                    <li class="page-item"><a class="page-link" href="/admin/product-list?page=<%= parseInt(currentPage) - 1 %>"
+                                        ><i class="material-icons md-chevron_left"></i></a></li>
+                                    <%}%>
+                              
+                                    <% for (let i=1; i <=pageCount; i++) { %>
+
+                                        <li
+                                            class=" <%= i == currentPage ? 'page-item active' : 'page-item ' %>">
+                                            <a class="page-link" href="<%= `/admin/product-list?page=${i}` %>">
+                                                <%= i %>
+                                            </a>
+                                        </li>
+                                    
+                                        <% } %>
+
+                                      
+
+                                        <%if(currentPage < pageCount){%>
+                                            <li class="page-item"><a class="page-link" href="/admin/product-list?page=<%= parseInt(currentPage) + 1 %>"
+                                                ><i class="material-icons md-chevron_right"></i></a></li>
+                                            <%}%>
+
+
+                            </ul>
+                        </nav>
+                    </div>
 
             </section>
             <script>
