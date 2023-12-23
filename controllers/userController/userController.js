@@ -1,21 +1,12 @@
-// user model
 const userModel = require('../../models/userModel')
-//product model
 const productModel = require('../../models/productModel')
-//order model
 const orderModel = require('../../models/orderModel')
-
 const bcrypt = require('bcrypt');
-
+const hashPassword=require('../../utility/hashPassword')
 const validator = require("validator");
-
 const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
+require('dotenv').config();
 
-require('dotenv').config(); //required for accessing env variable
-
-
-
-//load home page
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -32,15 +23,12 @@ const loadHome = async (req, res) => {
     }
 
 }
-//load log in page
 
 const loadLogin = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const email = req.session.lEmail || ''
         delete req.session.lEmail;
-        // destroys email after storing to email
-
         const message = req.query.message || ''
         const isLogin = req.session.isLogin || ''
         const sMessage = req.query.sMessage || ''
@@ -51,8 +39,6 @@ const loadLogin = async (req, res) => {
     }
 }
 
-//log out
-
 const logout = async (req, res) => {
     try {
         await req.session.destroy()
@@ -61,9 +47,6 @@ const logout = async (req, res) => {
         console.log(error.message)
     }
 }
-
-
-//load register page
 
 const loadRegister = async (req, res) => {
     try {
@@ -77,7 +60,7 @@ const loadRegister = async (req, res) => {
         console.log(error.message)
     }
 }
-//load forgot password
+
 const loadForgotPassword = async (req, res) => {
     try {
         if (req.session.registerOtp) {
@@ -90,7 +73,6 @@ const loadForgotPassword = async (req, res) => {
     }
 }
 
-//load about page
 const loadAbout = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -99,8 +81,6 @@ const loadAbout = async (req, res) => {
         console.log(error.message)
     }
 }
-
-//load contact us page
 
 const loadContact = async (req, res) => {
     try {
@@ -111,9 +91,6 @@ const loadContact = async (req, res) => {
     }
 }
 
-
-
-//load otp page
 const loadOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -127,8 +104,6 @@ const loadOtp = async (req, res) => {
     }
 }
 
-
-//send otp
 const sendForgotOtp = async (req, res) => {
     try {
         const { email } = req.body
@@ -144,16 +119,10 @@ const sendForgotOtp = async (req, res) => {
             await sendOtp(email, otp)
             res.status(200).json({ message: 'An Otp is send to Your Email' })
         }
-
-
-
-
-
     } catch (error) {
         console.log(error.message);
     }
 }
-//checking otp
 
 const checkOtp = async (req, res) => {
 
@@ -167,9 +136,6 @@ const checkOtp = async (req, res) => {
             return res.render('user/otp', { errMessage, email: '', user })
         }
 
-
-
-        //for register user checking
         if (req.session.registerOtp != null) {
             if (req.session.ROtp != otpFromPage) {
                 const errMessage = 'incorrect OTP'
@@ -200,7 +166,7 @@ const checkOtp = async (req, res) => {
             }
 
         }
-        //for change password checking
+
         if (req.session.forgotOtp != null) {
             console.log('inside forgot otp check');
             if (req.session.FOtp != otpFromPage) {
@@ -221,7 +187,6 @@ const checkOtp = async (req, res) => {
     }
 
 }
-//changing password by adding new password using otp
 
 const changePassword = async (req, res) => {
     try {
@@ -244,23 +209,7 @@ const changePassword = async (req, res) => {
 }
 
 
-//hashing function
-// Hash the user's password before saving to the database
-const hashPassword = async (password) => {
-    try {
-        const saltRounds = 10;
-        return await bcrypt.hash(password, saltRounds);
-    } catch (error) {
-        console.log(error.message);
 
-    }
-
-};
-//===========================================
-
-
-
-//register user on the server
 const registerUser = async (req, res) => {
     try {
         console.log('inside register user');
@@ -268,15 +217,10 @@ const registerUser = async (req, res) => {
         const lastname = req.body.lastName
         const email = req.body.email
         const phoneno = req.body.phoneno
-
         const user = req.session.userEmail || ''
         const userPass = req.body.password
-
         const userMatch = await userModel.find({ email: email })
         const phoneMatch = await userModel.find({ phone: phoneno })
-        console.log(userMatch.email + 'this is matched mail')
-
-
         if (userMatch.length > 0) {
             const message = 'email already exists'
             return res.render(`user/register`, { message, user });
@@ -287,21 +231,18 @@ const registerUser = async (req, res) => {
         else {
             const hashedPass = await hashPassword(userPass)
             const fullname = firstname + ' ' + lastname
-            console.log('this is first name');
-            console.log(firstname);
-
             req.session.fullname = fullname
             req.session.email = email
             req.session.phoneno = phoneno
             req.session.password = hashedPass
-
             const otp = generateOTP()
             req.session.ROtp = otp
             await sendOtp(email, otp)
-            //register session
             req.session.registerOtp = true
 
-            return res.redirect('/otp')
+            // return res.redirect('/otp')
+            return res.render('user/otp', { errMessage:'', email: '', user })
+
 
         }
 
@@ -311,7 +252,7 @@ const registerUser = async (req, res) => {
         console.log(error.message)
     }
 }
-//resend OTP
+
 const resendOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -335,8 +276,7 @@ const resendOtp = async (req, res) => {
         console.log(error.message);
     }
 }
-//====================================
-//user login post authentication
+
 const checkuser = async (req, res) => {
 
     try {
@@ -352,7 +292,7 @@ const checkuser = async (req, res) => {
             const message = 'Please enter a valid email';
             return res.redirect(`/login?message=${message}&email=${email}`)
         }
-        const userMatch = await userModel.findOne({ email: email,isAdmin:false })
+        const userMatch = await userModel.findOne({ email: email, isAdmin: false })
         if (userMatch) {
             if (userMatch.isActive == true) {
                 const passwordMatch = await bcrypt.compare(password, userMatch.password);
@@ -376,7 +316,6 @@ const checkuser = async (req, res) => {
 
 }
 
-//loading user dashboard pages
 const loadUserDashboard = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -408,14 +347,12 @@ const loadUserDashboard = async (req, res) => {
 }
 
 
-//user credential update
 const userUpdate = async (req, res) => {
     try {
 
         const goto = req.query.goto
         const id = req.query._id
         console.log('this is ' + goto);
-        //updating password
         if (goto == 'password update') {
             const currentPassword = req.body.currentPassword
             const newPassword = req.body.newPassword
@@ -441,7 +378,6 @@ const userUpdate = async (req, res) => {
 
 
         }
-        //updating name,and phone number
         if (goto == 'user update') {
             const firstname = req.body.firstname
             const lastname = req.body.lastname
@@ -480,16 +416,6 @@ const userUpdate = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
-
-
-
-
-
-
-
-//================================================
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,

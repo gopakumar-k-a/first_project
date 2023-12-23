@@ -354,17 +354,17 @@
         </body>
         <script>
             function validateForm() {
-                var productName = document.getElementById('product_name').value;
+                var productName = document.getElementById('product_name').value.trim();
                 var categoryId = document.querySelector('select[name="categoryId"]').value;
                 var leagueId = document.querySelector('select[name="leagueId"]').value;
                 var teamId = document.querySelector('select[name="teamId"]').value;
                 var brandId = document.querySelector('select[name="brandId"]').value;
-                var productDesc = document.querySelector('textarea[name="productDesc"]').value;
-                var smallQty = document.querySelector('input[name="smallQty"]').value;
-                var mediumQty = document.querySelector('input[name="mediumQty"]').value;
-                var largeQty = document.querySelector('input[name="largeQty"]').value;
-                var salePrice = document.querySelector('input[name="salePrice"]').value;
-                var regularPrice = document.querySelector('input[name="regularPrice"]').value;
+                var productDesc = document.querySelector('textarea[name="productDesc"]').value.trim();
+                var smallQty = document.querySelector('input[name="smallQty"]').value.trim();
+                var mediumQty = document.querySelector('input[name="mediumQty"]').value.trim();
+                var largeQty = document.querySelector('input[name="largeQty"]').value.trim();
+                var salePrice = document.querySelector('input[name="salePrice"]').value.trim();
+                var regularPrice = document.querySelector('input[name="regularPrice"]').value.trim();
                 // var images = document.querySelector('input[name="images"]').value;
                 var errorMessage = document.getElementById('errMessage');
                 if (

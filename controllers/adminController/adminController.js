@@ -1,12 +1,9 @@
 
 const userModel = require('../../models/userModel')
-
 const bcrypt = require('bcrypt');
-
 const validator = require("validator");
 
 
-//load log in page
 const loadLogin = async (req, res) => {
 
     try {
@@ -15,7 +12,7 @@ const loadLogin = async (req, res) => {
         console.log(error.message)
     }
 }
-//logut admin
+
 const logout = async (req, res) => {
     try {
         req.session.destroy()
@@ -24,7 +21,7 @@ const logout = async (req, res) => {
         console.log(error.message);
     }
 }
-//authenticating admin
+
 const checkAdmin = async (req, res) => {
 
     try {
@@ -42,7 +39,7 @@ const checkAdmin = async (req, res) => {
 
         const userMatch = await userModel.findOne({ email: email, isAdmin: true })
 
-        if (userMatch.isAdmin==true) {
+        if (userMatch.isAdmin == true) {
             const PasswordMatch = await bcrypt.compare(password, userMatch.password);
 
             if (PasswordMatch) {
@@ -55,7 +52,7 @@ const checkAdmin = async (req, res) => {
                 return res.render('admin/adminLogin', { message })
             }
 
-        }else {
+        } else {
             const message = 'incorrect email or password'
             return res.render('admin/adminLogin', { message })
         }
@@ -64,7 +61,7 @@ const checkAdmin = async (req, res) => {
     }
 
 }
-//load dashboard page
+
 const loadDashboard = async (req, res) => {
     try {
         res.render('admin/adminDashboard')
@@ -73,20 +70,15 @@ const loadDashboard = async (req, res) => {
     }
 }
 
-//load users list
-
 const loadUsersList = async (req, res) => {
     try {
         const page = req.query.page || 1
         const count = await userModel.find().count()
         const limit = 5
         const skip = (page - 1) * limit
-
         const userData = await userModel.find({ isAdmin: false }).sort({ createdAt: -1 }).
             limit(limit).skip(skip)
-
         const userIndices = userData.map((user, index) => index + 1 + skip);
-
         return res.render('admin/usersList', {
             userData: userData,
             userIndices: userIndices,
@@ -103,9 +95,7 @@ const loadUsersList = async (req, res) => {
 const blockUser = async (req, res) => {
     try {
         const id = req.query._id
-
         await userModel.updateOne({ _id: id }, { $set: { isActive: false } })
-
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
@@ -115,7 +105,6 @@ const blockUser = async (req, res) => {
 const unBlockUser = async (req, res) => {
     try {
         const id = req.query._id
-        // console.log('hoiiosifopsdifopsdiopfosdi');
         await userModel.updateOne({ _id: id }, { $set: { isActive: true } })
         res.status(200).json({ message: 'success' })
     } catch (error) {

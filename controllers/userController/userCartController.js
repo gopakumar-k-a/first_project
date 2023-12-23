@@ -6,9 +6,7 @@ const loadCart = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId || ''
-
         const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId')
-
         res.render('user/cart', { user, cartData })
     } catch (error) {
         console.log(error.message);
@@ -65,13 +63,12 @@ const addTocart = async (req, res) => {
         console.log(error.message);
     }
 }
-//remove quantity from cart
+
 const removeProduct = async (req, res) => {
     try {
         const userId = req.session.userId
         const cartId = req.query.cartId
         const cartData = await cartModel.findOne({ userId: userId });
-        // await cartModel.findByIdAndDelete(cartId)
         cartData.products.splice(cartId, 1)
         await cartData.save()
         console.log(cartId);
@@ -80,28 +77,22 @@ const removeProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-//increment or decerment quantity in cart
+
 const cartQuantity = async (req, res) => {
     try {
 
         const userId = req.session.userId
         const { productId, operation, size } = req.query
-
-        // console.log('Query:', req.query);
-    
-
         const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId')
-
-        
         const matchSize = cartData.products.find((product) => product.productId._id.toString() == productId && product.size == size)
-        const maxQuantityOfProduct=await matchSize.productId.size[size].quantity
-        const currentQuantityInCart= matchSize.quantity
+        const maxQuantityOfProduct = await matchSize.productId.size[size].quantity
+        const currentQuantityInCart = matchSize.quantity
 
         if (matchSize) {
 
-            if (operation == 'inc' && currentQuantityInCart<maxQuantityOfProduct) {
+            if (operation == 'inc' && currentQuantityInCart < maxQuantityOfProduct) {
                 matchSize.quantity += 1
-            } else if (operation == 'dec' && currentQuantityInCart>1) {
+            } else if (operation == 'dec' && currentQuantityInCart > 1) {
                 matchSize.quantity -= 1
             }
             await cartData.save()

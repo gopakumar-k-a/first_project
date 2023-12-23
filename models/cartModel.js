@@ -17,10 +17,7 @@ const addToCartSchema = new mongoose.Schema({
         size: {
             type: String
         }
-    }]
-
-   
-  
+    }] 
 
 });
 const cart = mongoose.model("Cart", addToCartSchema);

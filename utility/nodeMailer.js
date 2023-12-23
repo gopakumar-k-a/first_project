@@ -1,19 +1,13 @@
 const nodemailer = require('nodemailer');
 
-//random otp generate function
+
 function generateOTP() {
-    // Generate a random number between 100000 (inclusive) and 999999 (exclusive)
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-//node mailer function for sending otp to mail
 const sendOtp = async (email, otp) => {
     try {
-
-
-
-        console.log('generated OTP' + otp)
-
+        
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {

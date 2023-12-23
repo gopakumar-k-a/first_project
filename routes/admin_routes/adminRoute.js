@@ -1,7 +1,7 @@
 const express = require('express')
 const admin = express()
 
-const session = require('express-session');
+
 require('dotenv').config();
 
 const adminController = require('../../controllers/adminController/adminController')
