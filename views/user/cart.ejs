@@ -16,6 +16,7 @@
     <div class="Shopping-cart-area pt-60 pb-60">
         <div class="container">
             <div class="row">
+                <%if(cartData!=null){%>
                 <div class="col-12">
                     <form action="#">
                         <%if(cartData.products.length==0){%>
@@ -140,127 +141,151 @@
                         </div>
                         <%}%>
                     </form>
-                </div>
+                </div> 
+
+
+                <script>
+                    function calculateTotalPrice(unitPrice, quantity) {
+                        return unitPrice * quantity;
+                    }
+                
+                    function updateCartTotal() {
+                        var cartTotalElement = document.getElementById('cartTotal');
+                        var cartTotal = 0;
+                
+                        // Iterate through each product in the cart
+                        <% for (let i = 0; i < cartData.products.length; i++) { %>
+                            var unitPrice<%= i %> = parseFloat(document.getElementById(`price<%= i %>`).innerHTML);
+                            var quantity<%= i %> = parseFloat(document.getElementById(`quantityshow<%= i %>`).innerHTML);
+                            cartTotal += unitPrice<%= i %> * quantity<%= i %>;
+                        <% } %>
+                
+                        // Update the cart total in the HTML
+                        cartTotalElement.textContent = '₹ ' + cartTotal.toFixed(2); // Format to two decimal places
+                    }
+                
+                    function updateTotal(index) {
+                        var unitPrice = parseFloat(document.getElementById(`price${index}`).innerHTML);
+                        var quantity = parseFloat(document.getElementById(`quantityshow${index}`).innerHTML);
+                
+                        var totalAmountElement = document.getElementById(`totalAmount${index}`);
+                        var totalAmount = calculateTotalPrice(unitPrice, quantity).toFixed(2);
+                
+                        totalAmountElement.innerHTML = totalAmount;
+                
+                        // After updating individual total, update the overall cart total
+                        updateCartTotal();
+                    }
+                
+                    // Attach event listeners to quantity inputs
+                    <% for (let i = 0; i < cartData.products.length; i++) { %>
+                        document.getElementById(`quantityshow<%= i %>`).addEventListener("input", function () {
+                            updateTotal('<%= i %>');
+                        });
+                    <% } %>
+                
+                    // Update the cart total on window load
+                    window.onload = function () {
+                        <% for (let i = 0; i < cartData.products.length; i++) { %>
+                            updateTotal('<%= i %>');
+                        <% } %>
+                        updateCartTotal();
+                    };
+                
+                    function increaseValue(maxQuantity, i) {
+                        var max = parseInt(maxQuantity, 10);
+                        var value = parseInt(document.getElementById(`number${i}`).value, 10);
+                
+                        value = isNaN(value) ? 1 : value;
+                        if (value < max) {
+                            value++;
+                        }
+                
+                        document.getElementById(`number${i}`).value = value;
+                        document.getElementById(`quantityshow${i}`).innerHTML = value;
+                        updateTotal(i);
+                    }
+                
+                    function decreaseValue(i) {
+                        var value = parseInt(document.getElementById(`number${i}`).value, 10);
+                        value = isNaN(value) ? 0 : value;
+                
+                        if (value > 1) {
+                            value--;
+                        }
+                
+                        document.getElementById(`number${i}`).value = value;
+                        document.getElementById(`quantityshow${i}`).innerHTML = value;
+                        updateTotal(i);
+                    }
+                
+                    function quantityChange(productId, operation, size) {
+                        fetch(`/cart-quantity?productId=${productId}&operation=${operation}&size=${size}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        }).then(response => response.json())
+                            .then(data => {
+                                console.log(data.message);
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.log('Error removing product:', error);
+                            });
+                    }
+                
+                    function removeProduct(cartId) {
+                        Swal.fire({
+                            title: 'Remove Product?',
+                            text: 'Do you want to Remove this Product From The Cart?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, Remove!',
+                            cancelButtonText: 'No, cancel'
+                        }).then((result) => {
+                            if (result.value) {
+                                fetch(`/remove-product?cartId=${cartId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                }).then(response => {
+                                    window.location.reload();
+                                }).catch(error => {
+                                    console.error('Error removing product:', error);
+                                });
+                            } else {
+                                Swal.fire('Cancelled', 'Your is not Removed.', 'info');
+                            }
+                        });
+                    }
+                </script>
+                
+                <%}else if(cartData==null){%>
+                    <div class="col-12">
+                        <form action="#">
+                                <h3>your cart is empty !
+                                </h3>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <a href="/">
+                                            <div class="coupon-all">
+    
+                                                <div class="coupon2">
+                                                    <input class="button" name="update_cart" value="Continue Shopping"
+                                                        type="button">
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                    <%}%>
+                
             </div>
         </div>
     </div>
-    <script>
-        function calculateTotalPrice(unitPrice, quantity) {
-            return unitPrice * quantity;
-        }
-    
-        function updateCartTotal() {
-            var cartTotalElement = document.getElementById('cartTotal');
-            var cartTotal = 0;
-    
-            // Iterate through each product in the cart
-            <% for (let i = 0; i < cartData.products.length; i++) { %>
-                var unitPrice<%= i %> = parseFloat(document.getElementById(`price<%= i %>`).innerHTML);
-                var quantity<%= i %> = parseFloat(document.getElementById(`quantityshow<%= i %>`).innerHTML);
-                cartTotal += unitPrice<%= i %> * quantity<%= i %>;
-            <% } %>
-    
-            // Update the cart total in the HTML
-            cartTotalElement.textContent = '₹ ' + cartTotal.toFixed(2); // Format to two decimal places
-        }
-    
-        function updateTotal(index) {
-            var unitPrice = parseFloat(document.getElementById(`price${index}`).innerHTML);
-            var quantity = parseFloat(document.getElementById(`quantityshow${index}`).innerHTML);
-    
-            var totalAmountElement = document.getElementById(`totalAmount${index}`);
-            var totalAmount = calculateTotalPrice(unitPrice, quantity).toFixed(2);
-    
-            totalAmountElement.innerHTML = totalAmount;
-    
-            // After updating individual total, update the overall cart total
-            updateCartTotal();
-        }
-    
-        // Attach event listeners to quantity inputs
-        <% for (let i = 0; i < cartData.products.length; i++) { %>
-            document.getElementById(`quantityshow<%= i %>`).addEventListener("input", function () {
-                updateTotal('<%= i %>');
-            });
-        <% } %>
-    
-        // Update the cart total on window load
-        window.onload = function () {
-            <% for (let i = 0; i < cartData.products.length; i++) { %>
-                updateTotal('<%= i %>');
-            <% } %>
-            updateCartTotal();
-        };
-    
-        function increaseValue(maxQuantity, i) {
-            var max = parseInt(maxQuantity, 10);
-            var value = parseInt(document.getElementById(`number${i}`).value, 10);
-    
-            value = isNaN(value) ? 1 : value;
-            if (value < max) {
-                value++;
-            }
-    
-            document.getElementById(`number${i}`).value = value;
-            document.getElementById(`quantityshow${i}`).innerHTML = value;
-            updateTotal(i);
-        }
-    
-        function decreaseValue(i) {
-            var value = parseInt(document.getElementById(`number${i}`).value, 10);
-            value = isNaN(value) ? 0 : value;
-    
-            if (value > 1) {
-                value--;
-            }
-    
-            document.getElementById(`number${i}`).value = value;
-            document.getElementById(`quantityshow${i}`).innerHTML = value;
-            updateTotal(i);
-        }
-    
-        function quantityChange(productId, operation, size) {
-            fetch(`/cart-quantity?productId=${productId}&operation=${operation}&size=${size}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => response.json())
-                .then(data => {
-                    console.log(data.message);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    console.log('Error removing product:', error);
-                });
-        }
-    
-        function removeProduct(cartId) {
-            Swal.fire({
-                title: 'Remove Product?',
-                text: 'Do you want to Remove this Product From The Cart?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, Remove!',
-                cancelButtonText: 'No, cancel'
-            }).then((result) => {
-                if (result.value) {
-                    fetch(`/remove-product?cartId=${cartId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }).then(response => {
-                        window.location.reload();
-                    }).catch(error => {
-                        console.error('Error removing product:', error);
-                    });
-                } else {
-                    Swal.fire('Cancelled', 'Your is not Removed.', 'info');
-                }
-            });
-        }
-    </script>
+   
     
 
    
