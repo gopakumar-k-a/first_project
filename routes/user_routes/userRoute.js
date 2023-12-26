@@ -50,6 +50,8 @@ user.get('/logout',userController.logout)
 user.get('/single-product-view',userProductController.loadSingleProduct)
 //product listing
 user.get('/shop',userProductController.loadShop)
+//search
+user.post('/search',userProductController.searchProduct)
 //load user dashboard pages
 user.get('/user-dashboard',userAuth.isLogin,userController.loadUserDashboard)
 //update user credentials
@@ -76,6 +78,10 @@ user.get('/checkout',userAuth.isLogin,userOrderController.loadCheckout)
 user.post('/place-order',userAuth.isLogin,userOrderController.placeOrder)
 //cancel  the order
 user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
+//show each of order details of user
+user.get('/order-details',userAuth.isLogin,userOrderController.orderDetails)
+
+
 
 
 

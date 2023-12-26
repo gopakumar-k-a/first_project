@@ -12,10 +12,14 @@
     </div>
     <!-- Li's Breadcrumb Area End Here -->
     <!-- Begin Li's Content Wraper Area -->
+    
     <div class="content-wraper pt-60 pb-60">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                    <%if(keyword){%>
+                    <h5>showing results, <strong> <%=keyword%></strong></h5>
+                    <%}%>
                     <!-- Begin Li's Banner Area -->
                     <!-- <div class="single-banner shop-page-banner">
                         <a href="#">
@@ -24,6 +28,7 @@
                     </div> -->
                     <!-- Li's Banner Area End Here -->
                     <!-- shop-top-bar start -->
+                    <%if(foundCheck==true){%>
                     <div class="shop-top-bar mt-30">
                         <div class="shop-bar-inner">
                             <div class="product-view-mode">
@@ -58,6 +63,7 @@
                         </div>
                         <!-- product-select-box end -->
                     </div>
+                    <%}%>
                     <!-- shop-top-bar end -->
                     <!-- shop-products-wrapper start -->
                     <div class="shop-products-wrapper">
@@ -204,6 +210,32 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if (foundCheck) { %>
+                                
+                                <% if (pageCount > 1) { %>
+                                    <div class="pagination-area">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <!-- <p>Showing 1-12 of 13 item(s)</p>  -->
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <ul class="pagination-box">
+                                      
+                            
+                                                    <% for (let i = 1; i <= pageCount; i++) { %>
+                                                        <li class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
+                                                            <a href="<%= `/shop?page=${i}&keyword=${keyword}` %>"><%= i %></a>
+                                                        </li>
+                                                    <% } %>
+                            
+                                           
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% }else{%>
+                            
                             <%if(pageCount>1){%>
                             <div class="paginatoin-area">
                                 <div class="row">
@@ -235,6 +267,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <%}%>
                             <%}%>
 
 

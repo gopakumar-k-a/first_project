@@ -5,7 +5,7 @@
         <div class="container">
             <div class="breadcrumb-content">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="/">Home</a></li>
                     <li class="active">Account Overview</li>
                 </ul>
             </div>
@@ -67,13 +67,10 @@
                                                                     <td>
                                                                         <!-- Replace the button with an eye (visibility) icon inside a button -->
                                                                         <!-- Add a custom class for square buttons -->
-                                                                        <button
-                                                                            class="register-button mt-0 square-button"
-                                                                            onclick="hello(event)" title="View"
-                                                                            data-toggle="modal"
-                                                                            data-target="#exampleModalCenter<%=index%>">
+                                                                       <a href="/order-details?_id=<%=order._id%>"> <button
+                                                                            class="register-button mt-0 square-button">
                                                                             <i class="bi bi-eye custom-eye-icon"></i>
-                                                                        </button>
+                                                                        </button></a>
 
 
 
@@ -95,6 +92,18 @@
                                                     </table>
 
                                                     <script>
+                                                       
+                                                   
+
+
+
+
+
+
+
+
+
+
                                                         function cancelOrder(id) {
                                                             const orderId=id
                                                             Swal.fire({

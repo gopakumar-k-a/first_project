@@ -85,6 +85,18 @@ const cancelOrder = async (req, res) => {
     }
 }
 
+const orderDetails=async(req,res)=>{
+    try {
+        const user = req.session.userEmail || ''
+        const userId=req.session.userId
+        const id=req.query._id
+        const orderData=await orderModel.findOne({_id:id,userId:userId}).populate('userId').populate('items.productId')
+        res.render('user/orderDet.ejs',{user,orderData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
-    loadCheckout, placeOrder, cancelOrder
+    loadCheckout, placeOrder, cancelOrder,orderDetails
 }

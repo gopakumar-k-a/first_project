@@ -2,7 +2,7 @@ const userModel = require('../../models/userModel')
 const productModel = require('../../models/productModel')
 const orderModel = require('../../models/orderModel')
 const bcrypt = require('bcrypt');
-const hashPassword=require('../../utility/hashPassword')
+const hashPassword = require('../../utility/hashPassword')
 const validator = require("validator");
 const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
 require('dotenv').config();
@@ -241,7 +241,7 @@ const registerUser = async (req, res) => {
             req.session.registerOtp = true
 
             // return res.redirect('/otp')
-            return res.render('user/otp', { errMessage:'', email: '', user })
+            return res.render('user/otp', { errMessage: '', email: '', user })
 
 
         }
@@ -416,6 +416,9 @@ const userUpdate = async (req, res) => {
         console.log(error.message);
     }
 }
+
+
+
 
 module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,

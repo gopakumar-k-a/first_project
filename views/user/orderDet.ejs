@@ -1,0 +1,170 @@
+<%- include('header.ejs') %>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-image {
+            max-width: 50px;
+            max-height: 50px;
+            margin-right: 10px;
+        }
+    </style>
+    <div class="Shopping-cart-area pt-60 pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+
+                   <h3>Customer</h3>
+                    <h6><strong>Customer Name:</strong>
+                        <%=orderData.userId.name%>
+                    </h6>
+                    <h6><strong>Email:</strong>
+                        <%=orderData.userId.email%>
+                    </h6>
+                    <h6><strong>Phone:</strong>
+                        <%=orderData.userId.phone%>
+                    </h6>
+                    <h3>Order Details</h3>
+                    <h6><strong>Order Date: </strong> <%=orderData.orderedAt%></h6>
+                    <h6><strong>Order ID: </strong> <%=orderData.orderId%></h6>
+                    <h6><strong>Payment Method : </strong> <%=orderData.paymentMethod%></h6>
+                    <h6><strong>Status of order : </strong> <%=orderData.orderStatus%></h6>
+                    <h6><strong>Grand Total : </strong> <%=orderData.totalAmount%></h6>
+                    <h3>Delivery Address</h3>
+                    <h6>
+                        <%= `${orderData.address[0].firstName} ${orderData.address[0].lastName},
+                            ${orderData.address[0].phone}, ${orderData.address[0].altPhone},
+                            ${orderData.address[0].houseName}, ${orderData.address[0].city},
+                            ${orderData.address[0].state}, ${orderData.address[0].pincode},
+                            ${orderData.address[0].landMark}` %>
+                    </h6>
+                  
+
+                    <h3>Ordered Products</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>sl.No</th>
+                                <th>Product Name</th>
+                                <th></th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let i=0; i < orderData.items.length; i++) { %>
+                                <tr>
+                                    <td>
+                                        <%=i+1%>
+                                    </td>
+                                    <td class="product-name">
+                                        <%= orderData.items[i].productId.name%>
+                                    </td>
+                                    <td><img class="product-image"
+                                            src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
+                                            alt="Product 1"></td>
+                                    <td id="unit-price<%=i%>">
+                                        <%=orderData.items[i].productId.price.salePrice%>
+                                    </td>
+                                    <td id="quantity<%=i%>">
+                                        <%=orderData.items[i].quantity%>
+                                    </td>
+                                    <td id="total<%=i%>"></td>
+                                </tr>
+                                <%}%>
+                                    <input type="text" value="<%=orderData.items.length%>" id="order-product-length"
+                                        hidden>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <h3>Grand Total:</h3>
+                                        </td>
+                                        <td>
+                                            <h3 id="grand-total"><strong><%=orderData.totalAmount%></strong></h3>
+                                        </td>
+                                    </tr>
+                        </tbody>
+                    </table>
+
+
+                    <!-- Order Summary -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function calculatePrice() {
+            const productLength = document.getElementById('order-product-length').value
+            let unitPrice, quantity, total, grandTotal = 0
+            for (let i = 0; i < productLength; i++) {
+                unitPrice = document.getElementById(`unit-price${i}`).innerText
+                quantity = document.getElementById(`quantity${i}`).innerText
+                total = quantity * unitPrice
+
+                document.getElementById(`total${i}`).innerText = total
+                
+
+
+            }
+   
+
+        }
+        window.onload = calculatePrice
+
+    </script>
+
+
+
+
+
+    <style>
+        .product-name {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+    </style>
+    <%- include('footer.ejs') %>
