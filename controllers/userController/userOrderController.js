@@ -79,7 +79,7 @@ const cancelOrder = async (req, res) => {
         orderData.save()
 
 
-        res.status(200)
+        res.status(200).json({message:'success'})
     } catch (error) {
         console.log(error.message);
     }

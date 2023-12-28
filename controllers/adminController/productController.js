@@ -3,6 +3,8 @@ const leagueModel = require('../../models/leagueModel')
 const teamModel = require('../../models/teamModel')
 const brandModel = require('../../models/brandModel')
 const productModel = require('../../models/productModel')
+const sharp = require('sharp')
+const fs = require('node:fs')
 
 const loadProjectList = async (req, res) => {
     try {
@@ -285,8 +287,6 @@ const updateTeamName = async (req, res) => {
 const insertBrand = async (req, res) => {
     try {
         const brand = req.body.brandName;
-        const img = req.file.filename;
-
 
         const matchBrand = await brandModel.find({ name: brand });
 
@@ -294,9 +294,16 @@ const insertBrand = async (req, res) => {
             const err = 'Brand already exists';
             return res.redirect(`/admin/category-management?beMessage=${err}`);
         } else {
+
+            const resizedImg = `resized_${req.file.filename}`;
+            await sharp(req.file.path)
+                .resize({ width: 300, height: 300 })
+                .toFile(`public/admin-assets/uploads/${resizedImg}`);
+
+
             const data = new brandModel({
                 name: brand,
-                imageUrl: img,
+                imageUrl: resizedImg,
             });
 
             await data.save();
@@ -394,7 +401,19 @@ const insertProduct = async (req, res) => {
             return res.redirect('/admin/add-product?errMessage=' + errMessage)
         }
         else {
-            const images = req.files.map((file) => file.filename);
+            const images = [];
+
+            // Iterate through each uploaded file
+            for (const file of req.files) {
+                const resizedImg = `resized_${file.filename}`;
+
+                // Resize and save the image
+                await sharp(file.path)
+                    .resize({ width: 470, height: 470 })
+                    .toFile(`public/admin-assets/uploads/${resizedImg}`);
+
+                images.push(resizedImg);
+            };
             const newProduct = new productModel({
                 name: productName,
                 category: categoryId,
@@ -437,12 +456,24 @@ const editProduct = async (req, res) => {
             salePrice,
             regularPrice,
         } = req.body;
+
         if (newImages.length > 0) {
+
+            const resizedImages = [];
+            for (const file of req.files) {
+                const resizedImg = `resized_${file.filename}`;
+                await sharp(file.path)
+                    .resize({ width: 470, height: 470 })
+                    .toFile(`public/admin-assets/uploads/${resizedImg}`);
+                resizedImages.push(resizedImg);
+            }
+
             await productModel.updateOne(
                 { _id: id },
-                { $push: { imagesUrl: { $each: newImages } } }
+                { $push: { imagesUrl: { $each: resizedImages } } }
             );
         }
+
         await productModel.findByIdAndUpdate(
             id,
             {
