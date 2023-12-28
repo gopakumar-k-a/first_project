@@ -1,0 +1,223 @@
+<%-include('header.ejs') %>
+    <div class="screen-overlay"></div>
+<%- include('sideNav.ejs') %>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List </h2>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row gx-3">
+                        <div class="col-lg-4 col-md-6 me-auto">
+                            <input type="text" placeholder="Search..." class="form-control">
+                        </div>
+                        <div class="col-md-2 col-6">
+                         <label for="fromDate">from</label>
+                            <input type="date" value="02.05.2021" class="form-control" name="fromDate">
+                          </div>
+                        <div class="col-md-2 col-6">
+                         <label for="toDate">to</label>
+                            <input type="date" value="02.05.2021" class="form-control" name="toDate">
+                          </div>
+                          <div class="col-md-2 col-6">
+                            <button id="submitButton" class="btn btn-primary" style="display: none;">show report</button>
+                          </div>
+                    </div>
+                </header> 
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                      const fromDateInput = document.querySelector('[name="fromDate"]');
+                      const toDateInput = document.querySelector('[name="toDate"]');
+                      const submitButton = document.getElementById('submitButton');
+                  
+                      function toggleSubmitButton() {
+                        const fromDateValue = fromDateInput.value;
+                        const toDateValue = toDateInput.value;
+                        submitButton.style.display = fromDateValue && toDateValue ? 'block' : 'none';
+                      }
+                  
+                      fromDateInput.addEventListener('input', toggleSubmitButton);
+                      toDateInput.addEventListener('input', toggleSubmitButton);
+                    });
+                  </script>
+                <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col" class="text-end"> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%for(let i=0;i<orderData.length;i++){%>
+                                <tr>
+                                    <td><%=orderData[i].orderId%></td>
+                                    <td><b><%=orderData[i].userData.name%></b></td>
+                                    <td><%=orderData[i].userData.email%></td>
+                                    <td><%=orderData[i].totalAmount%></td>
+                                    <% if(orderData[i].orderStatus=='pending' ){ %>
+                                        <td><span
+                                                class="badge rounded-pill alert-warning">Pending</span>
+                                        </td>
+                                        <% } %>
+                                            <% if(orderData[i].orderStatus=='processing' ){ %>
+                                                <td><span
+                                                        class="badge rounded-pill alert-warning">processing</span>
+                                                </td>
+                                                <% } %>
+                                                    <% if(orderData[i].orderStatus=='shipped' ){ %>
+                                                        <td><span
+                                                                class="badge rounded-pill alert-warning">shipped</span>
+                                                        </td>
+                                                        <% } %>
+                                                            <% if(orderData[i].orderStatus=='delivered'
+                                                                ){ %>
+                                                                <td><span
+                                                                        class="badge rounded-pill alert-success">delivered</span>
+                                                                </td>
+                                                                <% } %>
+                                                                    <% if(orderData[i].orderStatus=='cancelled'
+                                                                        ){ %>
+                                                                        <td><span
+                                                                                class="badge rounded-pill alert-danger">cancelled</span>
+                                                                        </td>
+                                                                        <% } %>
+
+                                                                            <td>
+                                                                                <%= new
+                                                                                    Date(orderData[i].orderedAt).toLocaleDateString("en-US",
+                                                                                    { day: 'numeric'
+                                                                                    ,
+                                                                                    month: 'numeric'
+                                                                                    ,
+                                                                                    year: 'numeric'
+                                                                                    }) %>
+                                                                            </td>
+                                                                        
+                                    <td class="text-end">
+                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                        <div class="dropdown">
+                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">View detail</a>
+                                                <a class="dropdown-item" href="#">Edit info</a>
+                                                <a class="dropdown-item text-danger" href="#">Delete</a>
+                                            </div>
+                                        </div> <!-- dropdown //end -->
+                                    </td>
+                                </tr>
+                                <%}%>
+                               
+                            </tbody>
+                        </table>
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
+</html>

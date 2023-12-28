@@ -402,12 +402,8 @@ const insertProduct = async (req, res) => {
         }
         else {
             const images = [];
-
-            // Iterate through each uploaded file
             for (const file of req.files) {
                 const resizedImg = `resized_${file.filename}`;
-
-                // Resize and save the image
                 await sharp(file.path)
                     .resize({ width: 470, height: 470 })
                     .toFile(`public/admin-assets/uploads/${resizedImg}`);

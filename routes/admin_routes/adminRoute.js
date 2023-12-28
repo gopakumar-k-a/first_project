@@ -105,7 +105,10 @@ admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrder
 admin.get('/all-orders',adminAuth.isLogin,orderController.loadAllOrders)
 
 
-//---------------------------product-management-------------------
+//load sales report
+admin.get('/salesreport',adminAuth.isLogin,adminController.loadSalesReport)
+
+
 
 
 

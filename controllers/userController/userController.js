@@ -16,7 +16,7 @@ const loadHome = async (req, res) => {
             catStatus: true,
             leagueStatus: true,
             brandStatus: true
-        }).populate('brand').sort({ createdAt: -1 }).limit(6)
+        }).populate('brand').populate('category').sort({ createdAt: -1 }).limit(6)
         res.render('user/home', { user, prData })
     } catch (error) {
         console.log(error.message);
