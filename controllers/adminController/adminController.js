@@ -113,8 +113,6 @@ const loadDashboard = async (req, res) => {
         });
         const currentMonth = new Date().getMonth() + 1;
 
-        console.log(currentMonth, ' this is current month');
-
 
         const currentMonthIncome = await orderModel.aggregate([
             {
@@ -183,47 +181,100 @@ const loadDashboard = async (req, res) => {
 }
 const loadSalesReport = async (req, res) => {
     try {
-        // You can dynamically set this value
-        const fromDate = new Date('2023-02-05');
-        const toDate = new Date('2023-12-31');
-        
-        const orderData = await orderModel.aggregate([
-          {
-            $match: {
-              orderedAt: {
-                $gte: fromDate,
-                $lt: toDate,
-              },
-            },
-          },
-          {
-            $lookup: {
-              from: 'users', // Corrected to match the model name used in mongoose.model
-              localField: 'userId',
-              foreignField: '_id',
-              as: 'userData',
-            },
-          },
-          {
-            $unwind: '$userData',
-          },
-          {
-            $sort:{orderedAt:-1}
-          }
-        ]);
+        const fromDate = isValidDate(req.query.fromDate) ? new Date(req.query.fromDate) : new Date('2022-02-05');
+        const toDate = isValidDate(req.query.toDate) ? new Date(req.query.toDate) : new Date(Date.now());
+        const fromDateToFrontEnd = req.query.fromDate || '2022-02-05';
+        const toDateToFrontEnd = req.query.toDate ? req.query.toDate : new Date().toISOString().split('T')[0];
+        function isValidDate(dateString) {
+            return !isNaN(Date.parse(dateString));
+        }
 
-        // const orderData=await orderModel.find({}).populate('userId')
-        
-        console.log(orderData);
-        res.render('admin/salesReport', { orderData })
+        const orderData = await orderModel.aggregate([
+            {
+                $match: {
+                    orderedAt: {
+                        $gte: fromDate,
+                        $lt: toDate,
+                    },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'userData',
+                },
+            },
+            {
+                $unwind: '$userData',
+            },
+            {
+                $sort: { orderedAt: -1 }
+            }
+        ]);
+        // enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+        let totalAmount = 0
+        let totalOrders = 0
+        let orderPendingCount = 0
+        let orderProcessingCount = 0
+        let orderShippedCount = 0
+        let orderDeliveredCount = 0
+        let orderCancelledCount = 0
+        let codCount = 0
+        let upiCount = 0
+        let codPaymentAmount = 0
+        let upiPaymentAmount = 0
+        orderData.forEach((data) => {
+            totalAmount += data.totalAmount
+            totalOrders++
+            if (data.orderStatus == 'pending') {
+                orderPendingCount++
+            } else if (data.orderStatus == 'processing') {
+                orderProcessingCount++
+            } else if (data.orderStatus == 'shipped') {
+                orderShippedCount++
+            } else if (data.orderStatus == 'delivered') {
+                orderDeliveredCount++
+            } else if (data.orderStatus == 'cancelled') {
+                orderCancelledCount++
+            }
+            if (data.paymentMethod = 'cod') {
+                codCount++
+                codPaymentAmount += data.totalAmount
+            } else if (data.paymentMethod = 'upi') {
+                upiCount++
+                upiPaymentAmount += data.totalAmount
+
+            }
+
+        })
+
+        res.render('admin/salesReport', {
+            orderData,
+            fromDateToFrontEnd,
+            toDateToFrontEnd,
+            totalAmount,
+            totalOrders,
+            orderPendingCount,
+            orderProcessingCount,
+            orderDeliveredCount,
+            orderCancelledCount,
+            codCount,
+            upiCount,
+            codPaymentAmount,
+            upiPaymentAmount,
+            orderShippedCount
+        })
     } catch (error) {
         console.log(error.message);
     }
 }
 //getting date from the front end
-const dateOfSalesReport=async(req,res)=>{
+const dateOfSalesReport = async (req, res) => {
     try {
-        console.log(req.body);
+        const { fromDate, toDate } = req.body
+        res.redirect(`/admin/salesreport?fromDate=${fromDate}&toDate=${toDate}`)
     } catch (error) {
         console.log(error.message);
     }
@@ -277,5 +328,5 @@ const unBlockUser = async (req, res) => {
 
 module.exports = {
     loadLogin, loadDashboard, checkAdmin, loadUsersList, blockUser,
-    unBlockUser, logout, loadSalesReport,dateOfSalesReport
+    unBlockUser, logout, loadSalesReport, dateOfSalesReport
 }

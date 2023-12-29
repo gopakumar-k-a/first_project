@@ -238,13 +238,18 @@
 
                                                                                                     <div
                                                                                                         class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                                                                                        <a href="#"
-                                                                                                            onclick="document.getElementById('detailsModal<%=i%>').style.display='block'"
+                                                                                                        <a href="/admin/single-order-details?_id=<%=orderData[i]._id%>"
                                                                                                             class="btn btn-sm font-sm rounded btn-brand">
                                                                                                             <!-- <i
                                                                                                                 class="material-icons md-edit"></i> -->
                                                                                                             OrderStatus
                                                                                                         </a>
+                                                                                                        <!-- <a href="#"
+                                                                                                            onclick="document.getElementById('detailsModal<%=i%>').style.display='block'"
+                                                                                                            class="btn btn-sm font-sm rounded btn-brand">
+                                                                                                           
+                                                                                                            OrderStatus
+                                                                                                        </a> -->
 
                                                                                                     </div>
 
@@ -449,6 +454,7 @@
 
 
                             <script>
+                                
                                 function changeOrderStatus(indexOforder, indexOfSelect) {
 
 

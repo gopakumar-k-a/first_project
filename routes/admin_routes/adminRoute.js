@@ -103,12 +103,14 @@ admin.post('/order-details',adminAuth.isLogin,orderController.loadOrderDetails)
 admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrderStatus)
 //all order list 
 admin.get('/all-orders',adminAuth.isLogin,orderController.loadAllOrders)
+//show single order details
+admin.get('/single-order-details',adminAuth.isLogin,orderController.loadSingleOrderDetails)
 
 
 //load sales report
 admin.get('/salesreport',adminAuth.isLogin,adminController.loadSalesReport)
-
-
+//laading date of sales report
+admin.post('/dateofsalesreport',adminAuth.isLogin,adminController.dateOfSalesReport)
 
 
 

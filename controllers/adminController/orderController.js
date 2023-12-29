@@ -1,6 +1,6 @@
 const orderModel = require('../../models/orderModel')
 
-
+const mongoose=require('mongoose')
 
 const loadOrderDetails = async (req, res) => {
     try {
@@ -37,28 +37,42 @@ const changeOrderStatus = async (req, res) => {
     }
 }
 
-const loadAllOrders=async(req,res)=>{
+const loadAllOrders = async (req, res) => {
     try {
-        const page=req.query.page || 1
+        const page = req.query.page || 1
         const count = await orderModel.find().count()
-        const limit=10
-        const skip=(page-1)*limit
-        const orderData=await orderModel.find({}).sort({orderedAt:-1}).limit(limit).skip(skip)
+        const limit = 10
+        const skip = (page - 1) * limit
+        const orderData = await orderModel.find({}).sort({ orderedAt: -1 }).limit(limit).skip(skip)
         const userIndices = orderData.map((user, index) => index + 1 + skip);
-   
+
         // console.log(orderData);
-        res.render('admin/allOrders',{orderData,
+        res.render('admin/allOrders', {
+            orderData,
             userIndices: userIndices,
-            pageCount:Math.ceil(count/limit),
-            currentPage:page,
-            limit:limit})
+            pageCount: Math.ceil(count / limit),
+            currentPage: page,
+            limit: limit
+        })
     } catch (error) {
         console.log(error.message);
     }
 }
+const loadSingleOrderDetails = async (req, res) => {
+    try {
+        const id =new mongoose.Types.ObjectId(req.query._id);
+        const orderData=await orderModel.findOne({_id:id}).populate('userId').populate('items.productId')
+
+        console.log(orderData);
+        res.render('admin/singleOrderDetails', { orderData });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 
 
 
 module.exports = {
-    loadOrderDetails, changeOrderStatus,loadAllOrders
+    loadOrderDetails, changeOrderStatus, loadAllOrders, loadSingleOrderDetails
 }
