@@ -1,5 +1,4 @@
 const orderModel = require('../../models/orderModel')
-
 const mongoose=require('mongoose')
 
 const loadOrderDetails = async (req, res) => {

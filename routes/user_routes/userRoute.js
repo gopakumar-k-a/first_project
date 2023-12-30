@@ -76,10 +76,17 @@ user.patch('/cart-quantity',userAuth.isLogin,userCartController.cartQuantity)
 user.get('/checkout',userAuth.isLogin,userOrderController.loadCheckout)
 //place order
 user.post('/place-order',userAuth.isLogin,userOrderController.placeOrder)
+//online payment razor pay
+user.post('/online-payment',userAuth.isLogin,userOrderController.onlinePayment)
+//change the payment status to success after payment
+user.patch('/change-payment-status',userAuth.isLogin,userOrderController.changePaymentStatus)
+
+
 //cancel  the order
 user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
 //show each of order details of user
 user.get('/order-details',userAuth.isLogin,userOrderController.orderDetails)
+
 
 
 

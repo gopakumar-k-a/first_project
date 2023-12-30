@@ -239,10 +239,10 @@ const loadSalesReport = async (req, res) => {
             } else if (data.orderStatus == 'cancelled') {
                 orderCancelledCount++
             }
-            if (data.paymentMethod = 'cod') {
+            if (data.paymentMethod == 'cod') {
                 codCount++
                 codPaymentAmount += data.totalAmount
-            } else if (data.paymentMethod = 'upi') {
+            } else if (data.paymentMethod == 'upi') {
                 upiCount++
                 upiPaymentAmount += data.totalAmount
 

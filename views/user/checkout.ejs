@@ -14,7 +14,8 @@
     <!--Checkout Area Strat-->
 
     <% if (cartData && cartData!=null) { %>
-        <% if (typeof cartData === 'object' && cartData !== null && Array.isArray(cartData.products) && cartData.products.length > 0) { %>
+        <% if (typeof cartData==='object' && cartData !==null && Array.isArray(cartData.products) &&
+            cartData.products.length> 0) { %>
             <div class="checkout-area pt-60 pb-30">
                 <div class="container">
                     <div class="row">
@@ -202,44 +203,46 @@
                                         </thead>
                                         <tbody>
                                             <%if(cartData!=null){%>
-                                            <!-- loop area -->
-                                            <% for (let i=0; i < cartData.products.length; i++) { %>
-                                                <tr class="cart_item">
-                                                    <td>
-                                                        <img src="/admin-assets/uploads/<%= cartData.products[i].productId.imagesUrl[0] %>"
-                                                            alt="product image" style="width: 80px; height: 80px;">
-                                                    </td>
+                                                <!-- loop area -->
+                                                <% for (let i=0; i < cartData.products.length; i++) { %>
+                                                    <tr class="cart_item">
+                                                        <td>
+                                                            <img src="/admin-assets/uploads/<%= cartData.products[i].productId.imagesUrl[0] %>"
+                                                                alt="product image" style="width: 80px; height: 80px;">
+                                                        </td>
 
-                                                    <td class="cart-product-name">
-                                                        <%= cartData.products[i].productId.name %>
-
-
-
-                                                    </td>
+                                                        <td class="cart-product-name">
+                                                            <%= cartData.products[i].productId.name %>
 
 
-                                                    <td>
-                                                        <strong class="product-quantity"> × <%=
-                                                                cartData.products[i].quantity %>
-                                                        </strong>
-                                                        <input type="text" value="<%= cartData.products[i].quantity%>"
-                                                            id="quantity<%=i%>" hidden>
-                                                    </td>
-                                                    <td class="cart-product-total">
-                                                        <span class="amount" id="totalProductPrice<%=i%>">
+
+                                                        </td>
+
+
+                                                        <td>
+                                                            <strong class="product-quantity"> × <%=
+                                                                    cartData.products[i].quantity %>
+                                                            </strong>
                                                             <input type="text"
-                                                                value="<%=cartData.products[i].productId.price.salePrice%>"
-                                                                id="unitPrice<%=i%>" hidden>
+                                                                value="<%= cartData.products[i].quantity%>"
+                                                                id="quantity<%=i%>" hidden>
+                                                        </td>
+                                                        <td class="cart-product-total">
+                                                            <span class="amount" id="totalProductPrice<%=i%>">
+                                                                <input type="text"
+                                                                    value="<%=cartData.products[i].productId.price.salePrice%>"
+                                                                    id="unitPrice<%=i%>" hidden>
 
-                                                        </span>
-                                                        <input type="text" id="totalProductPriceHidden<%=i%>" hidden>
-                                                    </td>
+                                                            </span>
+                                                            <input type="text" id="totalProductPriceHidden<%=i%>"
+                                                                hidden>
+                                                        </td>
 
-                                                </tr>
-                                                <% } %>
-                                    <%}%>
+                                                    </tr>
+                                                    <% } %>
+                                                        <%}%>
 
-                                                    <!-- ------ -->
+                                                            <!-- ------ -->
                                         </tbody>
                                         <script>
                                             document.addEventListener('DOMContentLoaded', function () {
@@ -297,7 +300,8 @@
                                             <div class="card">
                                                 <div class="card-header" id="#payment-1">
                                                     <h5 class="panel-title">
-                                                        <input type="radio" name="paymentMethod" value="cod" checked>
+                                                        <input checked type="radio" name="paymentMethod" value="cod" 
+                                                            onchange="updateButton()">
                                                         <a class="" data-toggle="collapse" data-target="#collapseOne"
                                                             aria-expanded="true" aria-controls="collapseOne">
                                                             Cash On Delivery
@@ -316,7 +320,8 @@
                                                 <div class="card-header" id="#payment-2">
                                                     <h5 class="panel-title">
                                                         <!-- change this value in future -->
-                                                        <input type="radio" name="paymentMethod" value="cod">
+                                                        <input type="radio" name="paymentMethod" value="upi"
+                                                            onchange="updateButton()">
                                                         <a class="collapsed" data-toggle="collapse"
                                                             data-target="#collapseTwo" aria-expanded="false"
                                                             aria-controls="collapseTwo">
@@ -349,6 +354,109 @@
                                             </div>
                                         </div>
                                     </div> -->
+                                            <button id="rzp-button1" style="display: none;">Pay with Razorpay</button>
+                                            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                                            <script>
+                                                document.getElementById('rzp-button1').onclick = function (e) {
+                                                    e.preventDefault();
+                                                    var orderId;
+                                                    var totalAmount;
+                                                    console.log("Processing Razorpay payment...");
+                                                    const total = document.getElementById('total').innerHTML
+                                                    const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                                                    const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
+
+                                                    const requestData = {
+                                                        paymentMethod: selectedPaymentMethod,
+                                                        totalAmount: total,
+                                                        indexOfAddress: indexOfUserAddress,
+                                                    };
+
+                                                    fetch('/online-payment', {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                        },
+                                                        body: JSON.stringify(requestData)
+                                                    }).then(response => response.json())
+                                                        .then(data => {
+                                                            console.log(data.message);
+                                                            orderId = data.razorOrder
+                                                            totalAmount = data.totalAmount
+                                                            initializePayment(orderId, totalAmount)
+
+                                                        })
+                                                        .catch(error => {
+                                                            console.log('Error updating cart quantity:', error);
+                                                        });
+
+
+
+                                                }
+
+
+                                                function initializePayment(orderId, totalAmount) {
+                                                    let order = JSON.stringify(orderId);
+                                                    let amount = totalAmount
+                                                    var options = {
+                                                        "key": "rzp_test_EkB64T3dRlXXxF", // Enter the Key ID generated from the Dashboard
+                                                        "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                                        "currency": "INR",
+                                                        "name": "Jersy Man",
+                                                        "description": "Test Transaction",
+                                                        "image": "https://example.com/your_logo",
+                                                        "order_id": orderId.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                                        "handler": function (response) {
+                                                            alert('success')
+                                                            // const requestData = {
+                                                            //  razorId=orderId.id
+                                                            // };
+                                                            
+                                                            // fetch('/change-payment-status', {
+                                                            //   method: 'PATCH',
+                                                            //   headers: {
+                                                            //     'Content-Type': 'application/json',
+                                                            //   },
+                                                            //   body: JSON.stringify(requestData)
+                                                            // }).then(response => response.json())
+                                                            //   .then(data => {
+
+
+                                                            //     console.log(data.message);
+                                                            //     Swal.fire({
+                                                            //     icon: 'success', // Use the "success" icon for a success animation
+                                                            //     title: 'Success!',
+                                                            //     text: 'Your Payment is successful.',
+                                                            //     confirmButtonColor: '#28a745', // You can customize the color of the confirm button
+                                                            //     confirmButtonText: 'OK',
+                                                            // });
+
+
+                                                            //   })
+                                                            //   .catch(error => {
+                                                            //     console.log('Error updating cart quantity:', error);
+                                                            //   });
+                                                        
+                                                        },
+                                                        "theme": {
+                                                            "color": "#3399cc"
+                                                        }
+                                                    };
+                                                    var rzp1 = new Razorpay(options);
+                                                    rzp1.on('payment.failed', function (response) {
+                                                        alert(response.error.code);
+                                                        alert(response.error.description);
+                                                        alert(response.error.source);
+                                                        alert(response.error.step);
+                                                        alert(response.error.reason);
+                                                        alert(response.error.metadata.order_id);
+                                                        alert(response.error.metadata.payment_id);
+                                                    });
+                                                    rzp1.open();
+                                                }
+
+
+                                            </script>
                                             <li id="addressErr" class="fade-out text-danger text-center"
                                                 style="display: none;">
                                                 please add a address before proceeding</li>
@@ -362,9 +470,40 @@
                                         </div>
 
                                         <div class="order-button-payment">
-                                            <input value="Place order" type="submit" onclick="checkAddress()">
+                                            <input id="paymentButton" value="Place order" type="submit" onclick="updateButton()">
                                         </div>
                                         <script>
+
+                                            function updateButton() {
+                                                var codRadio = document.querySelector('input[value="cod"]');
+                                                var upiRadio = document.querySelector('input[value="upi"]');
+                                                var paymentButton = document.getElementById('paymentButton');
+
+                                                if (codRadio.checked) {
+                                                    // If Cash On Delivery is selected
+
+                                                    paymentButton.onclick = function () {
+                                                        checkAddress();
+                                                    };
+                                                } else if (upiRadio.checked) {
+                                                    // If UPI is selected
+                                                    paymentButton.onclick = function () {
+                                                        pay();
+                                                    };
+                                                    // paymentButton.setAttribute("onclick", "pay()");
+                                                }
+                                            }
+                                            //clicks razor pay button
+
+                                            function pay() {
+                                                document.getElementById('rzp-button1').click()
+                                            }
+
+
+
+
+
+
                                             const addressErr = document.getElementById('addressErr');
                                             function checkAddress() {
                                                 const userAddressLength = <%= cartData ?cartData.userId.address.length: 0 %>;
@@ -446,7 +585,7 @@
                     </div>
                 </div>
             </div>
-        <%}else{%>
+            <%}else{%>
 
 
 
@@ -458,9 +597,9 @@
                     </div>
                 </div>
 
-        <%}%>
+                <%}%>
 
-    <%}else{%>
+                    <%}else{%>
                         <div class="container mt-5">
                             <div class="card bg-light text-center border-0 custom-card-height p-5">
                                 <h5 class="card-title mb-4">Your Cart is Empty Add Items To Your Cart</h5>
@@ -468,7 +607,7 @@
                                 <!-- You can customize the message and style as needed -->
                             </div>
                         </div>
-    <%}%>
+                        <%}%>
 
                             <style>
                                 .custom-card-height {
@@ -567,130 +706,136 @@
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-lg-6 col-12">
-                                                            <% if (cartData && cartData!=null) { %> <form
-                                                                action="/add-address?_id=<%=cartData.userId._id%>&from=checkout"
-                                                                class="mx-auto" id="address-form" method="post">
-                                                                <%}%>
-                                                                <div class="checkbox-form">
-                                                                    <h3>Address Details</h3>
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>First Name <span
-                                                                                        class="required">*</span></label>
-                                                                                <input placeholder="eg: Dinesh"
-                                                                                    type="text" name="firstName"
-                                                                                    id="firstName">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="firstNameErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>Last Name </label>
-                                                                                <input placeholder="eg: Ragav"
-                                                                                    type="text" name="lastName"
-                                                                                    id="lastName">
+                                                            <% if (cartData && cartData!=null) { %>
+                                                                <form
+                                                                    action="/add-address?_id=<%=cartData.userId._id%>&from=checkout"
+                                                                    class="mx-auto" id="address-form" method="post">
+                                                                    <%}%>
+                                                                        <div class="checkbox-form">
+                                                                            <h3>Address Details</h3>
+                                                                            <div class="row">
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>First Name <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input placeholder="eg: Dinesh"
+                                                                                            type="text" name="firstName"
+                                                                                            id="firstName">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="firstNameErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>Last Name </label>
+                                                                                        <input placeholder="eg: Ragav"
+                                                                                            type="text" name="lastName"
+                                                                                            id="lastName">
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>Phone Number<span
+                                                                                                class="required">*</span></label>
+                                                                                        <input
+                                                                                            placeholder="Your 10 digit phone number"
+                                                                                            type="number" name="phone"
+                                                                                            id="phone">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="phoneErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>Alternate Number<span
+                                                                                                class="required">*</span></label>
+                                                                                        <input
+                                                                                            placeholder="Alternate 10 digit phone number"
+                                                                                            type="number"
+                                                                                            name="altPhone"
+                                                                                            id="altPhone">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="altPhoneErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>House Name <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input
+                                                                                            placeholder="Your House Name"
+                                                                                            type="text" name="houseName"
+                                                                                            id="houseName">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="houseNameErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>City <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input placeholder="eg: Kochi"
+                                                                                            type="text" name="city"
+                                                                                            id="city">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="cityErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>State <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input placeholder="eg: Kerala"
+                                                                                            type="text" name="state"
+                                                                                            id="state">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="stateErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>Pincode <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input placeholder="eg: 680664"
+                                                                                            type="number" name="pincode"
+                                                                                            id="pincode">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="pincodeErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="checkout-form-list">
+                                                                                        <label>Landmark <span
+                                                                                                class="required">*</span></label>
+                                                                                        <input
+                                                                                            placeholder="eg: Near Abu Backers"
+                                                                                            type="text" name="landMark"
+                                                                                            id="landMark">
+                                                                                        <li class="text-center text-danger"
+                                                                                            id="landMarkErr">
+                                                                                        </li>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-12 d-flex justify-content-center">
+                                                                                    <button
+                                                                                        onclick="return validateForm()"
+                                                                                        class="register-button mt-0"
+                                                                                        type="button">Add</button>
+                                                                                </div>
 
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>Phone Number<span
-                                                                                        class="required">*</span></label>
-                                                                                <input
-                                                                                    placeholder="Your 10 digit phone number"
-                                                                                    type="number" name="phone"
-                                                                                    id="phone">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="phoneErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>Alternate Number<span
-                                                                                        class="required">*</span></label>
-                                                                                <input
-                                                                                    placeholder="Alternate 10 digit phone number"
-                                                                                    type="number" name="altPhone"
-                                                                                    id="altPhone">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="altPhoneErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-12">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>House Name <span
-                                                                                        class="required">*</span></label>
-                                                                                <input placeholder="Your House Name"
-                                                                                    type="text" name="houseName"
-                                                                                    id="houseName">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="houseNameErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>City <span
-                                                                                        class="required">*</span></label>
-                                                                                <input placeholder="eg: Kochi"
-                                                                                    type="text" name="city" id="city">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="cityErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>State <span
-                                                                                        class="required">*</span></label>
-                                                                                <input placeholder="eg: Kerala"
-                                                                                    type="text" name="state" id="state">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="stateErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>Pincode <span
-                                                                                        class="required">*</span></label>
-                                                                                <input placeholder="eg: 680664"
-                                                                                    type="number" name="pincode"
-                                                                                    id="pincode">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="pincodeErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="checkout-form-list">
-                                                                                <label>Landmark <span
-                                                                                        class="required">*</span></label>
-                                                                                <input
-                                                                                    placeholder="eg: Near Abu Backers"
-                                                                                    type="text" name="landMark"
-                                                                                    id="landMark">
-                                                                                <li class="text-center text-danger"
-                                                                                    id="landMarkErr">
-                                                                                </li>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            class="col-12 d-flex justify-content-center">
-                                                                            <button onclick="return validateForm()"
-                                                                                class="register-button mt-0"
-                                                                                type="button">Add</button>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                            </form>
+                                                                </form>
 
 
 
