@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const hashPassword = require('../../utility/hashPassword')
 const validator = require("validator");
 const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
+const walletModel = require('../../models/walletModel');
 require('dotenv').config();
 
 const loadHome = async (req, res) => {
@@ -329,7 +330,6 @@ const loadUserDashboard = async (req, res) => {
         const firstName = fullName[0]
         const lastName = fullName[1]
 
-        console.log(userData);
 
         if (goto == 'account overview') {
             return res.render('user/userDashboard', { user, userData, firstName, lastName, message: message, sMessage: sMessage })
@@ -340,6 +340,12 @@ const loadUserDashboard = async (req, res) => {
         if (goto == 'user orders') {
             const orderData = await orderModel.find({ userId: userId }).populate('items.productId').sort({ orderedAt: -1 })
             return res.render('user/userOrders', { user, userData, message: message, sMessage: sMessage, orderData })
+        }
+        if(goto == 'user wallet'){
+            //wallet render here
+            const walletData=await walletModel.findOne({userId:userId})
+            console.log('  this is wallet data  ',walletData);
+            return res.render('user/userWallet',{user,userData,walletData})
         }
     } catch (error) {
         console.log(error.message);

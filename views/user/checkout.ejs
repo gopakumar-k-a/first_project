@@ -300,7 +300,7 @@
                                             <div class="card">
                                                 <div class="card-header" id="#payment-1">
                                                     <h5 class="panel-title">
-                                                        <input checked type="radio" name="paymentMethod" value="cod" 
+                                                        <input checked type="radio" name="paymentMethod" value="cod"
                                                             onchange="updateButton()">
                                                         <a class="" data-toggle="collapse" data-target="#collapseOne"
                                                             aria-expanded="true" aria-controls="collapseOne">
@@ -367,9 +367,7 @@
                                                     const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
 
                                                     const requestData = {
-                                                        paymentMethod: selectedPaymentMethod,
-                                                        totalAmount: total,
-                                                        indexOfAddress: indexOfUserAddress,
+                                                        totalAmount: total
                                                     };
 
                                                     fetch('/online-payment', {
@@ -407,36 +405,12 @@
                                                         "image": "https://example.com/your_logo",
                                                         "order_id": orderId.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                                                         "handler": function (response) {
-                                                            alert('success')
-                                                            // const requestData = {
-                                                            //  razorId=orderId.id
-                                                            // };
-                                                            
-                                                            // fetch('/change-payment-status', {
-                                                            //   method: 'PATCH',
-                                                            //   headers: {
-                                                            //     'Content-Type': 'application/json',
-                                                            //   },
-                                                            //   body: JSON.stringify(requestData)
-                                                            // }).then(response => response.json())
-                                                            //   .then(data => {
+
+                                                            let razId = orderId.id
+                                                            placeOrder(razId)
+                                                            // window.location.href(`/change-payment-status?razId=${razId}`)
 
 
-                                                            //     console.log(data.message);
-                                                            //     Swal.fire({
-                                                            //     icon: 'success', // Use the "success" icon for a success animation
-                                                            //     title: 'Success!',
-                                                            //     text: 'Your Payment is successful.',
-                                                            //     confirmButtonColor: '#28a745', // You can customize the color of the confirm button
-                                                            //     confirmButtonText: 'OK',
-                                                            // });
-
-
-                                                            //   })
-                                                            //   .catch(error => {
-                                                            //     console.log('Error updating cart quantity:', error);
-                                                            //   });
-                                                        
                                                         },
                                                         "theme": {
                                                             "color": "#3399cc"
@@ -470,7 +444,8 @@
                                         </div>
 
                                         <div class="order-button-payment">
-                                            <input id="paymentButton" value="Place order" type="submit" onclick="updateButton()">
+                                            <input id="paymentButton" value="Place order" type="submit"
+                                                onclick="updateButton()">
                                         </div>
                                         <script>
 
@@ -479,36 +454,30 @@
                                                 var upiRadio = document.querySelector('input[value="upi"]');
                                                 var paymentButton = document.getElementById('paymentButton');
 
-                                                if (codRadio.checked) {
+                                                if (codRadio.checked || upiRadio.checked) {
                                                     // If Cash On Delivery is selected
 
                                                     paymentButton.onclick = function () {
                                                         checkAddress();
                                                     };
-                                                } else if (upiRadio.checked) {
-                                                    // If UPI is selected
-                                                    paymentButton.onclick = function () {
-                                                        pay();
-                                                    };
-                                                    // paymentButton.setAttribute("onclick", "pay()");
                                                 }
                                             }
-                                            //clicks razor pay button
 
-                                            function pay() {
-                                                document.getElementById('rzp-button1').click()
-                                            }
-
-
-
-
-
-
+                                            //check address before proceeding
                                             const addressErr = document.getElementById('addressErr');
                                             function checkAddress() {
+                                                var codRadio = document.querySelector('input[value="cod"]');
+                                                var upiRadio = document.querySelector('input[value="upi"]');
+                                                var paymentButton = document.getElementById('paymentButton');
                                                 const userAddressLength = <%= cartData ?cartData.userId.address.length: 0 %>;
                                                 if (userAddressLength > 0) {
-                                                    confirmOrder();
+                                                    if (codRadio.checked) {
+                                                        confirmOrder();
+                                                    } else if (upiRadio.checked) {
+                                                        pay()
+                                                    }
+
+
                                                 } else {
                                                     addressErr.style.display = 'block';
                                                     setTimeout(() => {
@@ -522,6 +491,28 @@
                                                 }
                                             }
 
+
+                                            // if upi radio button is selected razor pay swal
+
+                                            function pay() {
+                                                Swal.fire({
+                                                    title: 'Place Order?',
+                                                    text: 'Do you want to place this order?',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'Yes, Order!',
+                                                    cancelButtonText: 'No, cancel'
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        document.getElementById('rzp-button1').click()
+                                                    } else {
+                                                        Swal.fire('Cancelled', 'Your order was not placed.', 'info');
+                                                    }
+                                                });
+
+                                            }
+                               
+                                    //confirm order function for placing order in cod
                                             function confirmOrder() {
 
                                                 addressErr.style.display = 'none'
@@ -537,41 +528,51 @@
                                                     cancelButtonText: 'No, cancel'
                                                 }).then((result) => {
                                                     if (result.value) {
+                                                        
+                                                        placeOrder()
 
-                                                        const total = document.getElementById('total').innerHTML
-                                                        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-                                                        const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
-
-                                                        const data = {
-                                                            paymentMethod: selectedPaymentMethod,
-                                                            totalAmount: total,
-                                                            indexOfAddress: indexOfUserAddress,
-                                                        };
-
-                                                        fetch('/place-order', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json',
-                                                            },
-                                                            body: JSON.stringify(data),
-                                                        }).then(response => response.json())
-                                                            .then(data => {
-                                                                console.log(data.message);
-
-                                                                window.location.href = '/user-dashboard?goto=user+orders';
-
-
-
-                                                            })
-                                                            .catch(error => {
-                                                                console.log('Error updating cart quantity:', error);
-                                                            });
 
                                                     } else {
                                                         Swal.fire('Cancelled', 'Your order was not placed.', 'info');
                                                     }
                                                 });
 
+                                            }
+                                            
+                                            //use this function weather it is cod or upi
+
+                                            function placeOrder(razId="nill") {
+
+
+                                                const total = document.getElementById('total').innerHTML
+                                                const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                                                const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
+
+                                                const data = {
+                                                    paymentMethod: selectedPaymentMethod,
+                                                    totalAmount: total,
+                                                    indexOfAddress: indexOfUserAddress,
+                                                    razId:razId
+                                                };
+
+                                                fetch('/place-order', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify(data),
+                                                }).then(response => response.json())
+                                                    .then(data => {
+                                                        console.log(data.message);
+
+                                                        window.location.href = '/user-dashboard?goto=user+orders';
+
+
+
+                                                    })
+                                                    .catch(error => {
+                                                        console.log('Error updating cart quantity:', error);
+                                                    });
                                             }
                                         </script>
 

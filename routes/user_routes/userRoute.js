@@ -78,10 +78,6 @@ user.get('/checkout',userAuth.isLogin,userOrderController.loadCheckout)
 user.post('/place-order',userAuth.isLogin,userOrderController.placeOrder)
 //online payment razor pay
 user.post('/online-payment',userAuth.isLogin,userOrderController.onlinePayment)
-//change the payment status to success after payment
-user.patch('/change-payment-status',userAuth.isLogin,userOrderController.changePaymentStatus)
-
-
 //cancel  the order
 user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
 //show each of order details of user

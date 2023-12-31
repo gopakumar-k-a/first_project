@@ -1,0 +1,150 @@
+<%- include('header.ejs') %>
+    <!-- Header Area End Here -->
+    <!-- Begin Li's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Account Overview</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
+    <!-- Begin Li's Main Blog Page Area -->
+    <div class="li-main-blog-page li-main-blog-details-page pt-60 pb-60 pb-sm-45 pb-xs-45">
+        <div class="container">
+            <div class="row">
+                <!-- Begin Li's Blog Sidebar Area -->
+                <%- include('userSidebar.ejs') %>
+                    <!-- Li's Blog Sidebar Area End Here -->
+                    <!-- Begin Li's Main Content Area -->
+                    <div class="col-lg-9 order-lg-2 order-1">
+                        <div class="row li-main-content">
+                            <div class="col-lg-12">
+                                <div class="page-section mb-60">
+                                    <div class="container text-align">
+                                        <div class="row d-flex">
+
+                                            <div class="col-sm-12 col-md-12 col-lg-8 col-xs-12">
+                                                <!-- Adjusted col-lg-6 to col-lg-8 for increased width -->
+                                                <h4 class="login-title">User Wallet
+                                                </h4>
+                                                <%if(walletData !=null){%>
+                                                    <h5>Wallet balance <strong>
+                                                        &#8377; <%= walletData.balance %>
+                                                        </strong></h5>
+
+                                                    <div class="col-12 d-flex justify-content-start pt-3">
+                                                        <!-- <button class="register-button mt-0 custom-width-button"
+                                                        onclick="hello(event)" title="quick view" class="quick-view-btn"
+                                                        data-toggle="modal" data-target="#exampleModalCenter">
+                                                        Add New Address
+                                                    </button> -->
+
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Amount</th>
+                                                                    <th scope="col">Type</th>
+                                                                    <th scope="col">Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                <% walletData.history.sort((a, b)=> new
+                                                                    Date(b.createdAt) - new Date(a.createdAt));
+
+
+                                                                    walletData.history.forEach((history, index) => {%>
+                                                                    <tr>
+                                                                        <td
+                                                                            style="color: <%= history.type === 'credit' ? 'green' : 'red' %>;">
+                                                                            <%= history.type==='credit' ? '+' : '-' %>
+                                                                                <%= history.amount %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span
+                                                                                class="badge badge-<%= history.type === 'credit' ? 'success' : 'danger' %>">
+                                                                                <%= history.type %>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= history.createdAt.toLocaleString('en-US',
+                                                                                { dateStyle: 'short' ,
+                                                                                timeStyle: 'short' }) %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }); %>
+
+
+                                                            </tbody>
+                                                        </table>
+                                                        <%}else{%>
+                                                            <h5>Wallet balance <strong>0</strong></h5>
+                                                            <%}%>
+
+
+
+
+
+
+                                                                <div class="container mt-5">
+                                                                    <h3></h3>
+                                                                    <hr>
+
+                                                                    <!-- Loop through user addresses and display each one -->
+
+
+                                                                </div>
+
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <!-- Li's Main Content Area End Here -->
+    </div>
+    </div>
+    </div>
+    <style>
+        /* Custom style for square button */
+        .square-button {
+            width: 40px;
+            /* Adjust the width as needed */
+            height: 40px;
+            /* Adjust the height as needed */
+            padding: 0;
+            /* Remove default padding */
+        }
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <%- include('footer.ejs') %>
