@@ -19,11 +19,37 @@ const loadShop = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const keyword = req.query.keyword || ''
+        const sortBy=req.query.sortBy || ''
+
+
+      
+
         if (keyword != 'not found') {
+            let sortOptions = {};
+
+            switch (sortBy) {
+                case 'name-asc':
+                    sortOptions = { name: 1 };
+                    break;
+                case 'name-desc':
+                    sortOptions = { name: -1 };
+                    break;
+                case 'price-asc':
+                    sortOptions = { price: 1 };
+                    break;
+                case 'price-desc':
+                    sortOptions = { price: -1 };
+                    break;
+                    case 'relevance':
+                        sortOptions={createdAt:-1}
+    
+                default:
+                    sortOptions = { relevanceScore: -1 };
+                    break;
+            }
             const page = req.query.page || 1
 
 
-            console.log(req.query.keyword);
             const limit = 3
             const skip = (page - 1) * limit
 
@@ -43,6 +69,9 @@ const loadShop = async (req, res) => {
                             { 'category.name': { $regex: keyword, $options: 'i' } },
                         ],
                     }
+                },  
+                {
+                    $sort: sortOptions,
                 },
                 { $skip: skip },
                 { $limit: limit },
@@ -91,21 +120,22 @@ const loadShop = async (req, res) => {
                 currentPage: page,
                 limit: limit,
                 keyword: keyword,
-                foundCheck:true
+                sortBy:sortBy,
+                foundCheck: true
             })
         }
 
         if (keyword == 'not found') {
             res.render('user/productListing', {
-                user, prData:'',
+                user, prData: '',
                 userIndices: '',
                 pageCount: '',
                 currentPage: '',
-                limit:'',
+                limit: '',
                 keyword: 'no results found',
-                foundCheck:false
+                foundCheck: false
             })
-     }
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -114,8 +144,9 @@ const loadShop = async (req, res) => {
 const searchProduct = async (req, res) => {
     try {
 
-        const { keyword } = req.body;
-
+        // const { keyword } = req.body;
+        const keyword = req.body.keyword;
+        const sortBy=req.body.sortBy;
         const regexPattern = new RegExp(keyword, "i");
 
         const searchResults = await productModel.aggregate([
@@ -128,22 +159,24 @@ const searchProduct = async (req, res) => {
                         { 'team.name': { $regex: regexPattern } },
                         { 'league.name': { $regex: regexPattern } },
                         { 'category.name': { $regex: regexPattern } },
+                      
                     ],
                 },
             },
         ])
 
-        console.log(searchResults, '  this is search results');
+        // console.log(searchResults, '  this is search results');
 
 
         if (searchResults.length > 0) {
-            res.redirect(`/shop?keyword=${keyword}`)
+            res.redirect(`/shop?keyword=${keyword}&sortBy=${sortBy}`)
         }
         if (searchResults.length == 0) {
 
             const notFoundKeyword = 'not+found';
             res.redirect(`/shop?keyword=${notFoundKeyword}`);
         }
+
 
     } catch (error) {
         console.log(error.message);

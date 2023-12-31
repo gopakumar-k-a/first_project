@@ -94,7 +94,10 @@
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
                             <!-- Begin Header Middle Searchbox Area -->
                             <form method="post" action="/search" class="hm-searchbox" onsubmit="return validateForm()">
-                                <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword">
+                                <!-- <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword"> -->
+                                <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword" <% if (typeof keyword !== 'undefined') { %>value="<%= keyword %>"<% } %>>
+
+
                                 <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
                             </form>
 
