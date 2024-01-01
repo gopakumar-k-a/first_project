@@ -130,7 +130,7 @@ const loadDashboard = async (req, res) => {
                 },
             },
         ]);
-        console.log('current month income:', currentMonthIncome);
+     
 
 
         const orderCount = await orderModel.aggregate([
@@ -226,7 +226,7 @@ const loadSalesReport = async (req, res) => {
         let codPaymentAmount = 0
         let upiPaymentAmount = 0
         orderData.forEach((data) => {
-            totalAmount += data.totalAmount
+           
             totalOrders++
             if (data.orderStatus == 'pending') {
                 orderPendingCount++
@@ -239,9 +239,12 @@ const loadSalesReport = async (req, res) => {
             } else if (data.orderStatus == 'cancelled') {
                 orderCancelledCount++
             }
+            if(data.paymentMethod == 'cod' && data.orderStatus == 'delivered'){
+                codPaymentAmount += data.totalAmount
+            }
             if (data.paymentMethod == 'cod') {
                 codCount++
-                codPaymentAmount += data.totalAmount
+                
             } else if (data.paymentMethod == 'upi') {
                 upiCount++
                 upiPaymentAmount += data.totalAmount
@@ -249,6 +252,7 @@ const loadSalesReport = async (req, res) => {
             }
 
         })
+        totalAmount=codPaymentAmount+upiPaymentAmount
 
         res.render('admin/salesReport', {
             orderData,

@@ -44,11 +44,10 @@ const loadShop = async (req, res) => {
                         sortOptions={createdAt:-1}
     
                 default:
-                    sortOptions = { relevanceScore: -1 };
+                    sortOptions = { createdAt: -1 };
                     break;
             }
             const page = req.query.page || 1
-
 
             const limit = 3
             const skip = (page - 1) * limit
@@ -80,6 +79,10 @@ const loadShop = async (req, res) => {
 
 
             ])
+            console.log('-------------------------------------');
+            prData.forEach((val)=>{
+                console.log(val.name);
+            })
 
 
 
@@ -122,6 +125,7 @@ const loadShop = async (req, res) => {
                 keyword: keyword,
                 sortBy:sortBy,
                 foundCheck: true
+                
             })
         }
 
