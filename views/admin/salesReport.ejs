@@ -80,7 +80,7 @@
                         <!-- <p>Lorem ipsum dolor sit amet.</p> -->
                     </div>
                     <div>
-                        <a href="#" onclick="printPage()" class="btn btn-primary hide-on-print"><i
+                        <a href="#" onclick="printPage()" class="btn btn-primary hide-on-print" id="printButton"><i
                                 class="text-muted material-icons md-post_add hide-on-print"></i>sales Report</a>
                     </div>
                     <script>
@@ -108,36 +108,63 @@
                                         <img src="/admin-assets/imgs/theme/logo.svg" alt="Evara Dashboard">
                                     </div>
                                     <div class="col-lg-8 col-md-6 d-flex align-items-center">
-                                        <form action="/admin/dateofsalesreport" method="post" class="d-flex">
+                                        <form action="/admin/dateofsalesreport" method="post" class="d-flex"
+                                            id="dateForm" onsubmit="return dateValidation()">
                                             <div class="me-3">
                                                 <label for="fromDate" class="m-0">From:</label>
                                                 <input type="date" value="<%=fromDateToFrontEnd%>" class="form-control"
                                                     name="fromDate" style="width: 100%;"
-                                                    onchange="toggleButtonVisibility()" id="fromDate">
+                                                  id="fromDate" onchange="toggleButtonVisibility()">
                                             </div>
                                             <div class="me-3">
                                                 <label for="toDate" class="m-0">To:</label>
                                                 <input type="date" value="<%=toDateToFrontEnd%>" class="form-control"
                                                     name="toDate" style="width: 100%;"
-                                                    onchange="toggleButtonVisibility()">
+                                                    id="toDate" onchange="toggleButtonVisibility()">
                                             </div>
+
                                             <div>
                                                 <div class="me-3 hide-on-print">
                                                     <!-- <label for="submitButton" id="submitButtonLabel" class="m-0" style="display: none;">Report</label> -->
-                                                    <button id="submitButton" type="submit" class="btn btn-primary btn-sm hide-on-print" style="display: none;">Show Report</button>
+                                                    <button id="submitButton" type="submit"
+                                                        class="btn btn-primary btn-sm hide-on-print"
+                                                      style="display: none;" >Show
+                                                        Report</button>
                                                 </div>
+                                                <h6 class="text-center text-danger" id="dateError"></h6>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
 
                                 <script>
+                                    function dateValidation() {
+                                        const fromDate = new Date(document.getElementById('fromDate').value)
+                                        const toDate = new Date(document.getElementById('toDate').value)
+                                        const dateError = document.getElementById('dateError')
+                                        const dateForm = document.getElementById('dateForm')
+                            
+
+                                        console.log(fromDate);
+                                        console.log(toDate);
+
+                                        if (fromDate>=toDate) {
+                                            dateError.innerHTML = 'fromDate should be before toDate';
+                                            return false
+                                        } else {
+                                            dateError.innerHTML = '';
+                                            return true
+                                        }
+                                       return false
+                                    }
+
+
                                     function toggleButtonVisibility() {
                                         var fromDate = document.getElementsByName('fromDate')[0].value;
                                         var toDate = document.getElementsByName('toDate')[0].value;
                                         var submitButton = document.getElementById('submitButton');
                                         var submitButtonLabel = document.getElementById('submitButtonLabel');
-                                
+
                                         // Display the button and label only if either fromDate or toDate has a value
                                         if (fromDate || toDate) {
                                             submitButton.style.display = 'inline-block';
@@ -167,6 +194,7 @@
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
+                                        <%if(orderData && orderData.length>0){%>
                                         <tr>
                                             <th>#ID</th>
                                             <th scope="col">Name</th>
@@ -176,6 +204,9 @@
                                             <th scope="col">Date</th>
                                             <th scope="col" class="text-end hide-on-print"> Action </th>
                                         </tr>
+                                        <%}else{%>
+                                            <h3 class="text-center">No orders During these Dates</h3>
+                                            <%}%>
                                     </thead>
                                     <tbody>
                                         <%for(let i=0;i<orderData.length;i++){%>
@@ -187,7 +218,7 @@
                                                         <%=orderData[i].userData.name%>
                                                     </b></td>
                                                 <td>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <%=orderData[i].totalAmount%>
@@ -227,7 +258,8 @@
                                                                                                 year: 'numeric' }) %>
                                                                                         </td>
 
-                                                                                        <td class="text-end hide-on-print">
+                                                                                        <td
+                                                                                            class="text-end hide-on-print">
                                                                                             <a href="/admin/single-order-details?_id=<%=orderData[i]._id%>"
                                                                                                 class="btn btn-md rounded font-sm hide-on-print">Detail</a>
                                                                                             <!-- <div class="dropdown">
@@ -269,6 +301,7 @@
                             /* Adjust as needed to control the distance between text and border */
                         }
                     </style>
+                    <%if(orderData && orderData.length>0){%>
                     <div class="col-md-3">
                         <div class="card mb-4">
                             <div class="card-body">
@@ -349,6 +382,7 @@
                             </div>
                         </div> <!-- card end// -->
                     </div>
+                    <%}%>
                     <!-- <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">

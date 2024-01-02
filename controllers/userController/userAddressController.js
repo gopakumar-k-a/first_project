@@ -52,8 +52,9 @@ const loadAddressEdit = async (req, res) => {
 const updateAddress = async (req, res) => {
     try {
         const id = req.session.userId
+        const checkOutCheck = req.body.checkOutCheck
         const { index, firstName, lastName, phone, altPhone, houseName,
-            city, state, pincode, landMark } = req.body
+            city, state, pincode, landMark, from } = req.body
         const addressPos = parseInt(index, 10)
         const userMatch = await userModel.findOne({ _id: id })
         if (userMatch) {
@@ -69,7 +70,12 @@ const updateAddress = async (req, res) => {
                 landMark: landMark
             };
             await userMatch.save();
-            res.redirect('/user-dashboard?goto=user+address')
+            if (from == 'dashboard') {
+                res.redirect('/user-dashboard?goto=user+address')
+            }else if(from=='checkout'){
+                res.redirect('/checkout')
+            }
+
         }
         else {
             res.send('user not found')

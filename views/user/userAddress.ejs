@@ -47,8 +47,8 @@
                                                                 <div class="col-md-6 mb-3">
                                                                     <div class="card">
                                                                         <div class="card-body">
-                                                                            <input type="text" value="<%= index %>"
-                                                                                id="indexOfAddress" hidden>
+                                                                            <input hidden type="text" value="<%= index %>"
+                                                                                id="indexOfAddress" >
                                                                             <h5 class="card-title">Address <%= index + 1
                                                                                     %>
                                                                             </h5>
@@ -72,7 +72,7 @@
                                                                             </p>
                                                                             <h6>
                                                                                 <a class="product_name"
-                                                                                    href="/edit-user-address?index=<%= index %>">edit</a>
+                                                                                    href="/edit-user-address?index=<%= index %>&from=dashboard">edit</a>
                                                                                 <span class="mx-2">|</span>
                                                                                 <a class="product_name" href="#"
                                                                                     onclick="deleteAddress()">delete</a>
@@ -265,6 +265,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                 
 
 
 

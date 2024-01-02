@@ -10,7 +10,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="checkout-form-list">
-                                        <input type="text" value="<%=index%>" id="indexOfAddress" name="index">
+                                        <input type="text" value="<%=index%>" id="indexOfAddress" hidden name="index">
                                         <label>First Name <span class="required">*</span></label>
                                         <input placeholder="eg: Dinesh" type="text" name="firstName" id="firstName"
                                             value="<%=address.firstName%>">
@@ -87,6 +87,9 @@
                                         </li>
                                     </div>
                                 </div>
+                            <input type="text" name="from" id="from" hidden>
+
+
                                 <div class="col-12 d-flex justify-content-center">
                                     <button onclick="return validateForm()" class="register-button mt-0"
                                         type="button">update</button>
@@ -95,6 +98,21 @@
                             </div>
                         </div>
                     </form>
+                    <script>
+                             
+                        document.addEventListener('DOMContentLoaded', function() {
+                 
+                          const urlParams = new URLSearchParams(window.location.search);
+                      
+                          const fromParam = urlParams.get('from');
+                          
+                 
+                          const fromInput = document.getElementById('from');
+                          if (fromInput && fromParam) {
+                            fromInput.value = fromParam;
+                          }
+                        });
+                      </script>
 
 
 

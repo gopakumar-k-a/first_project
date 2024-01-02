@@ -42,93 +42,458 @@
             max-height: 50px;
             margin-right: 10px;
         }
+
+
+        /* ---------status--bar--styling--------- */
+        /* .hh-grayBox {
+            background-color: #f4f4f4;
+            margin-bottom: 20px;
+            padding: 35px;
+            margin-top: 20px;
+        }
+
+        .pt45 {
+            padding-top: 45px;
+        }
+
+
+        .order-tracking {
+            text-align: center;
+            width: 33.33%;
+            position: relative;
+            display: block;
+        }
+
+
+        .order-tracking .is-complete {
+            display: block;
+            position: relative;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            border: 0px solid #AFAFAF;
+            background-color: #f7be16;
+            margin: 0 auto;
+            transition: background 0.25s linear;
+            -webkit-transition: background 0.25s linear;
+            z-index: 2;
+        }
+
+        .order-tracking .is-complete:after {
+            display: block;
+            position: absolute;
+            content: '';
+            height: 14px;
+            width: 7px;
+            top: -2px;
+            bottom: 0;
+            left: 5px;
+            margin: auto 0;
+            border: 0px solid #AFAFAF;
+            border-width: 0px 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+
+        .order-tracking.completed .is-complete {
+            border-color: #27aa80;
+            border-width: 0px;
+            background-color: #27aa80;
+        }
+
+        .order-tracking.completed .is-complete:after {
+            border-color: #fff;
+            border-width: 0px 3px 3px 0;
+            width: 7px;
+            left: 11px;
+            opacity: 1;
+        }
+
+        .order-tracking p {
+            color: #A4A4A4;
+            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 0;
+            line-height: 20px;
+        }
+
+        .order-tracking p span {
+            font-size: 14px;
+        }
+
+        .order-tracking.completed p {
+            color: #000;
+        }
+
+        .order-tracking::before {
+            content: '';
+            display: block;
+            height: 3px;
+            width: calc(100% - 40px);
+            background-color: #f7be16;
+            top: 13px;
+            position: absolute;
+            left: calc(-50% + 20px);
+            z-index: 0;
+        }
+
+        .order-tracking:first-child:before {
+            display: none;
+        }
+
+        .order-tracking.completed:before {
+            background-color: #27aa80;
+        } */
+
+        /* ----------------4-------------- */
+        .hh-grayBox {
+            background-color: #f4f4f4;
+            margin-bottom: 20px;
+            padding: 35px;
+            margin-top: 20px;
+        }
+
+        .pt45 {
+            padding-top: 45px;
+        }
+
+        .row.justify-content-between {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .order-tracking {
+            text-align: center;
+            width: 25%;
+            position: relative;
+            display: inline-block;
+            margin-right: -4px;
+        }
+
+        .order-tracking .is-complete {
+            display: block;
+            position: relative;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            border: 0px solid #AFAFAF;
+            background-color: #f7be16;
+            margin: 0 auto;
+            transition: background 0.25s linear;
+            -webkit-transition: background 0.25s linear;
+            z-index: 2;
+        }
+
+        .order-tracking .is-complete:after {
+            display: block;
+            position: absolute;
+            content: '';
+            height: 14px;
+            width: 7px;
+            top: -2px;
+            bottom: 0;
+            left: 5px;
+            margin: auto 0;
+            border: 0px solid #AFAFAF;
+            border-width: 0px 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+
+        .order-tracking.completed .is-complete {
+            border-color: #27aa80;
+            border-width: 0px;
+            background-color: #27aa80;
+        }
+
+        .order-tracking.completed .is-complete:after {
+            border-color: #fff;
+            border-width: 0px 3px 3px 0;
+            width: 7px;
+            left: 11px;
+            opacity: 1;
+        }
+
+        .order-tracking p {
+            color: #A4A4A4;
+            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 0;
+            line-height: 20px;
+        }
+
+        .order-tracking.completed p {
+            color: #000;
+        }
+
+        .order-tracking::before {
+            content: '';
+            display: block;
+            height: 3px;
+            width: calc(100% - 40px);
+            background-color: #f7be16;
+            top: 13px;
+            position: absolute;
+            left: calc(-50% + 20px);
+            z-index: 0;
+        }
+
+        .order-tracking:first-child:before {
+            display: none;
+        }
+
+        .order-tracking.completed:before {
+            background-color: #27aa80;
+        }
+
+
+        .print-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #fed700;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .print-button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+
+
     <div class="Shopping-cart-area pt-60 pb-60">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-
-                   <h3>Customer</h3>
-                    <h6><strong>Customer Name:</strong>
-                        <%=orderData.userId.name%>
-                    </h6>
-                    <h6><strong>Email:</strong>
-                        <%=orderData.userId.email%>
-                    </h6>
-                    <h6><strong>Phone:</strong>
-                        <%=orderData.userId.phone%>
-                    </h6>
-                    <h3>Order Details</h3>
-                    <h6><strong>Order Date: </strong> <%=orderData.orderedAt%></h6>
-                    <h6><strong>Order ID: </strong> <%=orderData.orderId%></h6>
-                    <h6><strong>Payment Method : </strong> <%=orderData.paymentMethod%></h6>
-                    <h6><strong>Status of order : </strong> <%=orderData.orderStatus%></h6>
-                    <h6><strong>Grand Total : </strong> <%=orderData.totalAmount%></h6>
-                    <h3>Delivery Address</h3>
-                    <h6>
-                        <%= `${orderData.address[0].firstName} ${orderData.address[0].lastName},
-                            ${orderData.address[0].phone}, ${orderData.address[0].altPhone},
-                            ${orderData.address[0].houseName}, ${orderData.address[0].city},
-                            ${orderData.address[0].state}, ${orderData.address[0].pincode},
-                            ${orderData.address[0].landMark}` %>
-                    </h6>
-                  
-
-                    <h3>Ordered Products</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>sl.No</th>
-                                <th>Product Name</th>
-                                <th></th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (let i=0; i < orderData.items.length; i++) { %>
-                                <tr>
-                                    <td>
-                                        <%=i+1%>
-                                    </td>
-                                    <td class="product-name">
-                                        <%= orderData.items[i].productId.name%>
-                                    </td>
-                                    <td><img class="product-image"
-                                            src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
-                                            alt="Product 1"></td>
-                                    <td id="unit-price<%=i%>">
-                                        <%=orderData.items[i].productId.price.salePrice%>
-                                    </td>
-                                    <td id="quantity<%=i%>">
-                                        <%=orderData.items[i].quantity%>
-                                    </td>
-                                    <td id="total<%=i%>"></td>
-                                </tr>
-                                <%}%>
-                                    <input type="text" value="<%=orderData.items.length%>" id="order-product-length"
-                                        hidden>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <h3>Grand Total:</h3>
-                                        </td>
-                                        <td>
-                                            <h3 id="grand-total"><strong><%=orderData.totalAmount%></strong></h3>
-                                        </td>
-                                    </tr>
-                        </tbody>
-                    </table>
-
-
-                    <!-- Order Summary -->
-
-                </div>
+            <div class="row print-hidden">
+                <button class="print-button ml-auto" onclick="printInvoice()">
+                    <i class="fas fa-print"></i> Download Invoice
+                </button>
             </div>
+
+
+            <%if(orderData.orderStatus!='cancelled'){%>
+                <div class="row print-hidden">
+
+                    <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
+
+                        <div class="row justify-content-between">
+                            <div class="order-tracking" id="sts1">
+                                <span class="is-complete"></span>
+                                <p>Pending<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts2">
+                                <span class="is-complete"></span>
+                                <p>Processing<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts3">
+                                <span class="is-complete"></span>
+                                <p>shipped<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts4">
+                                <span class="is-complete"></span>
+                                <p>Delivered<br></p>
+                            </div>
+                            <!-- <div class="order-tracking " id="sts5">
+                                <span class="is-complete"></span>
+                                <p>Delivered<br></p>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <% } else { %>
+                    <h1 class="print-hidden"><span class="badge badge-danger">Cancelled</span></h1>
+                    <% } %>
+
+                        <script>
+                            function printInvoice() {
+                                window.print()
+                            }
+                        </script>
+                        <style>
+                            @media print {
+                                .print-hidden {
+                                    display: none !important;
+                                }
+                            }
+                        </style>
+                        <input id="statusOfOrder" type="text" value="<%=orderData.orderStatus%>" hidden>
+                        <script>
+                            const statusOfOrder = document.getElementById('statusOfOrder').value
+                            let sts1 = document.getElementById('sts1')
+                            let sts2 = document.getElementById('sts2')
+                            let sts3 = document.getElementById('sts3')
+                            let sts4 = document.getElementById('sts4')
+
+                            // enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+
+                            if (statusOfOrder == 'pending') {
+                                setTimeout(() => {
+                                    sts1.classList.add('completed');
+                                }, 500);
+                            } else if (statusOfOrder == 'processing') {
+                                setTimeout(() => {
+                                    sts1.classList.add('completed');
+                                }, 500);
+                                setTimeout(() => {
+                                    sts2.classList.add('completed');
+                                }, 1000); 
+                            } else if (statusOfOrder == 'shipped') {
+                                setTimeout(() => {
+                                    sts1.classList.add('completed');
+                                }, 500);
+                                setTimeout(() => {
+                                    sts2.classList.add('completed');
+                                }, 1000); 
+                                setTimeout(() => {
+                                    sts3.classList.add('completed');
+                                }, 1500);
+                            } else if (statusOfOrder == 'delivered') {
+                                setTimeout(() => {
+                                    sts1.classList.add('completed');
+                                }, 500);
+                                setTimeout(() => {
+                                    sts2.classList.add('completed');
+                                }, 1000); 
+                                setTimeout(() => {
+                                    sts3.classList.add('completed');
+                                }, 1500);
+                                setTimeout(() => {
+                                    sts4.classList.add('completed');
+                                }, 2000);
+                            }
+                        </script>
+
+
+                        <div class="row">
+                            <div class="col-12" id="invoiceSpace">
+
+                                <h3>Customer</h3>
+                                <h6><strong>Customer Name:</strong>
+                                    <%=orderData.userId.name%>
+                                </h6>
+                                <h6><strong>Email:</strong>
+                                    <%=orderData.userId.email%>
+                                </h6>
+                                <h6><strong>Phone:</strong>
+                                    <%=orderData.userId.phone%>
+                                </h6>
+                                <h3>Order Details</h3>
+
+                                <h6><strong>Order Date: </strong>
+                                    <%=orderData.orderedAt%>
+                                </h6>
+                                <h6><strong>Order ID: </strong>
+                                    <%=orderData.orderId%>
+                                </h6>
+                                <h6><strong>Payment Method : </strong>
+                                    <%=orderData.paymentMethod%>
+                                </h6>
+                                <h6><strong>Payment Status : </strong>
+                                    <%=orderData.paymentStatus%>
+                                </h6>
+                                <h6><strong>Order Status : </strong>
+                                    <%=orderData.orderStatus%>
+                                </h6>
+                                <h6><strong>Grand Total : </strong>
+                                    <%=orderData.totalAmount%>
+                                </h6>
+                                <h3>Delivery Address</h3>
+                                <h6>
+                                    <%= `${orderData.address[0].firstName} ${orderData.address[0].lastName},
+                                        ${orderData.address[0].phone}, ${orderData.address[0].altPhone},
+                                        ${orderData.address[0].houseName}, ${orderData.address[0].city},
+                                        ${orderData.address[0].state}, ${orderData.address[0].pincode},
+                                        ${orderData.address[0].landMark}` %>
+                                </h6>
+
+                                <!-- <div class="row">
+                        <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
+                            <div class="row justify-content-between">
+                               
+                                <div class="order-tracking completed">
+                                    <span class="is-complete"></span>
+                                    <p>Ordered<br></p>
+                                </div>
+                                <div class="order-tracking completed">
+                                    <span class="is-complete"></span>
+                                    <p>Shipped<br></p>
+                                </div>
+                                <div class="order-tracking">
+                                    <span class="is-complete"></span>
+                                    <p>Delivered<br></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
+
+                                <h3>Ordered Products</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>sl.No</th>
+                                            <th>Product Name</th>
+                                            <th></th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for (let i=0; i < orderData.items.length; i++) { %>
+                                            <tr>
+                                                <td>
+                                                    <%=i+1%>
+                                                </td>
+                                                <td class="product-name">
+                                                    <%= orderData.items[i].productId.name%>
+                                                </td>
+                                                <td><img class="product-image"
+                                                        src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
+                                                        alt="Product 1"></td>
+                                                <td id="unit-price<%=i%>">
+                                                    <%=orderData.items[i].productId.price.salePrice%>
+                                                </td>
+                                                <td id="quantity<%=i%>">
+                                                    <%=orderData.items[i].quantity%>
+                                                </td>
+                                                <td id="total<%=i%>"></td>
+                                            </tr>
+                                            <%}%>
+                                                <input type="text" value="<%=orderData.items.length%>"
+                                                    id="order-product-length" hidden>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h3>Grand Total:</h3>
+                                                    </td>
+                                                    <td>
+                                                        <h3 id="grand-total"><strong>
+                                                                <%=orderData.totalAmount%>
+                                                            </strong></h3>
+                                                    </td>
+                                                </tr>
+                                    </tbody>
+                                </table>
+
+
+                                <!-- Order Summary -->
+
+                            </div>
+
+                        </div>
+
+
         </div>
     </div>
 
@@ -143,11 +508,11 @@
                 total = quantity * unitPrice
 
                 document.getElementById(`total${i}`).innerText = total
-                
+
 
 
             }
-   
+
 
         }
         window.onload = calculatePrice
@@ -161,10 +526,8 @@
     <style>
         .product-name {
             max-width: 150px;
-            white-space: nowrap;
+            white-space: normal;
             overflow: hidden;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
         }
     </style>
     <%- include('footer.ejs') %>

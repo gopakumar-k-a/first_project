@@ -79,10 +79,7 @@ const loadShop = async (req, res) => {
 
 
             ])
-            console.log('-------------------------------------');
-            prData.forEach((val)=>{
-                console.log(val.name);
-            })
+     
 
 
 

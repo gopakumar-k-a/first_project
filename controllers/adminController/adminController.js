@@ -131,13 +131,27 @@ const loadDashboard = async (req, res) => {
             },
         ]);
      
+        const totalCollection = await orderModel.aggregate([
+            {
+              $match: {
+                paymentStatus: 'success'
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                totalAmount: { $sum: "$totalAmount" }
+              }
+            }
+          ]);
+          
 
+       console.log('this is total collection  ',totalCollection);
 
         const orderCount = await orderModel.aggregate([
             {
                 $group: {
                     _id: null,
-                    totalAmount: { $sum: "$totalAmount" },
                     countOfOrders: { $sum: 1 },
                 },
             }
@@ -163,8 +177,61 @@ const loadDashboard = async (req, res) => {
 
         ])
 
+        const orderData=await orderModel.find({})
+
+        let totalAmount = 0
+        let totalOrders = 0
+        let orderPendingCount = 0
+        let orderProcessingCount = 0
+        let orderShippedCount = 0
+        let orderDeliveredCount = 0
+        let orderCancelledCount = 0
+        let codCount = 0
+        let upiCount = 0
+        let codPaymentAmount = 0
+        let upiPaymentAmount = 0
+        orderData.forEach((data) => {
+           
+            totalOrders++
+            if (data.orderStatus == 'pending') {
+                orderPendingCount++
+            } else if (data.orderStatus == 'processing') {
+                orderProcessingCount++
+            } else if (data.orderStatus == 'shipped') {
+                orderShippedCount++
+            } else if (data.orderStatus == 'delivered') {
+                orderDeliveredCount++
+            } else if (data.orderStatus == 'cancelled') {
+                orderCancelledCount++
+            }
+            if(data.paymentMethod == 'cod' && data.paymentStatus == 'success'){
+                codPaymentAmount += data.totalAmount
+            }
+            if(data.paymentMethod == 'upi' && data.paymentStatus == 'success'){
+                upiPaymentAmount += data.totalAmount
+
+            }
+            if (data.paymentMethod == 'cod') {
+                codCount++
+                
+            } else if (data.paymentMethod == 'upi') {
+                upiCount++
+             
+            }
+          
+
+        })
+        const orderStats={
+            pending:orderPendingCount,
+            processing:orderProcessingCount,
+            shipped:orderShippedCount,
+            delivered:orderDeliveredCount,
+            cancelled:orderCancelledCount
 
 
+        
+        }
+        
 
         res.render('admin/adminDashboard', {
             userCountsPerMonth,
@@ -173,7 +240,9 @@ const loadDashboard = async (req, res) => {
             orderCount,
             productCount,
             categoryCount,
-            currentMonthIncome
+            currentMonthIncome,
+            totalCollection,
+            orderStats
         })
     } catch (error) {
         console.log(error.message);
@@ -239,17 +308,21 @@ const loadSalesReport = async (req, res) => {
             } else if (data.orderStatus == 'cancelled') {
                 orderCancelledCount++
             }
-            if(data.paymentMethod == 'cod' && data.orderStatus == 'delivered'){
+            if(data.paymentMethod == 'cod' && data.paymentStatus == 'success'){
                 codPaymentAmount += data.totalAmount
+            }
+            if(data.paymentMethod == 'upi' && data.paymentStatus == 'success'){
+                upiPaymentAmount += data.totalAmount
+
             }
             if (data.paymentMethod == 'cod') {
                 codCount++
                 
             } else if (data.paymentMethod == 'upi') {
                 upiCount++
-                upiPaymentAmount += data.totalAmount
-
+             
             }
+          
 
         })
         totalAmount=codPaymentAmount+upiPaymentAmount

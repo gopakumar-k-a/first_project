@@ -93,9 +93,9 @@
                         <!-- Begin Header Middle Right Area -->
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
                             <!-- Begin Header Middle Searchbox Area -->
-                            <form method="post" action="/search" class="hm-searchbox" onsubmit="return validateForm()">
+                            <form method="post" action="/search" class="hm-searchbox print-hidden" onsubmit="return validateForm()">
                                 <!-- <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword"> -->
-                                <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword" <% if (typeof keyword !== 'undefined') { %>value="<%= keyword %>"<% } %>>
+                                <input class="print-hidden" type="text" id="inputField" placeholder="Enter your search key ..." name="keyword" <% if (typeof keyword !== 'undefined') { %>value="<%= keyword %>"<% } %>>
 
 
                                 <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
@@ -119,7 +119,7 @@
 
                             <!-- Header Middle Searchbox Area End Here -->
                             <!-- Begin Header Middle Right Area -->
-                            <div class="header-middle-right">
+                            <div class="header-middle-right print-hidden" >
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
                                     <li class="hm-wishlist">

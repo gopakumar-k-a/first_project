@@ -342,9 +342,7 @@ const loadUserDashboard = async (req, res) => {
             return res.render('user/userOrders', { user, userData, message: message, sMessage: sMessage, orderData })
         }
         if(goto == 'user wallet'){
-            //wallet render here
             const walletData=await walletModel.findOne({userId:userId})
-            console.log('  this is wallet data  ',walletData);
             return res.render('user/userWallet',{user,userData,walletData})
         }
     } catch (error) {

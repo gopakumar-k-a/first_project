@@ -14,8 +14,7 @@ const loadOrderDetails = async (req, res) => {
 //changing status of the order
 const changeOrderStatus = async (req, res) => {
     try {
-        console.log('order id');
-        console.log(req.body);
+
         const { idOforder, orderStatusSelect } = req.body
         const orderData = await orderModel.findOne({ _id: idOforder })
         //  ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
@@ -28,6 +27,23 @@ const changeOrderStatus = async (req, res) => {
                             orderStatusSelect === 'cancelled' ? 'cancelled' :
                                 'unknown';
             orderData.orderStatus = status
+            console.log('this is status ',status);
+            if(orderData.paymentMethod=='cod'){
+                if(status=='pending' || status=='processing' || status=='shipped'){
+                    orderData.paymentStatus='pending'
+                }else if(status=='delivered'){
+                    orderData.paymentStatus='success'
+                }else if(status=='cancelled'){
+                    orderData.paymentStatus='cancelled'
+                }
+            }
+            if(orderData.paymentMethod=='upi'){
+                if(status=='cancelled'){
+                    orderData.paymentStatus='cancelled'
+                }else{
+                    orderData.paymentStatus='success'
+                }
+            }
             await orderData.save()
         }
         res.status(200).json({ message: 'Success' });

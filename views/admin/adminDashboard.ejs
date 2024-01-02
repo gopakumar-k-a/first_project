@@ -2,6 +2,7 @@
   <div class="screen-overlay"></div>
  <%- include('sideNav.ejs') %>
   <main class="main-wrap">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
     <section class="content-main">
       <div class="content-header">
@@ -37,9 +38,9 @@
                   class="text-primary material-icons md-monetization_on"></i></span>
               <div class="text">
                 <h6 class="mb-1 card-title">Revenue</h6>
-                <% if (productCount && productCount.length > 0) {%>
+                <% if (totalCollection && totalCollection.length > 0) {%>
 
-                <span>&#x20B9; <%=orderCount[0].totalAmount%></span>
+                <span>&#x20B9; <%=totalCollection[0].totalAmount%></span>
                 <%}else{%>
                   <span>&#x20B9; 0</span>
 
@@ -111,7 +112,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
         <div class="col-xl-8 col-lg-12">
           <div class="card mb-4">
             <article class="card-body">
@@ -154,6 +155,37 @@
             </article>
           </div>
         </div> -->
+      </div>
+      <div class="row justify-content-center">
+        <div id="piechart_3d" style="width: 873px; height: 500px;"></div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      const pending=Number(<%=orderStats.pending%>)
+      const processing=Number(<%=orderStats.processing%>)
+      const shipped=Number(<%=orderStats.shipped%>)
+      const delivered=Number(<%=orderStats.delivered%>)
+      const cancelled=Number(<%=orderStats.cancelled%>)
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['pending',     pending],
+          ['processing',      processing],
+          ['shipped',  shipped],
+          ['delivered', delivered],
+          ['cancelled',    cancelled]
+        ]);
+
+        var options = {
+          title: 'Order Statistics',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
       </div>
       
      
