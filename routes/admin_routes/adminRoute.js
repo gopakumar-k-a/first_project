@@ -9,6 +9,8 @@ const adminController = require('../../controllers/adminController/adminControll
 const productController = require('../../controllers/adminController/productController')
 
 const orderController=require('../../controllers/adminController/orderController')
+
+const couponController=require('../../controllers/adminController/couponController')
 //requiring storage engine for multer
 const upload = require('../../multer')
 //admin auth
@@ -111,6 +113,10 @@ admin.get('/single-order-details',adminAuth.isLogin,orderController.loadSingleOr
 admin.get('/salesreport',adminAuth.isLogin,adminController.loadSalesReport)
 //laading date of sales report
 admin.post('/dateofsalesreport',adminAuth.isLogin,adminController.dateOfSalesReport)
+//load coupon management page
+admin.get('/coupon',adminAuth.isLogin,couponController.loadCoupon)
+//add new coupon
+admin.post('/coupon',adminAuth.isLogin,couponController.addNewCoupon)
 
 
 
