@@ -48,18 +48,76 @@
                                 </div> -->
                                 <!--Accordion End-->
                                 <!--Accordion Start-->
-                                <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
-                                <div id="checkout_coupon" class="coupon-checkout-content">
-                                    <div class="coupon-info">
-                                        <form action="#">
-                                            <p class="checkout-coupon">
-                                                <input placeholder="Coupon code" type="text">
-                                                <input value="Apply Coupon" type="submit">
-                                            </p>
-                                        </form>
+                                <%if(couponData && couponData.length>0){%>
+                                    <div id="couponDataDiv">
+                                        <h3>Your order is eligible for coupon apply <span id="showcoupon">Click here to
+                                                get
+                                                your coupon code</span></h3>
+                                        <div id="checkout_coupon" class="coupon-checkout-content">
+                                            <div class="coupon-info">
+                                                <form action="#">
+                                                    <p class="checkout-coupon">
+                                                        <!-- <input placeholder="Coupon code" type="text">
+                                                    <input value="Apply Coupon" type="submit"> -->
+                                                    <h4>apply any one of the code before order to claim the offer</h4>
+                                                    <div
+                                                        style="width: 500px; margin: 0 auto; padding: 20px; display: flex; background-color: #f5f5f5;">
+                                                        <table
+                                                            style="border-collapse: collapse; width: 100%; border: none; margin-left: auto;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% couponData.forEach((coupon, index)=> { %>
+                                                                    <tr>
+                                                                        <td style="border: none; padding: 10px 20px;">
+                                                                            <!-- <button
+                                                                            onclick="copyToClipboard('couponName<%= index %>')">Copy</button> -->
+                                                                            <sl-copy-button id="copyButton"
+                                                                                value="<%=coupon.name%>"></sl-copy-button>
+
+                                                                        </td>
+                                                                        <td style="border: none; padding: 10px 20px;">
+                                                                            <h4 id="couponName<%= index %>">
+                                                                                <%= coupon.name %>
+                                                                            </h4>
+
+
+                                                                        </td>
+                                                                        <td style="border: none; padding: 10px 20px;">
+                                                                            <% if (coupon.flatOffer> 0) { %>
+                                                                                flat &#8377;<%= coupon.flatOffer %> off
+                                                                                    <% } else { %>
+                                                                                        flat <%= coupon.discountPercent
+                                                                                            %>%
+                                                                                            off
+                                                                                            <% } %>
+                                                                        </td>
+                                                                        <td style="border: none; padding: 10px 20px;">
+                                                                            on minimum purchase of &#8377;<%=
+                                                                                coupon.minimumPurchase %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    </p>
+
+
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--Accordion End-->
+                                    <%}%>
+
+
+                                        <!--Accordion End-->
                             </div>
                         </div>
                     </div>
@@ -263,6 +321,37 @@
                                                 <td><span class="amount"></span></td>
                                                 <td><span class="amount" id="subTotal"></span></td>
                                             </tr>
+
+                                            <tr class="cart-subtotal" id="walletDiv" style="visibility: hidden;">
+                                                <th>Wallet Amount</th>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount" id="walletBal">0</span></td>
+                                            </tr>
+                                            <!-- couponShow -->
+                                            <tr class="cart-subtotal" id="couponAmountDiv" style="visibility: hidden;">
+                                                <th>Coupon Amount</th>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount" id="couponAmount">0</span></td>
+                                            </tr>
+                                            <style>
+                                                #couponAmount::before {
+                                                    content: '-';
+                                                }
+
+                                                #walletBal::before {
+                                                    content: '-';
+                                                }
+                                            </style>
+                                            <!-- <tr class="cart-subtotal" style="display: block;" id="walletDiv">
+                                                <th>Wallet Amount</th>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount"></span></td>
+                                                <td><span class="amount" id="walletBal">0</span></td>
+                                            </tr> -->
+
+
                                             <tr class="order-total">
                                                 <th>Order Total</th>
                                                 <td><span class="amount"></span></td>
@@ -271,17 +360,45 @@
                                                             name="orderTotal"></span></strong>
                                                 </td>
                                             </tr>
+                                            <%if(couponData && couponData.length>0){%>
+                                                <tr class="order-total">
+                                                    <td>
+                                                        <div id="couponDiv">
+                                                            <input style="background-color: white;"
+                                                                placeholder="Coupon code" type="text" id="couponName">
+
+                                                            <div class="order-button-payment">
+                                                                <input value="apply coupon" type="button"
+                                                                    id="couponButton">
+                                                            </div>
+                                                            <li class="text-danger" id="couponFieldError"></li>
+                                                        </div>
+                                                        <input type="text" id="currentCouponNameHidden">
+                                                        <input type="text" id="currentCouponTypeHidden">
+                                                        <input type="text" id="currentCouponValueHidden">
+
+
+                                                    </td>
+                                                </tr>
+                                                <%}%>
                                         </tfoot>
                                     </table>
                                 </div>
+
                                 <script>
+                                    //bill calculation
+
 
                                     document.addEventListener('DOMContentLoaded', function () {
                                         const addressErr = document.getElementById('addressErr')
                                         addressErr.style.display = 'none';
                                         var productPrice = 0;
                                         let subTotal = document.getElementById('subTotal');
+                                        // let sub2Total = document.getElementById('sub2Total')
+                                        let walletAmount = parseFloat(document.getElementById('walletBal'))
+                                        let couoponAmount = parseFloat(document.getElementById('couoponAmount'))
                                         let total = document.getElementById('total')
+                                        let totalRes = parseInt(document.getElementById('total').innerHTML)
 
                                         for (let i = 0; i < <%= cartData.products.length %>; i++) {
                                         let hiddenValue = document.getElementById(`totalProductPriceHidden${i}`).value;
@@ -289,50 +406,309 @@
                                         productPrice += parsedValue;
 
                                     }
+                                    // sub2Total.innerHTML = productPrice.toFixed(2);
+                                    let walletRes = walletAmount.toFixed(2)
+                                    let couponRes = couoponAmount.toFixed(2)
+                                    let subRes = productPrice.toFixed(2);
+                                    subTotal.innerHTML = subRes
+                                    if (walletAmount.innerHTML > 0 || couoponAmount.innerHTML > 0) {
+                                        total.innerHTML = totalRes - walletRes - couponRes
 
-                                    subTotal.innerHTML = productPrice.toFixed(2);
-                                    total.innerHTML = productPrice.toFixed(2);
-                            });
+                                    } else {
+
+                                        total.innerHTML = productPrice.toFixed(2);
+                                    }
+
+                                    });
+
+
+                                    //couponFetch
+
+                                    // Variable to store the currently applied discount
+                                    let currentDiscount = 0;
+
+                                    function applyCoupon() {
+                                        const couponName = document.getElementById('couponName').value.trim().toUpperCase();
+                                        const couponFieldError = document.getElementById('couponFieldError');
+                                        const couponAmount = document.getElementById('couponAmount');
+                                        couponAmount.innerHTML = 0;
+
+                                        if (couponName === '') {
+                                            couponFieldError.innerHTML = 'Please enter a value before applying';
+                                            return;
+                                        }
+
+                                        couponFieldError.innerHTML = '';
+
+                                        // Disable the fetch button to prevent multiple clicks
+                                        const fetchButton = document.getElementById("couponButton");
+                                        fetchButton.disabled = true;
+
+                                        const totalElement = document.getElementById('total');
+                                        let totalVal = parseInt(totalElement.innerHTML);
+
+                                        // Reset the applied coupon details before applying a new one
+                                        resetCouponDetails();
+
+                                        fetch(`/get-coupon-data?name=${couponName}&total=${totalVal}`, {
+                                            method: 'GET',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            }
+                                        }).then(response => response.json())
+                                            .then(data => {
+                                                console.log('data in response', data);
+
+                                                const message = data.message;
+                                                const discountPrice = data.discountPrice;
+                                                const couponType = data.couponType
+                                                const discountValue = data.discountValue
+                                                const couponName = data.couponName
+
+                                                if (message === 'success') {
+
+                                                    totalVal += currentDiscount;
+                                                    const currentCouponNameHidden = document.getElementById('currentCouponNameHidden')
+                                                    currentCouponNameHidden.value = couponName
+                                                    const currentCouponTypeHidden = document.getElementById('currentCouponTypeHidden')
+                                                    currentCouponTypeHidden.value = couponType
+                                                    const currentCouponValueHidden=document.getElementById('currentCouponValueHidden')
+                                                    currentCouponValueHidden.value=discountValue
+                                                    if (couponType === 'flat') {
+                                                        totalVal -= discountPrice;
+                                                        currentDiscount = discountPrice;
+                                                    } else if (couponType === 'percentage') {
+
+                                                        const percentageDiscount = totalVal * (discountValue / 100);
+                                                        totalVal -= parseInt(percentageDiscount);
+                                                        currentDiscount = parseInt(percentageDiscount);
+                                                    }
+
+                                                    totalVal = Math.max(totalVal, 0);
+
+                                                    totalElement.innerHTML = totalVal;
+                                                    couponAmount.innerHTML = currentDiscount;
+
+
+                                                    const couponAmountDiv = document.getElementById('couponAmountDiv');
+                                                    couponAmountDiv.style.visibility = 'visible';
+                                                } else if (message === 'cantApply') {
+                                                    couponFieldError.innerHTML = 'Cannot apply coupon';
+                                                } else if (message === 'notFound') {
+                                                    couponFieldError.innerHTML = 'Cannot find coupon';
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.log('Error applying coupon:', error);
+                                            })
+                                            .finally(() => {
+                                                // Enable the fetch button after the operation is complete
+                                                fetchButton.disabled = false;
+                                            });
+                                    }
+
+                                    document.getElementById("couponButton").addEventListener("click", applyCoupon);
+
+
+
+
+
+                                    // Function to reset applied coupon details
+                                    function resetCouponDetails() {
+                                        const couponAmount = document.getElementById('couponAmount');
+                                        const couponAmountDiv = document.getElementById('couponAmountDiv');
+                                        couponAmount.innerHTML = 0;
+                                        couponAmountDiv.style.visibility = 'hidden';
+                                    }
+
+
+
+                                    //walletFetch
+                                    document.addEventListener('DOMContentLoaded', () => {
+                                        const walletCheckbox = document.getElementById('walletCheckbox')
+                                        walletCheckbox.addEventListener('change', () => {
+                                            if (walletCheckbox.checked) {
+                                                // fetchWalletBalance()
+
+                                                const total = parseInt(document.getElementById('total').innerHTML)
+                                                const couponAmount = parseInt(document.getElementById('couponAmount').innerHTML)
+                                                let couponCheck = 0
+                                                if (couponAmount > 0) {
+                                                    couponCheck = couponAmount
+                                                }
+
+
+                                                fetch(`/get-wallet-data?total=${total}&couponCheck=${couponCheck}`, {
+                                                    method: 'GET',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+
+                                                }).then(response => response.json())
+                                                    .then(data => {
+                                                        console.log(data);
+                                                        //wallet balance
+                                                        const walletBalance = data.walletBal
+                                                        console.log('this is wallet  balance:walletBalance: ', walletBalance);
+                                                        //for hiding wallet div
+                                                        const walletDiv = document.getElementById('walletDiv')
+                                                        //applied wallet value html
+                                                        const walletBal = document.getElementById('walletBal')
+                                                        //wallet balance under checkbox
+                                                        const walletBalanceShow = document.getElementById('walletBalanceShow')
+                                                        //availabel balance in the wallet
+                                                        const walletBalanceShowVal = parseInt(walletBalanceShow.innerHTML)
+                                                        //money required to apply
+                                                        const moneyRequired = data.moneyRequired
+
+                                                        walletDiv.style.visibility = 'visible'
+                                                        let total = document.getElementById('total')
+                                                        let totalVal = parseFloat(document.getElementById('total').innerHTML)
+
+                                                        // const subTotalRes = parseFloat(subTotal.innerHTML)
+                                                        console.log('this is total val :totalVal ', totalVal);
+
+                                                        let totalRes = parseFloat(total.innerHTML)
+                                                        console.log('total :totalRes', totalRes);
+
+
+                                                        // if (total.innerHTML==0) {
+                                                        //     console.log('walletBalance >= totalVal');
+                                                        //     walletBal.innerHTML = totalVal
+                                                        //     // total.innerHTML = 0
+                                                        //     const codDiv = document.getElementById('codDiv')
+                                                        //     const upiDiv = document.getElementById('upiDiv')
+                                                        //     const couponDiv = document.getElementById('couponDiv')
+                                                        //     const couponDataDiv = document.getElementById('couponDataDiv')
+                                                        //     codDiv.style.display = 'none'
+                                                        //     upiDiv.style.display = 'none'
+                                                        //     couponDiv.style.display = 'none'
+                                                        //     couponDataDiv.style.display = 'none'
+                                                        //     // walletPending
+                                                        // } 
+                                                        // else {
+
+                                                        console.log('subTotal > walletBal');
+                                                        // total.innerHTML = totalVal - walletBalance
+
+                                                        walletBal.innerHTML = moneyRequired
+                                                        total.innerHTML -= moneyRequired
+
+                                                        // } 
+                                                        if (total.innerHTML == 0) {
+                                                            console.log('walletBalance >= totalVal');
+                                                            walletBal.innerHTML = totalVal
+                                                            // total.innerHTML = 0
+                                                            const codDiv = document.getElementById('codDiv')
+                                                            const upiDiv = document.getElementById('upiDiv')
+                                                            const couponDiv = document.getElementById('couponDiv')
+                                                            const couponDataDiv = document.getElementById('couponDataDiv')
+                                                            codDiv.style.display = 'none'
+                                                            upiDiv.style.display = 'none'
+                                                            couponDiv.style.display = 'none'
+                                                            couponDataDiv.style.display = 'none'
+                                                            // walletPending
+                                                        }
+                                                        walletBalanceShow.innerHTML = walletBalanceShowVal - parseInt(walletBal.innerHTML)
+
+
+                                                    })
+                                                    .catch(error => {
+                                                        console.log('Error updating cart quantity:', error);
+                                                    });
+
+                                            } else {
+                                                console.log('in else part of fetch');
+
+                                                const walletBalanceHidden = document.getElementById('walletBalanceHidden')
+                                                walletBalanceShow.innerHTML = walletBalanceHidden.value
+                                                walletDiv.style.visibility = 'hidden'
+                                                couponDiv.style.display = 'block'
+                                                walletBal.innerHTML = 0
+                                                total.innerHTML = subTotal.innerHTML
+                                                codDiv.style.display = 'block'
+                                                upiDiv.style.display = 'block'
+                                                couponDataDiv.style.display = 'block'
+
+                                            }
+                                        });
+                                    });
+
+
                                 </script>
                                 <div class="payment-method">
                                     <div class="payment-accordion">
                                         <div id="accordion">
                                             <div class="card">
-                                                <div class="card-header" id="#payment-1">
-                                                    <h5 class="panel-title">
-                                                        <input checked type="radio" name="paymentMethod" value="cod"
-                                                            onchange="updateButton()">
-                                                        <a class="" data-toggle="collapse" data-target="#collapseOne"
-                                                            aria-expanded="true" aria-controls="collapseOne">
-                                                            Cash On Delivery
-                                                        </a>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <p>"Shop now, pay later! Enjoy the convenience of Cash on
-                                                            Delivery."
-                                                        </p>
+                                                <%if(walletData && walletData!=null && walletData.balance>0){%>
+                                                    <div class="categori-checkbox" id="#payment-1">
+                                                        <h5 class="panel-title">
+                                                            <input type="checkbox" name="wallet" value="wallet"
+                                                                id="walletCheckbox">
+                                                            <a class="" data-toggle="collapse" data-target="#collapseW"
+                                                                aria-expanded="true" aria-controls="collapseOne">
+                                                                Apply Wallet Balance
+                                                            </a>
+                                                        </h5>
                                                     </div>
-                                                </div>
+
+                                                    <div id="collapseW" class="collapse show" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            <p>
+                                                                Available Balance <strong id="walletBalanceShow">
+                                                                    <%=walletData.balance%>
+                                                                </strong>
+                                                            </p>
+                                                            <p>Apply Wallet Money To Your Order
+                                                            </p>
+                                                            <input type="text" value="<%=walletData.balance%>"
+                                                                id="walletBalanceHidden" hidden>
+                                                        </div>
+                                                    </div>
+                                                    <%}%>
+                                                        <div id="codDiv">
+                                                            <div class="card-header" id="#payment-1">
+                                                                <h5 class="panel-title">
+                                                                    <input checked type="radio" name="paymentMethod"
+                                                                        value="cod" onchange="updateButton()">
+                                                                    <a class="" data-toggle="collapse"
+                                                                        data-target="#collapseOne" aria-expanded="true"
+                                                                        aria-controls="collapseOne">
+                                                                        Cash On Delivery
+                                                                    </a>
+                                                                </h5>
+                                                            </div>
+                                                            <div id="collapseOne" class="collapse show"
+                                                                data-parent="#accordion">
+                                                                <div class="card-body">
+                                                                    <p>"Shop now, pay later! Enjoy the convenience of
+                                                                        Cash
+                                                                        on
+                                                                        Delivery."
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                             </div>
-                                            <div class="card">
-                                                <div class="card-header" id="#payment-2">
-                                                    <h5 class="panel-title">
-                                                        <!-- change this value in future -->
-                                                        <input type="radio" name="paymentMethod" value="upi"
-                                                            onchange="updateButton()">
-                                                        <a class="collapsed" data-toggle="collapse"
-                                                            data-target="#collapseTwo" aria-expanded="false"
-                                                            aria-controls="collapseTwo">
-                                                            UPI
-                                                        </a>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <p>"Upholding trust in every tap – UPI, where security meets
-                                                            simplicity."</p>
+                                            <div id="upiDiv">
+                                                <div class="card">
+                                                    <div class="card-header" id="#payment-2">
+                                                        <h5 class="panel-title">
+                                                            <!-- change this value in future -->
+                                                            <input type="radio" name="paymentMethod" value="upi"
+                                                                onchange="updateButton()">
+                                                            <a class="collapsed" data-toggle="collapse"
+                                                                data-target="#collapseTwo" aria-expanded="false"
+                                                                aria-controls="collapseTwo">
+                                                                UPI
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            <p>"Upholding trust in every tap – UPI, where security meets
+                                                                simplicity."</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -469,12 +845,28 @@
                                                 var codRadio = document.querySelector('input[value="cod"]');
                                                 var upiRadio = document.querySelector('input[value="upi"]');
                                                 var paymentButton = document.getElementById('paymentButton');
+                                                const amountPaid = document.getElementById('total').innerHTML
+                                                const walletCheckbox = document.getElementById('walletCheckbox')
+
+
+
                                                 const userAddressLength = <%= cartData ?cartData.userId.address.length: 0 %>;
                                                 if (userAddressLength > 0) {
-                                                    if (codRadio.checked) {
-                                                        confirmOrder();
-                                                    } else if (upiRadio.checked) {
-                                                        pay()
+                                                    if (walletCheckbox.checked && amountPaid > 0) {
+
+                                                        if (codRadio.checked) {
+                                                            confirmOrder();
+                                                        } else if (upiRadio.checked) {
+                                                            pay()
+                                                        }
+                                                    } else if (walletCheckbox.checked && amountPaid <= 0) {
+                                                        confirmOrder()
+                                                    } else {
+                                                        if (codRadio.checked) {
+                                                            confirmOrder();
+                                                        } else if (upiRadio.checked) {
+                                                            pay()
+                                                        }
                                                     }
 
 
@@ -511,8 +903,8 @@
                                                 });
 
                                             }
-                               
-                                    //confirm order function for placing order in cod
+
+                                            //confirm order function for placing order in cod
                                             function confirmOrder() {
 
                                                 addressErr.style.display = 'none'
@@ -528,7 +920,7 @@
                                                     cancelButtonText: 'No, cancel'
                                                 }).then((result) => {
                                                     if (result.value) {
-                                                        
+
                                                         placeOrder()
 
 
@@ -538,21 +930,57 @@
                                                 });
 
                                             }
-                                            
+
                                             //use this function weather it is cod or upi
 
-                                            function placeOrder(razId="nill") {
+                                            function placeOrder(razId = "nill") {
+                                                const walletCheckbox = document.getElementById('walletCheckbox')
+                                                const couponAmount = document.getElementById('couponAmount')
+                                                let walletStatus = false
+                                                let couponStatus = false
+                                                let moneyFromWallet = 0
+                                                let moneyFromCoupon = 0
+                                                let couponName = ''
+                                                let couponType = ''
+                                                let couponDis=0
+
+                                                if (walletCheckbox.checked) {
+                                                    walletStatus = true
+                                                    moneyFromWallet = parseInt(document.getElementById('walletBal').innerHTML)
+                                                }
+                                                if (couponAmount.innerHTML > 0) {
+                                                    couponStatus = true
+                                                    moneyFromCoupon = parseInt(couponAmount.innerHTML)
+                                                    couponName = document.getElementById('currentCouponNameHidden').value
+                                                    couponType=document.getElementById('currentCouponTypeHidden').value
+                                                    couponDis=parseInt(document.getElementById('currentCouponValueHidden').value)
+                                                }
 
 
-                                                const total = document.getElementById('total').innerHTML
-                                                const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                                                const total =parseInt( document.getElementById('subTotal').innerHTML)
+                                                let selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
                                                 const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
+                                                const amountPaid = parseInt(document.getElementById('total').innerHTML)
+
+                                                if (walletCheckbox.checked && amountPaid == 0) {
+                                                    selectedPaymentMethod = 'wallet'
+                                                }
 
                                                 const data = {
                                                     paymentMethod: selectedPaymentMethod,
                                                     totalAmount: total,
                                                     indexOfAddress: indexOfUserAddress,
-                                                    razId:razId
+                                                    razId: razId,
+                                                    amountPaid: amountPaid,
+                                                    walletStatus: walletStatus,
+                                                    moneyFromWallet: moneyFromWallet,
+                                                    couponStatus: couponStatus,
+                                                    moneyFromCoupon: moneyFromCoupon,
+                                                    couponName: couponName,
+                                                    couponType:couponType,
+                                                    couponDiscount:couponDis,
+
+
                                                 };
 
                                                 fetch('/place-order', {

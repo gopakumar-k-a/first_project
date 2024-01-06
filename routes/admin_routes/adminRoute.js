@@ -107,8 +107,6 @@ admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrder
 admin.get('/all-orders',adminAuth.isLogin,orderController.loadAllOrders)
 //show single order details
 admin.get('/single-order-details',adminAuth.isLogin,orderController.loadSingleOrderDetails)
-
-
 //load sales report
 admin.get('/salesreport',adminAuth.isLogin,adminController.loadSalesReport)
 //laading date of sales report
@@ -117,6 +115,11 @@ admin.post('/dateofsalesreport',adminAuth.isLogin,adminController.dateOfSalesRep
 admin.get('/coupon',adminAuth.isLogin,couponController.loadCoupon)
 //add new coupon
 admin.post('/coupon',adminAuth.isLogin,couponController.addNewCoupon)
+//edit coupon
+admin.patch('/coupon',adminAuth.isLogin,couponController.editCoupon)
+//change status of the coupon
+admin.patch('/coupon-status',adminAuth.isLogin,couponController.changeActive)
+
 
 
 

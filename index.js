@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(express.json());
 
+
 const userRoute = require('./routes/user_routes/userRoute')
 const adminRoute = require('./routes/admin_routes/adminRoute')
 app.use('/',userRoute)

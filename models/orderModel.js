@@ -52,7 +52,7 @@ const orderSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         required: true,
-        enum: ['cod', 'upi']
+        enum: ['cod', 'upi','wallet']
     },
     totalAmount: {
         type: Number,
@@ -73,6 +73,37 @@ const orderSchema = new mongoose.Schema({
     paymentStatus:{
         type:String,
         enum:['pending','success','cancelled']
+    },
+    amountPaid:{
+        type:Number,
+        default:0
+
+    },
+    walletStatus:{
+        type:Boolean,
+        default:false
+
+    },
+    moneyFromWallet:{
+        type:Number,
+        default:0
+    },
+    couponStatus:{
+        type:Boolean
+    },
+    moneyFromCoupon:{
+        type:Number,
+        default:0
+    },
+    couponName:{
+        type:String
+    },
+    couponType:{
+        type:String
+    },
+    couponDiscount:{
+        type:Number,
+        default:0
     }
 });
 

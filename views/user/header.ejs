@@ -58,6 +58,14 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!-- bootstrap icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- -------shoelace-------- -->
+    <link rel="stylesheet" href="/shoelace/dist/themes/light.css" />
+    <script type="module" src="/shoelace/dist/shoelace.js"></script>
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/components/copy-button/copy-button.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 
 
 
@@ -93,33 +101,36 @@
                         <!-- Begin Header Middle Right Area -->
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
                             <!-- Begin Header Middle Searchbox Area -->
-                            <form method="post" action="/search" class="hm-searchbox print-hidden" onsubmit="return validateForm()">
+                            <form method="post" action="/search" class="hm-searchbox print-hidden"
+                                onsubmit="return validateForm()">
                                 <!-- <input type="text" id="inputField" placeholder="Enter your search key ..." name="keyword"> -->
-                                <input class="print-hidden" type="text" id="inputField" placeholder="Enter your search key ..." name="keyword" <% if (typeof keyword !== 'undefined') { %>value="<%= keyword %>"<% } %>>
+                                <input class="print-hidden" type="text" id="inputField"
+                                    placeholder="Enter your search key ..." name="keyword" <% if (typeof keyword
+                                    !=='undefined' ) { %>value="<%= keyword %>"<% } %>>
 
 
-                                <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+                                        <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
                             </form>
 
                             <script>
                                 function validateForm() {
-                                  // Get the input field value
-                                  var inputValue = document.getElementById('inputField').value;
-                              
-                                  // Check if the input field is empty
-                                  if (inputValue.trim() === '') {
-                                    return false;
-                                  }
-                              
-                                  // Allow the form submission if the input field is not empty
-                                  return true;
+                                    // Get the input field value
+                                    var inputValue = document.getElementById('inputField').value;
+
+                                    // Check if the input field is empty
+                                    if (inputValue.trim() === '') {
+                                        return false;
+                                    }
+
+                                    // Allow the form submission if the input field is not empty
+                                    return true;
                                 }
-                              </script>
-                              
+                            </script>
+
 
                             <!-- Header Middle Searchbox Area End Here -->
                             <!-- Begin Header Middle Right Area -->
-                            <div class="header-middle-right print-hidden" >
+                            <div class="header-middle-right print-hidden">
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
                                     <li class="hm-wishlist">

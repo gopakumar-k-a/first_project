@@ -82,7 +82,10 @@ user.post('/online-payment',userAuth.isLogin,userOrderController.onlinePayment)
 user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
 //show each of order details of user
 user.get('/order-details',userAuth.isLogin,userOrderController.orderDetails)
-
+//give coupon details to checkout
+user.get('/get-coupon-data',userAuth.isLogin,userOrderController.couponDetails)
+//give walllet details to checkout
+user.get('/get-wallet-data',userAuth.isLogin,userOrderController.walletApply)
 
 
 

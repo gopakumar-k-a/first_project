@@ -33,7 +33,7 @@ const couponSchema = new mongoose.Schema({
         type: Date,
         default: () => Date.now()
     },
-    status:{
+    isActive:{
         type:Boolean,
         default:true
     }

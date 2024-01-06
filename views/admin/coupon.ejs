@@ -13,6 +13,23 @@
                         <h2 class="content-title card-title">Coupon Management</h2>
                         <!-- <p>Lorem ipsum dolor sit amet.</p> -->
                     </div>
+                    <!-- success message -->
+                    <h3 class="text-success" id="addSuc">
+                        <%=successMsg%>
+                    </h3>
+                    <!-- error message -->
+                    <h3 class="text-danger" id="addErr">
+                        <%=errorMsg%>
+                    </h3>
+
+                    <script>
+                        const addSuc = document.getElementById('addSuc')
+                        const addErr = document.getElementById('addErr')
+                        setTimeout(() => {
+                            addErr.style.display = 'none'
+                            addSuc.style.display = 'none'
+                        }, 3000)
+                    </script>
                     <div>
                         <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
                     <a href="#" class="btn btn-light rounded  font-md">Import</a> -->
@@ -48,7 +65,7 @@
                                             </td>
 
                                             <td>
-                                                <% if (coupon.status==true) { %>
+                                                <% if (coupon.isActive==true) { %>
                                                     <span class="badge rounded-pill alert-success">active</span>
                                                     <% } else{%>
 
@@ -85,15 +102,89 @@
                                                     onclick="document.getElementById('editModal<%=index%>').style.display='block'">
                                                     <i class="material-icons md-edit"></i> Edit
                                                 </a>
-                                                <a href="#" class="btn btn-sm font-sm btn-light rounded">
-                                                    <i class="material-icons md-delete_forever"></i> Block
-                                                </a>
-                                                <a href="#" class="btn btn-sm font-sm btn-light rounded">
-                                                    <i class="material-icons md-delete_forever"></i> Delete
-                                                </a>
+
+                                                <%if(coupon.isActive==true){%>
+
+                                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"
+                                                        onclick="blockCoupon('<%=coupon._id%>',false)">
+                                                        <i class="material-icons md-delete_forever"></i> Block
+                                                    </a>
+                                                    <%}else{%>
+                                                        <a href="#" class="btn btn-sm font-sm btn-light rounded"
+                                                            onclick="unBlockCoupon('<%=coupon._id%>',true)">
+                                                            <i class="material-icons md-delete_forever"></i>UnBlock
+                                                        </a>
+                                                        <%}%>
+
+                                                         
+
                                             </td>
                                         </tr>
                                         <% }); %>
+                                            <script>
+                                                function unBlockCoupon(id, status) {
+                                                    Swal.fire({
+                                                        title: 'Un Block Coupon?',
+                                                        text: 'Do you want to unblock this coupon?',
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Yes, un-Block!',
+                                                        cancelButtonText: 'No, cancel'
+                                                    }).then((result) => {
+                                                        if (result.value) {
+                                                            changeStatus(id, status)
+                                                        } else {
+                                                            Swal.fire('Cancelled', 'Your coupon was not un-Blocked.', 'info');
+                                                        }
+                                                    });
+                                                }
+                                                function blockCoupon(id, status) {
+                                                    Swal.fire({
+                                                        title: 'Block Coupon?',
+                                                        text: 'Do you want to block this coupon?',
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Yes, Block!',
+                                                        cancelButtonText: 'No, cancel'
+                                                    }).then((result) => {
+                                                        if (result.value) {
+                                                            changeStatus(id, status)
+                                                        } else {
+                                                            Swal.fire('Cancelled', 'Your coupon was not Blocked.', 'info');
+                                                        }
+                                                    });
+                                                }
+                                                function changeStatus(id, status) {
+                                                    const requestData = {
+                                                        couponId: id,
+                                                        status: status
+                                                    };
+
+                                                    fetch('/admin/coupon-status', {
+                                                        method: 'PATCH',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                        },
+                                                        body: JSON.stringify(requestData)
+                                                    }).then(response => response.json())
+                                                        .then(data => {
+                                                            console.log(data.message);
+                                                            window.location.reload();
+                                                        })
+                                                        .catch(error => {
+                                                            console.log('Error updating cart quantity:', error);
+                                                        });
+                                                }
+                                       
+                                            </script>
+                                            <style>
+                                                .btn-delete {
+                                                    background-color: red;
+                                                    color: white;
+                                                    /* Set text color to white for better visibility */
+                                                }
+                                            </style>
+
                                 </tbody>
                             </table>
                             <style>
@@ -122,7 +213,7 @@
                             <header class="w3-container w3-teal">
                                 <span onclick="document.getElementById('editModal<%=index%>').style.display='none'"
                                     class="w3-button w3-display-topright">&times;</span>
-                                <h2 style="color: white;">Add New Coupon</h2>
+                                <h2 style="color: white;">Edit Coupon</h2>
                             </header>
                             <!-- <div class="w3-container pb-9"> -->
 
@@ -130,11 +221,12 @@
                                 <div class="card mb-4">
 
                                     <div class="card-body">
-                                        <form action="#" method="post" id="addCoupon">
+                                        <form action="#" id="addCoupon<%=index%>">
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Coupon Name</label>
                                                 <input type="text" placeholder="Name of Coupon" class="form-control"
-                                                    id="couponName<%=index%>" name="couponName<%=index%>" value="<%=coupon.name%>">
+                                                    id="couponName<%=index%>" name="couponName<%=index%>"
+                                                    value="<%=coupon.name%>">
                                                 <h6 class="text-danger" id="couponNameErr<%=index%>"> </h6>
                                             </div>
                                             <div class="col-lg-4">
@@ -150,47 +242,85 @@
                                                 <label for="product_name" class="form-label">Limit Of Coupon
                                                 </label>
                                                 <input type="number" placeholder="Limit of Coupon" class="form-control"
-                                                    id="limitOfCoupon<%=index%>" name="limitOfCoupon<%=index%>" value="<%=coupon.limit%>">
+                                                    id="limitOfCoupon<%=index%>" name="limitOfCoupon<%=index%>"
+                                                    value="<%=coupon.limit%>">
                                                 <h6 class="text-danger" id="limitOfCouponErr<%=index%>"> </h6>
 
                                             </div>
+                                            <!-- ---------error part------------ -->
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <label class="form-label">type of coupon</label>
-                                                    <select class="form-select" id="typeSelect<%=index%>" onchange="showType('<%=index%>')"
+
+                                                    <select class="form-select" id="typeSelect<%=index%>"
+                                                        onchange="showTypeEdit('<%=index%>')"
                                                         name="typeSelect<%=index%>">
-                                                        <option value="flat<%=index%>" <%=coupon.flatOffer>0 ? 'selected' : ''%>> flat
+                                                        <option value="flat" <%=coupon.flatOffer>0 ?
+                                                            'selected' : ''%>> flat
                                                         </option>
-                                                        <option value="percentage<%=index%>" <%=coupon.discountPercent>0 ? 'selected' : '' %>> percentage</option>
+                                                        <option value="percentage" <%=coupon.discountPercent>0
+                                                            ? 'selected' : '' %>> percentage</option>
                                                     </select>
                                                 </div>
 
-                                                <div class="col-lg-4" id="flatOffer" style="display: none;">
+                                                <div class="col-lg-4" id="flatOffer<%=index%>" style="display: none;">
                                                     <label for="product_name" class="form-label">Flat Offer</label>
                                                     <input type="number" placeholder="Enter Flat Offer Here"
-                                                    class="form-control" id="flatInput<%=index%>" name="flatInput<%=index%>"
-                                                    value="<%= coupon.flatOffer > 0 ? coupon.flatOffer : '' %>">
-                                             
+                                                        class="form-control" id="flatInput<%=index%>"
+                                                        name="flatInput<%=index%>">
+
                                                     <h6 class="text-danger" id="flatInputErr<%=index%>"> </h6>
 
                                                 </div>
-                                                <div class="col-lg-4" id="discountPercentage" style="display: none;">
+                                                <div class="col-lg-4" id="discountPercentage<%=index%>"
+                                                    style="display: none;">
                                                     <label for="product_name" class="form-label">Discount
                                                         Percentage</label>
                                                     <input type="number" placeholder="Enter Discount in Percentage<100"
-                                                        class="form-control" id="discountInput<%=index%>" name="discountInput<%=index%>"
-                                                        value="<%= coupon.discountPercent > 0 ? coupon.discountPercent : '' %>">
+                                                        class="form-control" id="discountInput<%=index%>"
+                                                        name="discountInput<%=index%>">
                                                     <h6 class="text-danger" id="discountInputErr<%=index%>"> </h6>
 
                                                 </div>
                                             </div>
+                                            <script>
+                                                function showTypeEdit(index) {
+                                                    const flat = document.getElementById(`flatOffer${index}`);
+                                                    const discount = document.getElementById(`discountPercentage${index}`);
+                                                    const type = document.getElementById(`typeSelect${index}`).value;
+                                                    const flatInput = document.getElementById(`flatInput${index}`);
+                                                    const discountInput = document.getElementById(`discountInput${index}`);
+
+                                                    if (type === 'flat') {
+                                                        flat.style.display = 'block';
+                                                        discount.style.display = 'none';
+                                                        flatInput.value = document.getElementById(`flatFromDb${index}`).value || 0;
+                                                    } else if (type === 'percentage') {
+                                                        discount.style.display = 'block';
+                                                        flat.style.display = 'none';
+                                                        discountInput.value = document.getElementById(`discountFromDb${index}`).value || 0;
+                                                    }
+                                                }
+
+
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    showType();
+                                                <% for (let i = 0; i < couponData.length; i++) { %>
+                                                        showTypeEdit('<%= i %>');
+                                                     <% } %>
+                                                });
+                                            </script>
+                                            <!-- ---------error part ends-------------- -->
 
                                             <div class="col-lg-4">
                                                 <div class="mb-4">
                                                     <label class="form-label">Expiry Date</label>
                                                     <div class="row gx-2">
-                                                        <input type="date" class="form-control" id="expiryDate<%=index%>"
-                                                            name="expiryDate<%=index%>">
+                                                        <input type="date" class="form-control"
+                                                            id="expiryDate<%=index%>" name="expiryDate<%=index%>"
+                                                            value="<%=coupon.expiryDate ? coupon.expiryDate.toISOString().substr(0, 10) : '' %>">
+
+
                                                         <h6 class="text-danger" id="expiryDateErr<%=index%>"> </h6>
 
                                                     </div>
@@ -199,7 +329,8 @@
                                             <div class="mb-4">
                                                 <label class="form-label">Full description</label>
                                                 <textarea placeholder="Type here" class="form-control" rows="4"
-                                                    id="description<%=index%>" name="description<%=index%>"></textarea>
+                                                    id="description<%=index%>"
+                                                    name="description<%=index%>"><%=coupon.description%></textarea>
                                                 <h6 class="text-danger" id="descriptionErr<%=index%>"></h6>
 
                                             </div>
@@ -208,152 +339,133 @@
                                                 </div> -->
                                             <div>
                                                 <button type="button" class="btn btn-primary btn-sm rounded"
-                                                    id="submitForm">Add</button>
+                                                    id="submitEditForm<%=index%>"
+                                                    onclick="submitEdit('<%=index%>','<%=coupon._id%>')">Add</button>
                                             </div>
 
                                         </form>
-                                        <input type="text" value="<%=index%>" id="index">
+                                      
+                                        <input type="text" value="<%=coupon.flatOffer%>" id="flatFromDb<%=index%>" hidden>
+                                  
+
+                                        <input type="text" value="<%=coupon.discountPercent%>"
+                                            id="discountFromDb<%=index%>" hidden>
+
                                         <script>
-                                           
-                                            function showType(i) {
-                                                const flat = document.getElementById(`flatOffer${i}`)
-                                                const discount = document.getElementById(`discountPercentage${i}`)
-                                                const type = document.getElementById(`typeSelect${i}`).value
-                                                if (type == 'flat') {
-                                                    flat.style.display = 'block'
-                                                    discount.style.display = 'none'
 
 
-                                                }
-                                                if (type == 'percentage') {
-                                                    discount.style.display = 'block'
-                                                    flat.style.display = 'none'
 
-
-                                                }
-                                            }
-                                            function validateForm() {
-                                                const couponName = document.getElementById('couponName').value;
-                                                const minPurchase = document.getElementById('minPurchase').value;
-                                                const limitOfCoupon = document.getElementById('limitOfCoupon').value;
-                                                const type = document.getElementById('typeSelect').value;
+                                            function validateFormEdit(i) {
+                                                console.log('inside Form validation  ', i);
+                                                const couponName = document.getElementById(`couponName${i}`).value;
+                                                const minPurchase = document.getElementById(`minPurchase${i}`).value;
+                                                const limitOfCoupon = document.getElementById(`limitOfCoupon${i}`).value;
+                                                const type = document.getElementById(`typeSelect${i}`).value;
 
                                                 let flat = 0;
                                                 let discount = 0;
 
                                                 if (type === 'flat') {
-                                                    const flatInput = document.getElementById('flatInput').value.trim();
+                                                    const flatInput = document.getElementById(`flatInput${i}`).value.trim();
                                                     flat = parseFloat(flatInput);
 
                                                     if (flatInput === '') {
-                                                        document.getElementById('flatInputErr').innerText = 'Flat Offer is required';
+                                                        document.getElementById(`flatInputErr${i}`).innerText = 'Flat Offer is required';
                                                         return false;
                                                     }
                                                 }
 
                                                 if (type === 'percentage') {
-                                                    const discountInput = document.getElementById('discountInput').value.trim();
+                                                    const discountInput = document.getElementById(`discountInput${i}`).value.trim();
                                                     discount = parseFloat(discountInput);
 
                                                     if (discountInput === '') {
-                                                        document.getElementById('discountInputErr').innerText = 'Discount Percentage is required';
+                                                        document.getElementById(`discountInputErr${i}`).innerText = 'Discount Percentage is required';
                                                         return false;
                                                     }
                                                 }
 
-                                                const description = document.getElementById('description').value;
+                                                const description = document.getElementById(`description${i}`).value;
 
-                                                // Clear previous error messages
-                                                document.getElementById('couponNameErr').innerText = '';
-                                                document.getElementById('minPurchaseErr').innerText = '';
-                                                document.getElementById('limitOfCouponErr').innerText = '';
-                                                document.getElementById('flatInputErr').innerText = '';
-                                                document.getElementById('discountInputErr').innerText = '';
-                                                document.getElementById('expiryDateErr').innerText = '';
-                                                document.getElementById('descriptionErr').innerText = '';
+                                                document.getElementById(`couponNameErr${i}`).innerText = '';
+                                                document.getElementById(`minPurchaseErr${i}`).innerText = '';
+                                                document.getElementById(`limitOfCouponErr${i}`).innerText = '';
+                                                document.getElementById(`flatInputErr${i}`).innerText = '';
+                                                document.getElementById(`discountInputErr${i}`).innerText = '';
+                                                document.getElementById(`expiryDateErr${i}`).innerText = '';
+                                                document.getElementById(`descriptionErr${i}`).innerText = '';
 
                                                 let isValid = true;
 
-                                                const expiryDateInput = document.getElementById('expiryDate').value;
+                                                const expiryDateInput = document.getElementById(`expiryDate${i}`).value;
                                                 const expiryDate = new Date(expiryDateInput);
 
                                                 if (couponName.trim() === '') {
-                                                    document.getElementById('couponNameErr').innerText = 'Coupon Name is required';
+                                                    document.getElementById(`couponNameErr${i}`).innerText = 'Coupon Name is required';
                                                     isValid = false;
                                                 }
 
                                                 if (minPurchase.trim() === '') {
-                                                    document.getElementById('minPurchaseErr').innerText = 'Minimum Purchase is required';
+                                                    document.getElementById(`minPurchaseErr${i}`).innerText = 'Minimum Purchase is required';
                                                     isValid = false;
                                                 }
 
                                                 if (limitOfCoupon.trim() === '') {
-                                                    document.getElementById('limitOfCouponErr').innerText = 'Limit Of Coupon is required';
+                                                    document.getElementById(`limitOfCouponErr${i}`).innerText = 'Limit Of Coupon is required';
                                                     isValid = false;
                                                 }
 
-
                                                 if (type === 'flat' && flat <= 0) {
-                                                    document.getElementById('flatInputErr').innerText = 'Flat Offer must be greater than 0';
+                                                    document.getElementById(`flatInputErr${i}`).innerText = 'Flat Offer must be greater than 0';
                                                     isValid = false;
                                                 }
                                                 if (minPurchase < flat) {
-                                                    document.getElementById('flatInputErr').innerText = 'Flat Offer must be less than Minimum Purchase';
+                                                    document.getElementById(`flatInputErr${i}`).innerText = 'Flat Offer must be less than Minimum Purchase';
                                                     isValid = false;
                                                 }
 
                                                 if (type === 'percentage' && (discount <= 0 || discount >= 100)) {
-                                                    document.getElementById('discountInputErr').innerText = 'Discount Percentage must be between 0 and 100';
+                                                    document.getElementById(`discountInputErr${i}`).innerText = 'Discount Percentage must be between 0 and 100';
                                                     isValid = false;
                                                 }
 
                                                 if (!expiryDateInput || isNaN(expiryDate.getTime()) || expiryDate <= Date.now()) {
-                                                    document.getElementById('expiryDateErr').innerText = 'Expiry Date must be a valid future date';
+                                                    document.getElementById(`expiryDateErr${i}`).innerText = 'Expiry Date must be a valid future date';
                                                     isValid = false;
                                                 }
 
                                                 if (description.trim() === '') {
-                                                    document.getElementById('descriptionErr').innerText = 'Description is required';
+                                                    document.getElementById(`descriptionErr${i}`).innerText = 'Description is required';
                                                     isValid = false;
                                                 }
 
-
                                                 return isValid;
-                                            }
-                                            document.getElementById('submitForm').addEventListener('click', function () {
-                                                if (validateForm()) {
-                                                    let flat = 0
-                                                    let discount = 0
-                                                    const flatSelect = document.getElementById('flatInput')
-                                                    const discountSelect = document.getElementById('discountInput')
 
-                                                    const type = document.getElementById('typeSelect').value
+                                            }
+                                            function submitEdit(i, id) {
+                                               
+                                                if (validateFormEdit(i)) {
+
+                                                    let flat = 0;
+                                                    let discount = 0;
+                                                    const flatSelect = document.getElementById(`flatInput${i}`);
+                                                    const discountSelect = document.getElementById(`discountInput${i}`);
+
+                                                    const type = document.getElementById(`typeSelect${i}`).value;
                                                     if (type == 'flat') {
-                                                        flat = parseFloat(flatSelect.value)
-                                                        discount = 0
+                                                        flat = parseFloat(flatSelect.value);
+                                                        discount = 0;
                                                     }
                                                     if (type == 'percentage') {
-                                                        discount = parseFloat(discountSelect.value)
-                                                        flat = 0
+                                                        discount = parseFloat(discountSelect.value);
+                                                        flat = 0;
                                                     }
 
-                                                    // let flat = 0;
-                                                    // let discount = 0;
-
-                                                    // const type = document.getElementById('typeSelect').value;
-                                                    // if (type == 'flat') {
-                                                    //     flat = parseFloat(flatSelect.value) || 0;
-                                                    // }
-                                                    // if (type == 'percentage') {
-                                                    //     discount = parseFloat(discountSelect.value) || 0;
-                                                    // }
-
-
-                                                    const couponName = document.getElementById('couponName').value
-                                                    const minPurchase = parseFloat(document.getElementById('minPurchase').value)
-                                                    const limitOfCoupon = parseInt(document.getElementById('limitOfCoupon').value)
-                                                    const expiryDate = new Date(document.getElementById('expiryDate').value)
-                                                    const description = document.getElementById('description').value
+                                                    const couponName = document.getElementById(`couponName${i}`).value.trim();
+                                                    const minPurchase = parseFloat(document.getElementById(`minPurchase${i}`).value);
+                                                    const limitOfCoupon = parseInt(document.getElementById(`limitOfCoupon${i}`).value);
+                                                    const expiryDate = new Date(document.getElementById(`expiryDate${i}`).value);
+                                                    const description = document.getElementById(`description${i}`).value;
                                                     const formData = {
                                                         couponName: couponName,
                                                         minPurchase: minPurchase,
@@ -361,32 +473,42 @@
                                                         expiryDate: expiryDate,
                                                         description: description,
                                                         flat: flat,
-                                                        discount: discount
+                                                        discount: discount,
+                                                        id: id
                                                     }
 
 
                                                     fetch('/admin/coupon', {
-                                                        method: 'POST',
+                                                        method: 'PATCH',
                                                         body: JSON.stringify(formData),
                                                         headers: {
                                                             'Content-Type': 'application/json'
                                                         }
-
                                                     }).then(res => {
-                                                        if (res.ok) {
-                                                            console.log("Hello");
-                                                            window.location.reload();
+                                                        if (res.status === 200) {
+                                                            return res.json();
                                                         } else {
-                                                            console.log('error in fetch');
+                                                            return res.json().then(data => Promise.reject(data));
                                                         }
+                                                    }).then(data => {
+                                                        console.log(data.message);
+                                                        let dataMessage = '';
+                                                        let status = ''
+                                                        if (data.message === 'Editing success') {
+                                                            dataMessage = 'Coupon+edited+successfully';
+                                                            status = 'success'
+                                                        } else {
+                                                            dataMessage = 'Can+Edit+Coupon+name+already+exists';
+                                                            status = 'exists'
+                                                        }
+                                                        window.location.href = `/admin/coupon?data=${dataMessage}&status=${status}`;
                                                     }).catch(err => {
-                                                        console.log(err);
-                                                    })
+                                                        console.log(err.message);
+                                                    });
                                                 }
-                                            })
-                                            //stuck in index
-                                            window.onload = showType()
-                                        
+                                            }
+
+
 
 
 
@@ -454,6 +576,7 @@
                                                     <h6 class="text-danger" id="limitOfCouponErr"> </h6>
 
                                                 </div>
+                                                <!-- -------select coupon type--------- -->
                                                 <div class="row">
                                                     <div class="col-lg-4">
                                                         <label class="form-label">type of coupon</label>
@@ -482,7 +605,29 @@
                                                         <h6 class="text-danger" id="discountInputErr"> </h6>
 
                                                     </div>
+                                                    <script>
+                                                        function showType() {
+                                                            const flat = document.getElementById('flatOffer')
+                                                            const discount = document.getElementById('discountPercentage')
+                                                            const type = document.getElementById('typeSelect').value
+                                                            if (type == 'flat') {
+                                                                flat.style.display = 'block'
+                                                                discount.style.display = 'none'
+
+
+                                                            }
+                                                            if (type == 'percentage') {
+                                                                discount.style.display = 'block'
+                                                                flat.style.display = 'none'
+
+
+                                                            }
+                                                        }
+                                                        showType()
+                                                    </script>
                                                 </div>
+                                                <!-- select coupon type ends -->
+
 
                                                 <div class="col-lg-4">
                                                     <div class="mb-4">
@@ -512,23 +657,8 @@
 
                                             </form>
                                             <script>
-                                                function showType() {
-                                                    const flat = document.getElementById('flatOffer')
-                                                    const discount = document.getElementById('discountPercentage')
-                                                    const type = document.getElementById('typeSelect').value
-                                                    if (type == 'flat') {
-                                                        flat.style.display = 'block'
-                                                        discount.style.display = 'none'
 
 
-                                                    }
-                                                    if (type == 'percentage') {
-                                                        discount.style.display = 'block'
-                                                        flat.style.display = 'none'
-
-
-                                                    }
-                                                }
                                                 function validateForm() {
                                                     const couponName = document.getElementById('couponName').value;
                                                     const minPurchase = document.getElementById('minPurchase').value;
@@ -619,38 +749,26 @@
                                                 }
                                                 document.getElementById('submitForm').addEventListener('click', function () {
                                                     if (validateForm()) {
-                                                        let flat = 0
-                                                        let discount = 0
-                                                        const flatSelect = document.getElementById('flatInput')
-                                                        const discountSelect = document.getElementById('discountInput')
+                                                        let flat = 0;
+                                                        let discount = 0;
+                                                        const flatSelect = document.getElementById('flatInput');
+                                                        const discountSelect = document.getElementById('discountInput');
 
-                                                        const type = document.getElementById('typeSelect').value
+                                                        const type = document.getElementById('typeSelect').value;
                                                         if (type == 'flat') {
-                                                            flat = parseFloat(flatSelect.value)
-                                                            discount = 0
+                                                            flat = parseFloat(flatSelect.value) || 0;
+                                                            discount = 0;
                                                         }
                                                         if (type == 'percentage') {
-                                                            discount = parseFloat(discountSelect.value)
-                                                            flat = 0
+                                                            discount = parseFloat(discountSelect.value) || 0;
+                                                            flat = 0;
                                                         }
 
-                                                        // let flat = 0;
-                                                        // let discount = 0;
-
-                                                        // const type = document.getElementById('typeSelect').value;
-                                                        // if (type == 'flat') {
-                                                        //     flat = parseFloat(flatSelect.value) || 0;
-                                                        // }
-                                                        // if (type == 'percentage') {
-                                                        //     discount = parseFloat(discountSelect.value) || 0;
-                                                        // }
-
-
-                                                        const couponName = document.getElementById('couponName').value
-                                                        const minPurchase = parseFloat(document.getElementById('minPurchase').value)
-                                                        const limitOfCoupon = parseInt(document.getElementById('limitOfCoupon').value)
-                                                        const expiryDate = new Date(document.getElementById('expiryDate').value)
-                                                        const description = document.getElementById('description').value
+                                                        const couponName = document.getElementById('couponName').value;
+                                                        const minPurchase = parseFloat(document.getElementById('minPurchase').value);
+                                                        const limitOfCoupon = parseInt(document.getElementById('limitOfCoupon').value);
+                                                        const expiryDate = new Date(document.getElementById('expiryDate').value);
+                                                        const description = document.getElementById('description').value;
                                                         const formData = {
                                                             couponName: couponName,
                                                             minPurchase: minPurchase,
@@ -659,8 +777,7 @@
                                                             description: description,
                                                             flat: flat,
                                                             discount: discount
-                                                        }
-
+                                                        };
 
                                                         fetch('/admin/coupon', {
                                                             method: 'POST',
@@ -668,20 +785,32 @@
                                                             headers: {
                                                                 'Content-Type': 'application/json'
                                                             }
-
                                                         }).then(res => {
-                                                            if (res.ok) {
-                                                                console.log("Hello");
-                                                                window.location.reload();
+                                                            if (res.status === 200) {
+                                                                return res.json();
                                                             } else {
-                                                                console.log('error in fetch');
+                                                                return res.json().then(data => Promise.reject(data));
                                                             }
+                                                        }).then(data => {
+                                                            console.log(data.message);
+                                                            let dataMessage = '';
+                                                            let status = ''
+                                                            if (data.message === 'Coupon added successfully') {
+                                                                dataMessage = 'Coupon+added+successfully';
+                                                                status = 'success'
+                                                            } else {
+                                                                dataMessage = 'Coupon+name+already+exists';
+                                                                status = 'exists'
+                                                            }
+                                                            window.location.href = `/admin/coupon?data=${dataMessage}&status=${status}`;
                                                         }).catch(err => {
-                                                            console.log(err);
-                                                        })
+                                                            console.log(err.message);
+                                                        });
                                                     }
-                                                })
-                                                window.onload = showType
+                                                });
+
+
+
 
 
 
