@@ -215,8 +215,10 @@
                                                                     })
                                                                         .then(response => response.json())
                                                                         .then(data => {
-                                                                            console.log(data);
-                                                                            window.location.reload();
+                                                                            if(data.message=='success'){
+
+                                                                                window.location.reload();
+                                                                            }
                                                                         })
                                                                         .catch(error => console.error(error));
                                                                 }, 'image/jpeg', 0.8);

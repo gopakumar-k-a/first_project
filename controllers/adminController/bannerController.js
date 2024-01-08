@@ -38,13 +38,13 @@ const PostBannerImage = async (req, res) => {
 
             // Introduce a delay of 500 milliseconds (adjust as needed)
             setTimeout(() => {
-                if (req.xhr) {
+                // if (req.xhr) {
                     // If it's an XMLHttpRequest (AJAX) request, send a JSON response
                     res.status(200).json({ message: 'success' });
-                } else {
-                    // If it's a regular form submission, you can redirect
-                    res.redirect('/admin/banner'); // Adjust the redirect URL as needed
-                }
+                // } else {
+                //     // If it's a regular form submission, you can redirect
+                //     res.redirect('/admin/banner'); // Adjust the redirect URL as needed
+                // }
             }, 500);
         }
 
