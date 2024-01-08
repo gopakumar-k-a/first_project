@@ -6,11 +6,13 @@ const hashPassword = require('../../utility/hashPassword')
 const validator = require("validator");
 const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
 const walletModel = require('../../models/walletModel');
+const bannerModel = require('../../models/bannerModel');
 require('dotenv').config();
 
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
+        const bannerData=await bannerModel.find()
 
         const prData = await productModel.find({
             isActive: true,
@@ -18,7 +20,7 @@ const loadHome = async (req, res) => {
             leagueStatus: true,
             brandStatus: true
         }).populate('brand').populate('category').sort({ createdAt: -1 }).limit(6)
-        res.render('user/home', { user, prData })
+        res.render('user/home', { user, prData,bannerData })
     } catch (error) {
         console.log(error.message);
     }

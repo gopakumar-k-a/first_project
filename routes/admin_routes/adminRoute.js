@@ -11,6 +11,8 @@ const productController = require('../../controllers/adminController/productCont
 const orderController=require('../../controllers/adminController/orderController')
 
 const couponController=require('../../controllers/adminController/couponController')
+
+const bannerController=require('../../controllers/adminController/bannerController')
 //requiring storage engine for multer
 const upload = require('../../multer')
 //admin auth
@@ -100,7 +102,7 @@ admin.get('/block-brand', adminAuth.isLogin, productController.blockBrand)
 //unblocking brand
 admin.get('/unblock-brand', adminAuth.isLogin, productController.unblockBrand)
 //load user order details
-admin.post('/order-details',adminAuth.isLogin,orderController.loadOrderDetails)
+admin.get('/order-details',adminAuth.isLogin,orderController.loadOrderDetails)
 //change order Status
 admin.patch('/change-order-status',adminAuth.isLogin,orderController.changeOrderStatus)
 //all order list 
@@ -119,6 +121,9 @@ admin.post('/coupon',adminAuth.isLogin,couponController.addNewCoupon)
 admin.patch('/coupon',adminAuth.isLogin,couponController.editCoupon)
 //change status of the coupon
 admin.patch('/coupon-status',adminAuth.isLogin,couponController.changeActive)
+
+admin.get('/banner',adminAuth.isLogin,bannerController.loadBanner)
+admin.post('/banner-image',adminAuth.isLogin,upload.single('croppedImage'),bannerController.PostBannerImage)
 
 
 

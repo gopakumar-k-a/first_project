@@ -50,67 +50,60 @@ const loadCheckout = async (req, res) => {
 //fetch coupon data to checkout
 const couponDetails = async (req, res) => {
     try {
+        const userId = req.session.userId;
         console.log(req.query);
-        const { name, total } = req.query
-        let appliedValue = 0
-        let couponType = ''
-        let discountPrice = 0
-        let discountValue = 0
+        const { name, total } = req.query;
+        let appliedValue = 0;
+        let couponType = '';
+        let discountPrice = 0;
+        let discountValue = 0;
+
         if (total > 0) {
-            const singleCoupon = await couponModel.findOne({ name: name })
-            console.log(singleCoupon);
-            const couponName = singleCoupon.name
+            const singleCoupon = await couponModel.findOne({ name: name });
 
-            if (singleCoupon && singleCoupon != null) {
+            if (singleCoupon !== null && singleCoupon !== undefined) {
+                const couponName = singleCoupon.name;
+
+                // Check if the user has already applied the coupon
+                if (singleCoupon.users.includes(userId)) {
+                    return res.status(200).json({ message: 'alreadyApplied', couponType, discountPrice, discountValue, couponName });
+                }
+
                 if (singleCoupon.flatOffer > 0) {
-                    appliedValue = total - singleCoupon.flatOffer
-                    couponType = 'flat'
-                    discountValue = singleCoupon.flatOffer
-                    discountPrice = total - appliedValue
-                    console.log('appliedValue ', appliedValue);
-                    console.log('couponType ', couponType);
-                    console.log('discountValue ', discountValue);
-                    console.log('discountPrice ', discountPrice);
-
+                    appliedValue = total - singleCoupon.flatOffer;
+                    couponType = 'flat';
+                    discountValue = singleCoupon.flatOffer;
+                    discountPrice = total - appliedValue;
                 } else if (singleCoupon.discountPercent > 0) {
-                    // appliedValue = total * (singleCoupon.discountPercent) / 100
-                    // couponType = 'percentage'
-                    // discountValue = singleCoupon.discountPercent
-                    // discountPrice = total - appliedValue
-
-                    //  // Corrected calculation for percentage discounts
                     appliedValue = (total * singleCoupon.discountPercent) / 100;
                     couponType = 'percentage';
                     discountValue = singleCoupon.discountPercent;
                     discountPrice = total - appliedValue;
-                    console.log('appliedValue ', appliedValue);
-                    console.log('couponType ', couponType);
-                    console.log('discountValue ', discountValue);
-                    console.log('discountPrice ', discountPrice);
                 }
-                console.log('couponType ', couponType, 'discount price', discountPrice, 'discountValue ', discountValue, ' couponName ', couponName);
+
                 if (appliedValue < 0) {
-                    appliedValue = 0
-                    console.log('applied value in appliedValue < 0', appliedValue, 'couponType ', couponType, 'discount price', discountPrice, ' discountValue ', discountValue);
-
-                    res.status(200).json({ message: 'cantApply', couponType, discountPrice, discountValue, couponName })
+                    appliedValue = 0;
+                    res.status(200).json({ message: 'cantApply', couponType, discountPrice, discountValue, couponName });
                 } else {
-                    console.log('applied value else', 'couponType ', couponType, 'discount price', discountPrice, 'discountValue ', discountValue, ' couponName ', couponName);
+                    // Add the user to the list of users who have applied the coupon
+                    singleCoupon.users.push(userId);
+                    await singleCoupon.save();
 
-                    res.status(200).json({ message: 'success', couponType, discountPrice, discountValue, couponName })
+                    res.status(200).json({ message: 'success', couponType, discountPrice, discountValue, couponName });
                 }
             } else {
-                res.status(200).json({ message: 'notFound', couponType, discountPrice, discountValue, couponName })
-
+                res.status(200).json({ message: 'notFound' });
             }
         } else {
-            res.status(200).json({ message: 'cantApply', couponType, discountPrice, discountValue, couponName })
-
+            res.status(200).json({ message: 'cantApply' });
         }
     } catch (error) {
         console.log(error.message);
+        res.status(500).send("Internal Server Error");
     }
-}
+};
+
+
 //fetch walllet data to the checkout
 const walletApply = async (req, res) => {
     try {
@@ -212,8 +205,8 @@ const placeOrder = async (req, res) => {
             await walletData.save()
 
         }
-        if(couponStatus){
-            const couponData=await couponModel.findOne({name:couponName})
+        if (couponStatus) {
+            const couponData = await couponModel.findOne({ name: couponName })
             couponData.users.push(userId)
             await couponData.save()
             // console.log('this is coupon Data',couponData);
@@ -227,14 +220,14 @@ const placeOrder = async (req, res) => {
             totalAmount: totalAmount,
             paymentStatus: paymentStatus,
             razorId: razId,
-            amountPaid:amountPaid,
-            walletStatus:walletStatus,
-            moneyFromWallet:moneyFromWallet,
-            couponStatus:couponStatus,
-            moneyFromCoupon:moneyFromCoupon,
-            couponName:couponName,
-            couponType:couponType,
-            couponDiscount:couponDiscount
+            amountPaid: amountPaid,
+            walletStatus: walletStatus,
+            moneyFromWallet: moneyFromWallet,
+            couponStatus: couponStatus,
+            moneyFromCoupon: moneyFromCoupon,
+            couponName: couponName,
+            couponType: couponType,
+            couponDiscount: couponDiscount
 
         })
         await newOrder.save()
@@ -288,7 +281,7 @@ const cancelOrder = async (req, res) => {
         }
         orderData.orderStatus = "cancelled"
         orderData.paymentStatus = "cancelled"
-        if (orderData.paymentMethod == 'upi') {
+        if (orderData.paymentMethod == 'upi' || orderData.paymentMethod == 'wallet' || orderData.paymentMethod == 'cod' && orderData.orderStatus == 'delivered') {
             const walletData = await walletModel.findOne({ userId: userId })
             const historyData = {
                 amount: orderData.totalAmount,
@@ -318,6 +311,54 @@ const cancelOrder = async (req, res) => {
     }
 }
 
+const returnOrder = async (req, res) => {
+    try {
+        const userId = req.session.userId
+        console.log(req.body);
+        const { id, returnReason } = req.body
+        const orderData = await orderModel.findOne({ _id: id })
+        for (const orderProduct of orderData.items) {
+            const product = await productModel.findOne({ _id: orderProduct.productId })
+            const size = orderProduct.size
+            const orderedQuantity = orderProduct.quantity
+            product.size[size].quantity += orderedQuantity
+            product.save()
+
+        }
+        orderData.orderStatus = "returned"
+        orderData.paymentStatus = "returned"
+        orderData.returnReason = returnReason
+
+        const walletData = await walletModel.findOne({ userId: userId })
+        const historyData = {
+            amount: orderData.totalAmount,
+            type: 'credit'
+        }
+
+        if (walletData) {
+            walletData.balance += orderData.totalAmount
+            walletData.history.push(historyData)
+            await walletData.save()
+        } else {
+            const createWallet = new walletModel({
+                userId: userId,
+                balance: orderData.totalAmount,
+                history: historyData
+
+            })
+            await createWallet.save()
+        }
+
+
+        await orderData.save()
+
+
+        res.status(200).json({ message: 'success' })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const orderDetails = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -332,5 +373,6 @@ const orderDetails = async (req, res) => {
 
 module.exports = {
     loadCheckout, placeOrder, cancelOrder,
-    orderDetails, onlinePayment, couponDetails, walletApply
+    orderDetails, onlinePayment, couponDetails, walletApply,
+    returnOrder
 }

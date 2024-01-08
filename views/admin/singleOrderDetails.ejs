@@ -29,39 +29,45 @@
                                 <small class="text-muted">Order ID: <%=orderData.orderId%></small>
                             </div>
                             <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                                <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="orderStatusSelect"
-                                    id="orderStatusSelect">
+                                <%if(orderData.orderStatus!='cancelled'){%>
+                                    <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200"
+                                        name="orderStatusSelect" id="orderStatusSelect">
 
 
-                                    <option value="pending" <%=orderData.orderStatus==='pending' ? 'selected' : '' %>
-                                        >pending</option>
-                                    <option value="processing" <%=orderData.orderStatus==='processing' ? 'selected' : ''
-                                        %>>processing</option>
-                                    <option value="shipped" <%=orderData.orderStatus==='shipped' ? 'selected' : '' %>
-                                        >shipped</option>
-                                    <option value="delivered" <%=orderData.orderStatus==='delivered' ? 'selected' : ''
-                                        %>>delivered</option>
-                                    <option value="cancelled" <%=orderData.orderStatus==='cancelled' ? 'selected' : ''
-                                        %>>cancelled</option>
+                                        <option value="pending" <%=orderData.orderStatus==='pending' ? 'selected' : ''
+                                            %>
+                                            >pending</option>
+                                        <option value="processing" <%=orderData.orderStatus==='processing' ? 'selected'
+                                            : '' %>>processing</option>
+                                        <option value="shipped" <%=orderData.orderStatus==='shipped' ? 'selected' : ''
+                                            %>
+                                            >shipped</option>
+                                        <option value="delivered" <%=orderData.orderStatus==='delivered' ? 'selected'
+                                            : '' %>>delivered</option>
+                                        <option value="cancelled" <%=orderData.orderStatus==='cancelled' ? 'selected'
+                                            : '' %>>cancelled</option>
 
-                                </select>
-                                <a class="btn btn-primary hidden-print" href="#"
-                                    onclick="changeOrderStatus('<%=orderData._id%>')">Save</a>
-                                <a class="btn btn-secondary hidden-print print ms-2" href="#" onclick="printPage()"><i
-                                        class="icon material-icons md-print hidden-print"></i> Print</a>
+                                    </select>
+                                    <a class="btn btn-primary hidden-print" href="#"
+                                        onclick="changeOrderStatus('<%=orderData._id%>')">Save</a>
+                                    <%}%>
 
-                                <script>
-                                    function printPage() {
-                                        window.print();
-                                    }
-                                </script>
-                                <style>
-                                    @media print {
-                                        .hidden-print {
-                                            display: none !important;
-                                        }
-                                    }
-                                </style>
+                                        <a class="btn btn-secondary hidden-print print ms-2" href="#"
+                                            onclick="printPage()"><i
+                                                class="icon material-icons md-print hidden-print"></i> Print</a>
+
+                                        <script>
+                                            function printPage() {
+                                                window.print();
+                                            }
+                                        </script>
+                                        <style>
+                                            @media print {
+                                                .hidden-print {
+                                                    display: none !important;
+                                                }
+                                            }
+                                        </style>
 
 
                             </div>
@@ -146,7 +152,7 @@
                                         <p class="mb-1">
                                             <br> Pay method: <%=orderData.paymentMethod%> <br>Order Status:
                                                 <%=orderData.orderStatus%>
-                                                <br>Payment Status: <%=orderData.paymentStatus%>
+                                                    <br>Payment Status: <%=orderData.paymentStatus%>
                                         </p>
                                         <!-- <a href="#">Download info</a> -->
                                     </div>
@@ -242,34 +248,41 @@
                                                             <article class="float-end">
                                                                 <dl class="dlist">
                                                                     <dt>Subtotal:</dt>
-                                                                    <dd id="subTotal">$973.35</dd>
+                                                                    <dd id="subTotal"></dd>
                                                                 </dl>
 
                                                                 <dl class="dlist">
                                                                     <dt>Grand total:</dt>
-                                                                    <dd> <b class="h5" id="grandTotal">$983.00</b> </dd>
+                                                                    <dd> <b class="h5" id="grandTotal"></b> </dd>
                                                                 </dl>
                                                                 <dl class="dlist">
                                                                     <dt class="text-muted">Status:</dt>
                                                                     <dd>
-                                                                        <%if(orderData.orderStatus=='delivered' &&
-                                                                            orderData.paymentMethod=='cod' ){%>
+                                                                        <!-- enum:['pending','success','cancelled','returned'] -->
+
+                                                                        <%if(orderData.paymentStatus=='pending' ){%>
                                                                             <span
-                                                                                class="badge rounded-pill alert-success text-success">Payment
-                                                                                done</span>
-                                                                            <%}else if(orderData.paymentMethod=='upi'
-                                                                                ){%>
-                                                                                <span
-                                                                                    class="badge rounded-pill alert-success text-success">Payment
-                                                                                    done</span>
-                                                                                <%}else
-                                                                                    if(orderData.orderStatus!='delivered'
-                                                                                    && orderData.paymentMethod=='cod'
+                                                                                class="badge rounded-pill alert-success text-warning">Payment
+                                                                                pending</span>
+                                                                            <%}%>
+
+                                                                                <%if(orderData.paymentStatus=='success'
                                                                                     ){%>
                                                                                     <span
-                                                                                        class="badge rounded-pill alert-success text-warning">Payment
-                                                                                        pending</span>
+                                                                                        class="badge rounded-pill alert-success text-success">Payment
+                                                                                        done</span>
                                                                                     <%}%>
+                                                                                        <%if(orderData.paymentStatus=='cancelled'){%>
+                                                                                            <span
+                                                                                                class="badge rounded-pill alert-danger text-success">Payment
+                                                                                                cancelled</span>
+                                                                                            <%}%>
+
+                                                                                                <%if(orderData.paymentStatus=='returned'){%>
+                                                                                                    <span
+                                                                                                        class="badge rounded-pill alert-danger text-success">Payment
+                                                                                                        returned</span>
+                                                                                                    <%}%>
                                                                     </dd>
                                                                 </dl>
                                                             </article>

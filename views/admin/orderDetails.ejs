@@ -143,28 +143,21 @@
                                                                     class="badge rounded-pill alert-warning">Pending</span>
                                                             </td>
                                                             <% } %>
-                                                                <% if(orderData[i].orderStatus=='processing' ){ %>
-                                                                    <td><span
-                                                                            class="badge rounded-pill alert-warning">processing</span>
-                                                                    </td>
-                                                                    <% } %>
-                                                                        <% if(orderData[i].orderStatus=='shipped' ){ %>
-                                                                            <td><span
-                                                                                    class="badge rounded-pill alert-warning">shipped</span>
-                                                                            </td>
-                                                                            <% } %>
-                                                                                <% if(orderData[i].orderStatus=='delivered'
-                                                                                    ){ %>
-                                                                                    <td><span
-                                                                                            class="badge rounded-pill alert-success">delivered</span>
-                                                                                    </td>
-                                                                                    <% } %>
-                                                                                        <% if(orderData[i].orderStatus=='cancelled'
-                                                                                            ){ %>
-                                                                                            <td><span
-                                                                                                    class="badge rounded-pill alert-danger">cancelled</span>
-                                                                                            </td>
-                                                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'processing') { %>
+                                                                <td><span class="badge rounded-pill alert-warning">Processing</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'shipped') { %>
+                                                                <td><span class="badge rounded-pill alert-info">Shipped</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'delivered') { %>
+                                                                <td><span class="badge rounded-pill alert-success">Delivered</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'cancelled') { %>
+                                                                <td><span class="badge rounded-pill alert-danger">Cancelled</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'returned') { %>
+                                                                <td><span class="badge rounded-pill alert-danger">Returned</span></td>
+                                                            <% } %>
 
                                                                                                 <td>
                                                                                                     <%= new
@@ -231,12 +224,12 @@
 
                                                                                                     <div
                                                                                                         class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                                                                                        <a href="#"
-                                                                                                            onclick="document.getElementById('detailsModal<%=i%>').style.display='block'"
+                                                                                                        <a href="/admin/single-order-details?_id=<%=orderData[i]._id%>"
+                                                                                                            
                                                                                                             class="btn btn-sm font-sm rounded btn-brand">
                                                                                                             <!-- <i
                                                                                                                 class="material-icons md-edit"></i> -->
-                                                                                                            OrderStatus
+                                                                                                          Order Detais 
                                                                                                         </a>
 
                                                                                                     </div>

@@ -264,7 +264,7 @@
         }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <div class="breadcrumb-area">
+    <div class="breadcrumb-area print-hidden">
         <div class="container">
             <div class="breadcrumb-content">
                 <ul>
@@ -276,225 +276,290 @@
         </div>
     </div>
     <!-- ---------modal------ -->
-    <div class="w3-container">
-        <div id="id01" class="w3-modal w3-modal-sm">
-            <div class="w3-modal-content w3-animate-top w3-card-4">
-                <header class="w3-container w3-teal">
-                    <span onclick="document.getElementById('id01').style.display='none'"
-                        class="w3-button w3-display-topright">&times;</span>
 
-                </header>
-                <div class="w3-container">
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                 <div style="width: 60%; text-align: right;">
-                    <label for="returnReason">Reason for Return:</label>
-                    <input type="text" id="returnReason" name="returnReason" placeholder="Enter reason">
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
 
-                    <br>
-                    <button onclick="returnProduct()" class="w3-button w3-red w3-round-large w3-right">Return My
-                        Product</button>
-                    </div>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <footer class="w3-container w3-teal">
-                    </footer>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Return Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Reason:</label>
+                            <textarea class="form-control" id="returnReason"></textarea>
+                        </div>
+                        <li id="returnErr" class="text-danger text-center"></li>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger"
+                        onclick="returnProduct('<%=orderData._id%>')">Return</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <!-- ---modal end-- -->
+
+
+    <script>
+
+        function returnProduct(id) {
+            console.log('Inside returnProduct');
+            const returnReason = document.getElementById('returnReason').value;
+            const returnErr = document.getElementById('returnErr');
+
+            if (returnReason.trim() == '') {
+                console.log('Inside if');
+                returnErr.innerHTML = 'Enter a reason before proceeding';
+                return;
+            }
+
+
+            const orderId = id
+            Swal.fire({
+                title: 'Return Products?',
+                text: 'Do you want to return this Products?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Return!',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+
+
+                    const requestData = {
+                        id: orderId,
+                        returnReason: returnReason
+                    };
+
+                    fetch('/return-order', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData)
+                    }).then(response => response.json())
+                        .then(data => {
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.log('Error returning order:', error);
+                        });
+
+                } else {
+                    Swal.fire('Not returned', 'Your order was not Returned.', 'info');
+                }
+            });
+        }
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body input').val(recipient)
+        })
+    </script>
+
+
+    <!-- ---modal end-- -->
 
 
 
-        <div class="Shopping-cart-area pt-60 pb-60">
+    <div class="Shopping-cart-area pt-60 pb-60">
 
-            <div class="container">
-                <div class="print-hidden text-right">
-                    <button class="print-button" onclick="printInvoice()">
-                        <i class="fas fa-print"></i> Download Invoice
+        <div class="container">
+            <div class="print-hidden text-right">
+                <button class="print-button" onclick="printInvoice()">
+                    <i class="fas fa-print"></i> Download Invoice
+                </button>
+                <% if(orderData.orderStatus=='delivered' ){ %>
+                    <button class="print-button delete-button return-button" data-toggle="modal"
+                        data-target="#exampleModal" data-whatever="@getbootstrap">
+                        <i class="fas fa-reply"></i> Return Product
                     </button>
-                    <% if(orderData.orderStatus=='delivered' ){ %>
-                        <button class="print-button delete-button return-button"
-                            onclick="document.getElementById('id01').style.display='block'">
-                            <i class="fas fa-reply"></i> Return Product
-                        </button>
-                        <%}%>
+                    <%}%>
 
-                            <% if(orderData.orderStatus=='pending' || orderData.orderStatus=='processing' ||
-                                orderData.orderStatus=='shipped' ){ %>
-                                <button class="print-button delete-button" onclick="cancelOrder('<%=orderData._id%>')">
-                                    <i class="fas fa-trash-alt"></i> Cancel order
-                                </button>
-                                <% } %>
-                </div>
+                        <% if(orderData.orderStatus=='pending' || orderData.orderStatus=='processing' ||
+                            orderData.orderStatus=='shipped' ){ %>
+                            <button class="print-button delete-button" onclick="cancelOrder('<%=orderData._id%>')">
+                                <i class="fas fa-trash-alt"></i> Cancel order
+                            </button>
+                            <% } %>
+            </div>
 
 
-                <style>
-                    .delete-button {
-                        background-color: red;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        cursor: pointer;
-                    }
+            <style>
+                .delete-button {
+                    background-color: red;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    cursor: pointer;
+                }
 
-                    .delete-button i {
-                        margin-right: 5px;
-                    }
-                </style>
+                .delete-button i {
+                    margin-right: 5px;
+                }
+            </style>
 
 
 
 
-                <%if(orderData.orderStatus!='cancelled'){%>
-                    <div class="row print-hidden">
+            <%if(orderData.orderStatus!='cancelled' && orderData.orderStatus!='returned' ){%>
+                <div class="row print-hidden">
 
-                        <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
+                    <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
 
-                            <div class="row justify-content-between">
-                                <div class="order-tracking" id="sts1">
-                                    <span class="is-complete"></span>
-                                    <p>Pending<br></p>
-                                </div>
-                                <div class="order-tracking " id="sts2">
-                                    <span class="is-complete"></span>
-                                    <p>Processing<br></p>
-                                </div>
-                                <div class="order-tracking " id="sts3">
-                                    <span class="is-complete"></span>
-                                    <p>shipped<br></p>
-                                </div>
-                                <div class="order-tracking " id="sts4">
-                                    <span class="is-complete"></span>
-                                    <p>Delivered<br></p>
-                                </div>
-                                <!-- <div class="order-tracking " id="sts5">
+                        <div class="row justify-content-between">
+                            <div class="order-tracking" id="sts1">
+                                <span class="is-complete"></span>
+                                <p>Pending<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts2">
+                                <span class="is-complete"></span>
+                                <p>Processing<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts3">
+                                <span class="is-complete"></span>
+                                <p>shipped<br></p>
+                            </div>
+                            <div class="order-tracking " id="sts4">
+                                <span class="is-complete"></span>
+                                <p>Delivered<br></p>
+                            </div>
+                            <!-- <div class="order-tracking " id="sts5">
                                 <span class="is-complete"></span>
                                 <p>Delivered<br></p>
                             </div> -->
-                            </div>
                         </div>
                     </div>
-                    <% } else { %>
+                </div>
+                <% } else { %>
+                    <%if(orderData.orderStatus=='cancelled'){%>
                         <h1 class="print-hidden"><span class="badge badge-danger">Cancelled</span></h1>
-                        <% } %>
+                        <%}%>
 
-                            <script>
-                                function printInvoice() {
-                                    window.print()
-                                }
-                            </script>
-                            <style>
-                                @media print {
-                                    .print-hidden {
-                                        display: none !important;
-                                    }
-                                }
-                            </style>
-                            <input id="statusOfOrder" type="text" value="<%=orderData.orderStatus%>" hidden>
-                            <script>
-                                const statusOfOrder = document.getElementById('statusOfOrder').value
-                                let sts1 = document.getElementById('sts1')
-                                let sts2 = document.getElementById('sts2')
-                                let sts3 = document.getElementById('sts3')
-                                let sts4 = document.getElementById('sts4')
+                            <%if(orderData.orderStatus=='returned'){%>
+                                <h1 class="print-hidden"><span class="badge badge-danger">Returned</span></h1>
+                                <%}%>
+                                    <% } %>
 
-                                // enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+                                        <script>
+                                            function printInvoice() {
+                                                window.print()
+                                            }
+                                        </script>
+                                        <style>
+                                            @media print {
+                                                .print-hidden {
+                                                    display: none !important;
+                                                }
+                                            }
+                                        </style>
+                                        <input id="statusOfOrder" type="text" value="<%=orderData.orderStatus%>" hidden>
+                                        <script>
+                                            const statusOfOrder = document.getElementById('statusOfOrder').value
+                                            let sts1 = document.getElementById('sts1')
+                                            let sts2 = document.getElementById('sts2')
+                                            let sts3 = document.getElementById('sts3')
+                                            let sts4 = document.getElementById('sts4')
 
-                                if (statusOfOrder == 'pending') {
-                                    setTimeout(() => {
-                                        sts1.classList.add('completed');
-                                    }, 500);
-                                } else if (statusOfOrder == 'processing') {
-                                    setTimeout(() => {
-                                        sts1.classList.add('completed');
-                                    }, 500);
-                                    setTimeout(() => {
-                                        sts2.classList.add('completed');
-                                    }, 1000);
-                                } else if (statusOfOrder == 'shipped') {
-                                    setTimeout(() => {
-                                        sts1.classList.add('completed');
-                                    }, 500);
-                                    setTimeout(() => {
-                                        sts2.classList.add('completed');
-                                    }, 1000);
-                                    setTimeout(() => {
-                                        sts3.classList.add('completed');
-                                    }, 1500);
-                                } else if (statusOfOrder == 'delivered') {
-                                    setTimeout(() => {
-                                        sts1.classList.add('completed');
-                                    }, 500);
-                                    setTimeout(() => {
-                                        sts2.classList.add('completed');
-                                    }, 1000);
-                                    setTimeout(() => {
-                                        sts3.classList.add('completed');
-                                    }, 1500);
-                                    setTimeout(() => {
-                                        sts4.classList.add('completed');
-                                    }, 2000);
-                                }
-                            </script>
+                                            // enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+
+                                            if (statusOfOrder == 'pending') {
+                                                setTimeout(() => {
+                                                    sts1.classList.add('completed');
+                                                }, 500);
+                                            } else if (statusOfOrder == 'processing') {
+                                                setTimeout(() => {
+                                                    sts1.classList.add('completed');
+                                                }, 500);
+                                                setTimeout(() => {
+                                                    sts2.classList.add('completed');
+                                                }, 1000);
+                                            } else if (statusOfOrder == 'shipped') {
+                                                setTimeout(() => {
+                                                    sts1.classList.add('completed');
+                                                }, 500);
+                                                setTimeout(() => {
+                                                    sts2.classList.add('completed');
+                                                }, 1000);
+                                                setTimeout(() => {
+                                                    sts3.classList.add('completed');
+                                                }, 1500);
+                                            } else if (statusOfOrder == 'delivered') {
+                                                setTimeout(() => {
+                                                    sts1.classList.add('completed');
+                                                }, 500);
+                                                setTimeout(() => {
+                                                    sts2.classList.add('completed');
+                                                }, 1000);
+                                                setTimeout(() => {
+                                                    sts3.classList.add('completed');
+                                                }, 1500);
+                                                setTimeout(() => {
+                                                    sts4.classList.add('completed');
+                                                }, 2000);
+                                            }
+                                        </script>
 
 
-                            <div class="row">
-                                <div class="col-12" id="invoiceSpace">
+                                        <div class="row">
+                                            <div class="col-12" id="invoiceSpace">
 
-                                    <h3>Customer</h3>
-                                    <h6><strong>Customer Name:</strong>
-                                        <%=orderData.userId.name%>
-                                    </h6>
-                                    <h6><strong>Email:</strong>
-                                        <%=orderData.userId.email%>
-                                    </h6>
-                                    <h6><strong>Phone:</strong>
-                                        <%=orderData.userId.phone%>
-                                    </h6>
-                                    <h3>Order Details</h3>
+                                                <h3>Customer</h3>
+                                                <h6><strong>Customer Name:</strong>
+                                                    <%=orderData.userId.name%>
+                                                </h6>
+                                                <h6><strong>Email:</strong>
+                                                    <%=orderData.userId.email%>
+                                                </h6>
+                                                <h6><strong>Phone:</strong>
+                                                    <%=orderData.userId.phone%>
+                                                </h6>
+                                                <h3>Order Details</h3>
 
-                                    <h6><strong>Order Date: </strong>
-                                        <%=orderData.orderedAt%>
-                                    </h6>
-                                    <h6><strong>Order ID: </strong>
-                                        <%=orderData.orderId%>
-                                    </h6>
-                                    <h6><strong>Payment Method : </strong>
-                                        <%=orderData.paymentMethod%>
-                                    </h6>
-                                    <h6><strong>Payment Status : </strong>
-                                        <%=orderData.paymentStatus%>
-                                    </h6>
-                                    <h6><strong>Order Status : </strong>
-                                        <%=orderData.orderStatus%>
-                                    </h6>
-                                    <h6><strong>Grand Total : </strong>
-                                        <%=orderData.totalAmount%>
-                                    </h6>
-                                    <h3>Delivery Address</h3>
-                                    <h6>
-                                        <%= `${orderData.address[0].firstName} ${orderData.address[0].lastName},
-                                            ${orderData.address[0].phone}, ${orderData.address[0].altPhone},
-                                            ${orderData.address[0].houseName}, ${orderData.address[0].city},
-                                            ${orderData.address[0].state}, ${orderData.address[0].pincode},
-                                            ${orderData.address[0].landMark}` %>
-                                    </h6>
+                                                <h6><strong>Order Date: </strong>
+                                                    <%=orderData.orderedAt%>
+                                                </h6>
+                                                <h6><strong>Order ID: </strong>
+                                                    <%=orderData.orderId%>
+                                                </h6>
+                                                <h6><strong>Payment Method : </strong>
+                                                    <%=orderData.paymentMethod%>
+                                                </h6>
+                                                <h6><strong>Payment Status : </strong>
+                                                    <%=orderData.paymentStatus%>
+                                                </h6>
+                                                <h6><strong>Order Status : </strong>
+                                                    <%=orderData.orderStatus%>
+                                                </h6>
+                                                <h6><strong>Grand Total : </strong>
+                                                    <%=orderData.totalAmount%>
+                                                </h6>
+                                                <h3>Delivery Address</h3>
+                                                <h6>
+                                                    <%= `${orderData.address[0].firstName}
+                                                        ${orderData.address[0].lastName}, ${orderData.address[0].phone},
+                                                        ${orderData.address[0].altPhone},
+                                                        ${orderData.address[0].houseName}, ${orderData.address[0].city},
+                                                        ${orderData.address[0].state}, ${orderData.address[0].pincode},
+                                                        ${orderData.address[0].landMark}` %>
+                                                </h6>
 
-                                    <!-- <div class="row">
+                                                <!-- <div class="row">
                         <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
                             <div class="row justify-content-between">
                                
@@ -517,136 +582,136 @@
 
 
 
-                                    <h3>Ordered Products</h3>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>sl.No</th>
-                                                <th>Product Name</th>
-                                                <th></th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% for (let i=0; i < orderData.items.length; i++) { %>
-                                                <tr>
-                                                    <td>
-                                                        <%=i+1%>
-                                                    </td>
-                                                    <td class="product-name">
-                                                        <%= orderData.items[i].productId.name%>
-                                                    </td>
-                                                    <td><img class="product-image"
-                                                            src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
-                                                            alt="Product 1"></td>
-                                                    <td id="unit-price<%=i%>">
-                                                        <%=orderData.items[i].productId.price.salePrice%>
-                                                    </td>
-                                                    <td id="quantity<%=i%>">
-                                                        <%=orderData.items[i].quantity%>
-                                                    </td>
-                                                    <td id="total<%=i%>"></td>
-                                                </tr>
-                                                <%}%>
-                                                    <input type="text" value="<%=orderData.items.length%>"
-                                                        id="order-product-length" hidden>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>
-                                                            <h3>Grand Total:</h3>
-                                                        </td>
-                                                        <td>
-                                                            <h3 id="grand-total"><strong>
-                                                                    <%=orderData.totalAmount%>
-                                                                </strong></h3>
-                                                        </td>
-                                                    </tr>
-                                        </tbody>
-                                    </table>
+                                                <h3>Ordered Products</h3>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>sl.No</th>
+                                                            <th>Product Name</th>
+                                                            <th></th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% for (let i=0; i < orderData.items.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%=i+1%>
+                                                                </td>
+                                                                <td class="product-name">
+                                                                    <%= orderData.items[i].productId.name%>
+                                                                </td>
+                                                                <td><img class="product-image"
+                                                                        src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
+                                                                        alt="Product 1"></td>
+                                                                <td id="unit-price<%=i%>">
+                                                                    <%=orderData.items[i].productId.price.salePrice%>
+                                                                </td>
+                                                                <td id="quantity<%=i%>">
+                                                                    <%=orderData.items[i].quantity%>
+                                                                </td>
+                                                                <td id="total<%=i%>"></td>
+                                                            </tr>
+                                                            <%}%>
+                                                                <input type="text" value="<%=orderData.items.length%>"
+                                                                    id="order-product-length" hidden>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>
+                                                                        <h3>Grand Total:</h3>
+                                                                    </td>
+                                                                    <td>
+                                                                        <h3 id="grand-total"><strong>
+                                                                                <%=orderData.totalAmount%>
+                                                                            </strong></h3>
+                                                                    </td>
+                                                                </tr>
+                                                    </tbody>
+                                                </table>
 
 
-                                    <!-- Order Summary -->
+                                                <!-- Order Summary -->
 
-                                </div>
+                                            </div>
 
-                            </div>
+                                        </div>
 
 
-            </div>
         </div>
+    </div>
 
 
-        <script>
-            function calculatePrice() {
-                const productLength = document.getElementById('order-product-length').value
-                let unitPrice, quantity, total, grandTotal = 0
-                for (let i = 0; i < productLength; i++) {
-                    unitPrice = document.getElementById(`unit-price${i}`).innerText
-                    quantity = document.getElementById(`quantity${i}`).innerText
-                    total = quantity * unitPrice
+    <script>
+        function calculatePrice() {
+            const productLength = document.getElementById('order-product-length').value
+            let unitPrice, quantity, total, grandTotal = 0
+            for (let i = 0; i < productLength; i++) {
+                unitPrice = document.getElementById(`unit-price${i}`).innerText
+                quantity = document.getElementById(`quantity${i}`).innerText
+                total = quantity * unitPrice
 
-                    document.getElementById(`total${i}`).innerText = total
+                document.getElementById(`total${i}`).innerText = total
 
 
 
+            }
+
+
+        }
+        function cancelOrder(id) {
+            const orderId = id
+            Swal.fire({
+                title: 'Cancel Order?',
+                text: 'Do you want to Cancel this order?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Cancel!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.value) {
+
+
+                    const requestData = {
+                        id: orderId
+                    };
+
+                    fetch('/cancel-order', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData)
+                    }).then(response => response.json())
+                        .then(data => {
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.log('Error updating cart quantity:', error);
+                        });
+
+                } else {
+                    Swal.fire('Not Cancelled', 'Your order was notCancelled.', 'info');
                 }
+            });
+        }
+        window.onload = calculatePrice
 
-
-            }
-            function cancelOrder(id) {
-                const orderId = id
-                Swal.fire({
-                    title: 'Cancel Order?',
-                    text: 'Do you want to Cancel this order?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Cancel!',
-                    cancelButtonText: 'No, cancel'
-                }).then((result) => {
-                    if (result.value) {
-
-
-                        const requestData = {
-                            id: orderId
-                        };
-
-                        fetch('/cancel-order', {
-                            method: 'PATCH',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(requestData)
-                        }).then(response => response.json())
-                            .then(data => {
-                                window.location.reload();
-                            })
-                            .catch(error => {
-                                console.log('Error updating cart quantity:', error);
-                            });
-
-                    } else {
-                        Swal.fire('Not Cancelled', 'Your order was notCancelled.', 'info');
-                    }
-                });
-            }
-            window.onload = calculatePrice
-
-        </script>
+    </script>
 
 
 
 
 
-        <style>
-            .product-name {
-                max-width: 150px;
-                white-space: normal;
-                overflow: hidden;
-            }
-        </style>
-        <%- include('footer.ejs') %>
+    <style>
+        .product-name {
+            max-width: 150px;
+            white-space: normal;
+            overflow: hidden;
+        }
+    </style>
+    <%- include('footer.ejs') %>

@@ -148,7 +148,7 @@
                 <!-- ----users list -----modal--------- -->
                 <% for (let i=0; i < userData.length; i++) { %>
                     <div class="w3-container">
-                        
+
 
                         <!-- -----------modal --start----------- -->
 
@@ -208,15 +208,16 @@
                                         <% } else { %>
                                             <p>No address information available.</p>
                                             <% } %>
-                                                <form action="/admin/order-details" method="post">
-                                                    <input type="text" value="<%=userData[i]._id%>" name="_id" hidden>
+                                              
 
-                                                    <button class="btn btn-success" style="color: white;"
-                                                        type="submit">Order Details</button>
-                                                </form>
+                                                    <a href="/admin/order-details?id=<%=userData[i]._id%>">
+                                                        <button class="btn btn-success" style="color: white;">Order
+                                                            Details</button></a>
+
 
                                                 <p></p>
                                                 <p></p>
+
 
 
                                 </div>
@@ -299,21 +300,21 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
 
-                                        
+
                                         fetch("/admin/block-user?_id=" + userId, {
-                                          method: 'PATCH',
-                                          headers: {
-                                            'Content-Type': 'application/json',
-                                          },
+                                            method: 'PATCH',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
                                         }).then(response => response.json())
-                                          .then(data => {
-                                            console.log(data.message);
-                                            window.location.reload();
-                                          })
-                                          .catch(error => {
-                                            console.log('Error updating cart quantity:', error);
-                                          });
-        
+                                            .then(data => {
+                                                console.log(data.message);
+                                                window.location.reload();
+                                            })
+                                            .catch(error => {
+                                                console.log('Error updating cart quantity:', error);
+                                            });
+
                                     }
                                 });
                             }
@@ -331,19 +332,19 @@
                                     if (result.isConfirmed) {
 
                                         fetch("/admin/unblock-user?_id=" + userId, {
-                                          method: 'PATCH',
-                                          headers: {
-                                            'Content-Type': 'application/json',
-                                          },
+                                            method: 'PATCH',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
                                         }).then(response => response.json())
-                                          .then(data => {
-                                            console.log(data.message);
-                                            window.location.reload();
-                                          })
-                                          .catch(error => {
-                                            console.log('Error updating cart quantity:', error);
-                                          });
-        
+                                            .then(data => {
+                                                console.log(data.message);
+                                                window.location.reload();
+                                            })
+                                            .catch(error => {
+                                                console.log('Error updating cart quantity:', error);
+                                            });
+
                                     }
                                 });
                             }

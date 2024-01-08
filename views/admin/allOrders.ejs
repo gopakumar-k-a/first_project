@@ -150,28 +150,22 @@
                                                                     class="badge rounded-pill alert-warning">Pending</span>
                                                             </td>
                                                             <% } %>
-                                                                <% if(orderData[i].orderStatus=='processing' ){ %>
-                                                                    <td><span
-                                                                            class="badge rounded-pill alert-warning">processing</span>
-                                                                    </td>
-                                                                    <% } %>
-                                                                        <% if(orderData[i].orderStatus=='shipped' ){ %>
-                                                                            <td><span
-                                                                                    class="badge rounded-pill alert-warning">shipped</span>
-                                                                            </td>
-                                                                            <% } %>
-                                                                                <% if(orderData[i].orderStatus=='delivered'
-                                                                                    ){ %>
-                                                                                    <td><span
-                                                                                            class="badge rounded-pill alert-success">delivered</span>
-                                                                                    </td>
-                                                                                    <% } %>
-                                                                                        <% if(orderData[i].orderStatus=='cancelled'
-                                                                                            ){ %>
-                                                                                            <td><span
-                                                                                                    class="badge rounded-pill alert-danger">cancelled</span>
-                                                                                            </td>
-                                                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'processing') { %>
+                                                                <td><span class="badge rounded-pill alert-warning">Processing</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'shipped') { %>
+                                                                <td><span class="badge rounded-pill alert-info">Shipped</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'delivered') { %>
+                                                                <td><span class="badge rounded-pill alert-success">Delivered</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'cancelled') { %>
+                                                                <td><span class="badge rounded-pill alert-danger">Cancelled</span></td>
+                                                            <% } %>
+                                                            <% if (orderData[i].orderStatus == 'returned') { %>
+                                                                <td><span class="badge rounded-pill alert-danger">Returned</span></td>
+                                                            <% } %>
+                                                            
 
                                                                                                 <td>
                                                                                                     <%= new

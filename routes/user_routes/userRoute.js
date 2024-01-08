@@ -80,6 +80,8 @@ user.post('/place-order',userAuth.isLogin,userOrderController.placeOrder)
 user.post('/online-payment',userAuth.isLogin,userOrderController.onlinePayment)
 //cancel  the order
 user.patch('/cancel-order',userAuth.isLogin,userOrderController.cancelOrder)
+//return order
+user.patch('/return-order',userAuth.isLogin,userOrderController.returnOrder)
 //show each of order details of user
 user.get('/order-details',userAuth.isLogin,userOrderController.orderDetails)
 //give coupon details to checkout

@@ -1,0 +1,491 @@
+
+<%- include('header.ejs') %>
+    <div class="screen-overlay"></div>
+    <%- include('sideNav.ejs') %>
+        <main class="main-wrap">
+            <section class="content-main">
+                <!-- --------modal start---------- -->
+                <div class="w3-container">
+                    <div id="id01" class="w3-modal w3-x-large">
+                        <div class="w3-modal-content w3-animate-zoom">
+                            <header class="w3-container w3-teal">
+                                <span onclick="document.getElementById('id01').style.display='none'"
+                                    class="w3-button w3-display-topright">&times;</span>
+                                <h2>.</h2>
+                            </header>
+                            <div class="w3-container">
+                                <section class="content-main">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="content-header">
+                                                <h2 class="content-title">Add New Banner</h2>
+                                                <!-- <div>
+                                                    <button
+                                                        class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save
+                                                        to draft</button>
+                                                    <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <!-- card end// -->
+                                                    <div class="card mb-4">
+                                                        <div class="card-body">
+                                                            <div>
+                                                                <label class="form-label">Images</label>
+                                                                <div id="cropped-image-container"
+                                                                    style="overflow: hidden;" class="col-lg-12">
+                                                                </div>
+                                                                <input type="file" id="image-input" name="image">
+                                                                <!-- <input class="form-control" type="file"> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <form id="image-form" action="/admin/banner-image" method="post"
+                                                        enctype="multipart/form-data">
+                                                        <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <input type="text" id="name" placeholder="Type here"
+                                                                class="form-control" name="name" placeholder="Name">
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Title</label>
+                                                            <input type="text" id="title" name="title"
+                                                                placeholder="Title" class="form-control">
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Subtitle</label>
+                                                            <input type="text" id="subtitle" name="subtitle"
+                                                                placeholder="Subtitle" class="form-control">
+                                                        </div>
+                                                        <!-- <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <input type="text" id="subtitle" name="subtitle"
+                                                                placeholder="Subtitle" class="form-control">
+                                                        </div> -->
+                                                        <!-- <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <textarea id="description" name="description"
+                                                                placeholder="Description" rows="4"></textarea>
+                                                        </div> -->
+                                                        <div class="mb-4">
+                                                            <label class="form-label">Full description</label>
+                                                            <textarea id="description" name="description"
+                                                            placeholder="Description" class="form-control" rows="4"></textarea>
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Target Url</label>
+                                                            <input type="text" id="targetedUrl" name="targetedUrl"
+                                                                placeholder="Targeted Url" class="form-control">
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="mb-4">
+                                                                <label for="product_name" class="form-label">Start Date</label>
+                                                                <input type="date" id="startDate" name="startDate"
+                                                                placeholder="Start Date" class="form-control" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="mb-4">
+                                                                <label for="product_name" class="form-label">End Date</label>
+                                                                <input type="date" id="endDate" name="endDate"
+                                                                placeholder="End Date" class="form-control" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        <!-- <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <input type="date" id="startDate" name="startDate"
+                                                                placeholder="Start Date" class="form-control">
+                                                        </div> -->
+                                                        <!-- <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <input type="date" id="endDate" name="endDate"
+                                                                placeholder="End Date" class="form-control">
+                                                        </div> -->
+                                                        <div id="cropped-image-container"
+                                                            style="max-width: 385px; max-height: 237.5px; overflow: hidden;">
+                                                        </div>
+                                                        <input type="hidden" id="cropped-image-input"
+                                                        name="croppedImage" value="">
+                                                        <input type="file" id="image-input" name="image" hidden>
+                                                        <button class="btn btn-md rounded font-sm hover-up"
+                                                            id="submit-button">Add
+                                                            Banner</button>
+                                                    </form><!-- card end// -->
+                                                </div>
+                                            </div>
+                                            <div class="card-body" style="padding: 30px;">
+                                                <!-- <form id="image-form" action="/admin/banner-image" method="post"
+                                                    enctype="multipart/form-data"> -->
+                                                    <!-- <div class="row" style="padding: 10px;"> -->
+                                                        <!-- Input for the image -->
+                                                        <!-- <input type="file" id="image-input" name="image" hidden> -->
+                                                        <!-- Other input elements -->
+                                                        <!-- <div class="mb-4">
+                                                            <label for="product_name" class="form-label">Name</label>
+                                                            <input type="text" id="name" placeholder="Type here"
+                                                                class="form-control" name="name" placeholder="Name">
+                                                        </div> -->
+                                                        <!-- <input type="text" id="title" name="title" placeholder="Title"> -->
+                                                        <!-- <input type="text" id="subtitle" name="subtitle"
+                                                            placeholder="Subtitle"> -->
+                                                        <!-- <textarea id="description" name="description"
+                                                            placeholder="Description" rows="4"></textarea> -->
+                                                        <!-- <input type="date" id="startDate" name="startDate"
+                                                            placeholder="Start Date"> -->
+                                                        <!-- <input type="date" id="endDate" name="endDate"
+                                                            placeholder="End Date"> -->
+                                                        <!-- Cropped image container -->
+                                                        <!-- <div id="cropped-image-container"
+                                                            style="max-width: 385px; max-height: 237.5px; overflow: hidden;">
+                                                        </div> -->
+                                                        <!-- Hidden input for cropped image data -->
+                                                        <!-- <input type="hidden" id="cropped-image-input"
+                                                            name="croppedImage" value=""> -->
+                                                        <!-- Button to submit the form -->
+                                                        <!-- <button class="btn btn-md rounded font-sm hover-up"
+                                                            id="submit-button">Add
+                                                            Banner</button> -->
+                                                    <!-- </div> -->
+                                                <!-- </form> -->
+                                                <script>
+                                                    const imageInput = document.getElementById('image-input');
+                                                    const croppedImageContainer = document.getElementById('cropped-image-container');
+                                                    const submitButton = document.getElementById('submit-button');
+                                                    const croppedImageInput = document.getElementById('cropped-image-input');
+                                                    let cropper;
+                                                    imageInput.addEventListener('change', (event) => {
+                                                        const imageFile = event.target.files[0];
+                                                        if (imageFile) {
+                                                            // An image file is selected, proceed with Cropper initialization
+                                                            const imageURL = URL.createObjectURL(imageFile);
+                                                            const image = document.createElement('img');
+                                                            image.src = imageURL;
+                                                            // Append the image to the container
+                                                            croppedImageContainer.innerHTML = '';
+                                                            croppedImageContainer.appendChild(image);
+                                                            // Initialize Cropper on the image with the fixed ID
+                                                            cropper = new Cropper(image, {
+                                                                aspectRatio: 16 / 9,
+                                                            });
+                                                        } else {
+                                                            // No image file selected, reset Cropper and clear the container
+                                                            if (cropper) {
+                                                                cropper.destroy();
+                                                                cropper = null;
+                                                            }
+                                                            croppedImageContainer.innerHTML = '';
+                                                        }
+                                                    });
+                                                    submitButton.addEventListener('click', async () => {
+                                                        try {
+                                                            if (cropper) {
+                                                                // Get the cropped canvas
+                                                                const canvas = cropper.getCroppedCanvas();
+                                                                // Convert canvas content to a Blob
+                                                                canvas.toBlob((blob) => {
+                                                                    // Create File object with a fake name (you can adjust the filename as needed)
+                                                                    const croppedImageFile = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
+                                                                    // Create FormData
+                                                                    const formData = new FormData();
+                                                                    formData.append('croppedImage', croppedImageFile);
+                                                                    // Append other input elements to FormData
+                                                                    const nameInput = document.getElementById('name');
+                                                                    const titleInput = document.getElementById('title');
+                                                                    const subtitleInput = document.getElementById('subtitle');
+                                                                    const descriptionInput = document.getElementById('description');
+                                                                    const startDateInput = document.getElementById('startDate');
+                                                                    const endDateInput = document.getElementById('endDate');
+                                                                    const targetedUrl=document.getElementById('targetedUrl')
+                                                                    formData.append('name', nameInput.value);
+                                                                    formData.append('title', titleInput.value);
+                                                                    formData.append('subtitle', subtitleInput.value);
+                                                                    formData.append('description', descriptionInput.value);
+                                                                    formData.append('startDate', startDateInput.value);
+                                                                    formData.append('endDate', endDateInput.value);
+                                                                    formData.append('targetedUrl',targetedUrl.value)
+                                                                    // Send FormData to the backend using fetch or XMLHttpRequest
+                                                                    fetch('/admin/banner-image', {
+                                                                        method: 'POST',
+                                                                        body: formData,
+                                                                    })
+                                                                        .then(response => response.json())
+                                                                        .then(data => {
+                                                                            console.log(data);
+                                                                            window.location.reload();
+                                                                        })
+                                                                        .catch(error => console.error(error));
+                                                                }, 'image/jpeg', 0.8);
+                                                            } else {
+                                                                // No image file selected, submit the form without the image
+                                                                const form = document.getElementById('image-form');
+                                                                const formData = new FormData(form);
+                                                                fetch('/admin/banner-image', {
+                                                                    method: 'POST',
+                                                                    body: formData,
+                                                                })
+                                                                    .then(response => response.json())
+                                                                    .then(data => {
+                                                                        console.log(data);
+                                                                        window.location.reload();
+                                                                    })
+                                                                    .catch(error => console.error(error));
+                                                            }
+                                                        } catch (error) {
+                                                            console.error(error.message);
+                                                        }
+                                                    });
+                                                </script>
+                                </section>
+                            </div>
+
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                        </div>
+                       
+                    </div>
+                </div>
+                </div>
+                <!-- --------modal end------ -->
+                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
+                    integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css"
+                    integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <!-- <link href="/node_modules/cropperjs/dist/cropper.css" rel="stylesheet">
+                <script src="/node_modules/cropperjs/dist/cropper.js"></script> -->
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Banner Management</h2>
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-light rounded font-md">Export</a>
+                        <a href="#" class="btn btn-light rounded  font-md">Import</a>
+                        <a href="#" class="btn btn-primary btn-sm rounded"
+                            onclick="document.getElementById('id01').style.display='block'">Create new</a>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <!-- <header class="card-header">
+                    <div class="row gx-3">
+                        <div class="col-lg-4 col-md-6 me-auto">
+                            <input type="text" placeholder="Search..." class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>All category</option>
+                                <option>Electronics</option>
+                                <option>Clothings</option>
+                                <option>Something else</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>Latest added</option>
+                                <option>Cheap first</option>
+                                <option>Most viewed</option>
+                            </select>
+                        </div>
+                    </div>
+                </header> -->
+                    <!-- card-header end// -->
+                    <!-- <div class="card-body">
+                        <form id="image-form" action="/admin/banner-image" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <input type="file" id="image-input" name="image">
+                                <input type="text" value="hiii" name="hii" id="hii">
+                                <div id="cropped-image-container" style="max-width: 385px; max-height: 237.5px; overflow: hidden;"></div>
+                                <button type="button" id="submit-button">Submit Cropped Image</button>
+                                <input type="hidden" id="cropped-image-input" name="croppedImage" value="">
+                            </div>
+                        </form>
+                        <script>
+                            const imageInput = document.getElementById('image-input');
+                            const croppedImageContainer = document.getElementById('cropped-image-container');
+                            const submitButton = document.getElementById('submit-button');
+                            const croppedImageInput = document.getElementById('cropped-image-input');
+                            let cropper;
+                            imageInput.addEventListener('change', (event) => {
+                                const imageFile = event.target.files[0];
+                                const imageURL = URL.createObjectURL(imageFile);
+                                // Create an image element to display the selected image
+                                const image = document.createElement('img');
+                                image.src = imageURL;
+                                // Append the image to the container
+                                croppedImageContainer.innerHTML = '';
+                                croppedImageContainer.appendChild(image);
+                                // Initialize Cropper on the image with the fixed ID
+                                cropper = new Cropper(image, {
+                                    aspectRatio: 16 / 9,
+                                });
+                            });
+                            submitButton.addEventListener('click', async () => {
+                                try {
+                                    // Get the cropped canvas
+                                    const canvas = cropper.getCroppedCanvas();
+                                    // Convert canvas content to a Blob
+                                    canvas.toBlob((blob) => {
+                                        // Create File object with a fake name (you can adjust the filename as needed)
+                                        const croppedImageFile = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
+                                        const hii = document.getElementById('hii').value
+                                        // Create FormData
+                                        const formData = new FormData();
+                                        formData.append('croppedImage', croppedImageFile);
+                                        formData.append('msg', hii)
+                                        // Send FormData to the backend using fetch or XMLHttpRequest
+                                        fetch('/admin/banner-image', {
+                                            method: 'POST',
+                                            body: formData,
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                console.log(data)
+                                                window.location.reload()
+                                            })
+                                            .catch(error => console.error(error));
+                                    }, 'image/jpeg', 0.8);
+                                } catch (error) {
+                                    console.error(error.message);
+                                }
+                            });
+                        </script>
+                    </div> -->
+                    <!-- ---modal start---  -->
+                    <!-- <div class="w3-container">
+                        <h2>W3.CSS Modal</h2>
+                        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Modal</button>
+                      
+                        <div id="id01" class="w3-modal">
+                          <div class="w3-modal-content">
+                            <div class="w3-container">
+                              <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                              <p>Some text. Some text. Some text.</p>
+                              <p>Some text. Some text. Some text.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+                    <!-- Button trigger modal -->
+                    <!-- --modal start---  -->
+
+
+                    <!-- --modal end---  -->
+
+                    <!-- -----------row 1------------------- -->
+                    <div class="row">
+                        <h2>Home Page Top</h2>
+                    </div>
+                    <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                        <div class="col">
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img src="/admin-assets/uploads/<%=bannerData[0].imageUrl%>" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate"><%=bannerData[0].name%></a>
+                                    <!-- <div class="price mb-2">$179.00</div> -->
+                                     <!-- price.// -->
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded">
+                                        <i class="material-icons md-delete_forever"></i> Block
+                                    </a>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div> <!-- col.// -->
+                        <div class="col">
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img src="/admin-assets/uploads/<%=bannerData[1].imageUrl%>" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate"><%=bannerData[1].name%></a>
+                                    <!-- <div class="price mb-2">$179.00</div> -->
+                                     <!-- price.// -->
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded">
+                                        <i class="material-icons md-delete_forever"></i> Block
+                                    </a>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div> <!-- col.// -->
+                        <!-- card-product  end// -->
+                    </div>
+                    <!-- row 1 end-------------------- -->
+                    <!-- row 2--------------------- -->
+                    <div class="row">
+                        <h2>Home Page Bottom</h2>
+                    </div>
+                    <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                        <div class="col">
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img src="/admin-assets/imgs/items/2.jpg" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate">Brown Winter Jacket for Men</a>
+                                    <div class="price mb-2">$179.00</div> <!-- price.// -->
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded">
+                                        <i class="material-icons md-delete_forever"></i> Delete
+                                    </a>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div> <!-- col.// -->
+                        <div class="col">
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img src="/admin-assets/imgs/items/3.jpg" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate">Jeans short new model</a>
+                                    <div class="price mb-2">$179.00</div> <!-- price.// -->
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded">
+                                        <i class="material-icons md-delete_forever"></i> Delete
+                                    </a>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div> <!-- col.// -->
+                        <!-- card-product  end// -->
+                    </div>
+                    <!-- col.// -->
+                </div> <!-- row.// -->
+                </div> <!-- card-body end// -->
+                </div> <!-- card end// -->
+            </section> <!-- content-main end// -->
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script> ©, Evara - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">
+                            All rights reserved
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/admin-assets/js/vendors/select2.min.js"></script>
+        <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+        </body>
+        <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-grid.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+        </html>

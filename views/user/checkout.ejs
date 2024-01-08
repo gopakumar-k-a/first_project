@@ -373,9 +373,9 @@
                                                             </div>
                                                             <li class="text-danger" id="couponFieldError"></li>
                                                         </div>
-                                                        <input type="text" id="currentCouponNameHidden">
-                                                        <input type="text" id="currentCouponTypeHidden">
-                                                        <input type="text" id="currentCouponValueHidden">
+                                                        <input type="text" id="currentCouponNameHidden" hidden>
+                                                        <input type="text" id="currentCouponTypeHidden" hidden>
+                                                        <input type="text" id="currentCouponValueHidden" hidden>
 
 
                                                     </td>
@@ -495,7 +495,10 @@
                                                 } else if (message === 'cantApply') {
                                                     couponFieldError.innerHTML = 'Cannot apply coupon';
                                                 } else if (message === 'notFound') {
-                                                    couponFieldError.innerHTML = 'Cannot find coupon';
+                                                    couponFieldError.innerHTML = 'Cannot find coupon Enter a valid Coupon Name';
+                                                }else if(message=='alreadyApplied'){
+                                                    couponFieldError.innerHTML = 'Cannot apply this coupon user already used the coupon';
+
                                                 }
                                             })
                                             .catch(error => {

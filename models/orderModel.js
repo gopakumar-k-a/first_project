@@ -65,14 +65,14 @@ const orderSchema = new mongoose.Schema({
     orderStatus: {
         type: String,
         default: 'pending',
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled','returned']
     },
     razorId:{
         type:String
     },
     paymentStatus:{
         type:String,
-        enum:['pending','success','cancelled']
+        enum:['pending','success','cancelled','returned']
     },
     amountPaid:{
         type:Number,
@@ -86,14 +86,15 @@ const orderSchema = new mongoose.Schema({
     },
     moneyFromWallet:{
         type:Number,
-        default:0
+       
     },
     couponStatus:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     moneyFromCoupon:{
         type:Number,
-        default:0
+   
     },
     couponName:{
         type:String
@@ -103,7 +104,10 @@ const orderSchema = new mongoose.Schema({
     },
     couponDiscount:{
         type:Number,
-        default:0
+      
+    },
+    returnReason:{
+        type:String
     }
 });
 

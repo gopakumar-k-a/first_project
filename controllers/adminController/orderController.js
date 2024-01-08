@@ -1,11 +1,12 @@
 const orderModel = require('../../models/orderModel')
-const mongoose=require('mongoose')
+const productModel=require('../../models/productModel')
+const walletModel=require('../../models/walletModel')
+const mongoose = require('mongoose')
 
 const loadOrderDetails = async (req, res) => {
     try {
-        const id = req.body._id
-        const orderData = await orderModel.find({ userId: id })
-        // console.log(orderData);
+        const id = req.query.id
+        const orderData = await orderModel.find({ userId: id }).sort({orderedAt:-1})
         res.render('admin/orderDetails', { orderData })
     } catch (error) {
         console.log(error.message);
@@ -18,34 +19,67 @@ const changeOrderStatus = async (req, res) => {
         const { idOforder, orderStatusSelect } = req.body
         const orderData = await orderModel.findOne({ _id: idOforder })
         //  ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
-        if (orderStatusSelect) {
+   
 
-            const status = orderStatusSelect === 'pending' ? 'pending' :
-                orderStatusSelect === 'processing' ? 'processing' :
-                    orderStatusSelect === 'shipped' ? 'shipped' :
-                        orderStatusSelect === 'delivered' ? 'delivered' :
-                            orderStatusSelect === 'cancelled' ? 'cancelled' :
-                                'unknown';
-            orderData.orderStatus = status
-            console.log('this is status ',status);
-            if(orderData.paymentMethod=='cod'){
-                if(status=='pending' || status=='processing' || status=='shipped'){
-                    orderData.paymentStatus='pending'
-                }else if(status=='delivered'){
-                    orderData.paymentStatus='success'
-                }else if(status=='cancelled'){
-                    orderData.paymentStatus='cancelled'
-                }
+
+        const status = orderStatusSelect
+        orderData.orderStatus = status
+        if(status=='cancelled'){
+            const userId = orderData.userId
+            for (const orderProduct of orderData.items) {
+                const product = await productModel.findOne({ _id: orderProduct.productId })
+                const size = orderProduct.size
+                const orderedQuantity = orderProduct.quantity
+                product.size[size].quantity += orderedQuantity
+                product.save()
+    
             }
-            if(orderData.paymentMethod=='upi'){
-                if(status=='cancelled'){
-                    orderData.paymentStatus='cancelled'
-                }else{
-                    orderData.paymentStatus='success'
+            orderData.orderStatus = "cancelled"
+            orderData.paymentStatus = "cancelled"
+        // enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled','returned']
+
+            if (orderData.paymentMethod == 'upi' || orderData.paymentMethod == 'wallet' || orderData.paymentMethod=='cod' && orderData.orderStatus=='delivered') {
+                const walletData = await walletModel.findOne({ userId: userId })
+                console.log('this is wallet data  ',walletData );
+                const historyData = {
+                    amount: orderData.totalAmount,
+                    type: 'credit'
                 }
+                if (walletData) {
+                    walletData.balance += orderData.totalAmount
+                    walletData.history.push(historyData)
+                    await walletData.save()
+                } else {
+                    const createWallet = new walletModel({
+                        userId: userId,
+                        balance: orderData.totalAmount,
+                        history: historyData
+    
+                    })
+                    await createWallet.save()
+                }
+    
             }
-            await orderData.save()
         }
+        console.log('this is status ', status);
+        if (orderData.paymentMethod == 'cod') {
+            if (status == 'pending' || status == 'processing' || status == 'shipped') {
+                orderData.paymentStatus = 'pending'
+            } else if (status == 'delivered') {
+                orderData.paymentStatus = 'success'
+            } else if (status == 'cancelled') {
+                orderData.paymentStatus = 'cancelled'
+            }
+        }
+        if (orderData.paymentMethod == 'upi' || orderData.paymentMethod == 'wallet') {
+            if (status == 'cancelled') {
+                orderData.paymentStatus = 'cancelled'
+            } else {
+                orderData.paymentStatus = 'success'
+            }
+        }
+        await orderData.save()
+
         res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error.message);
@@ -75,8 +109,8 @@ const loadAllOrders = async (req, res) => {
 }
 const loadSingleOrderDetails = async (req, res) => {
     try {
-        const id =new mongoose.Types.ObjectId(req.query._id);
-        const orderData=await orderModel.findOne({_id:id}).populate('userId').populate('items.productId')
+        const id = new mongoose.Types.ObjectId(req.query._id);
+        const orderData = await orderModel.findOne({ _id: id }).populate('userId').populate('items.productId')
 
         console.log(orderData);
         res.render('admin/singleOrderDetails', { orderData });
