@@ -38,6 +38,9 @@ app.use('/upload', express.static(path.join('public/admin-assets/uploads')))
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
+app.use('*',(req,res)=>{
+    res.render('error/404')
+})
 
 
 

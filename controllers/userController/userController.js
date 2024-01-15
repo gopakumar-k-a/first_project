@@ -8,11 +8,13 @@ const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
 const walletModel = require('../../models/walletModel');
 const bannerModel = require('../../models/bannerModel');
 require('dotenv').config();
+const { generateReferralCode, checkReferredUser } = require('../helper/referralCode')
+
 
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        const bannerData=await bannerModel.find()
+        const bannerData = await bannerModel.find()
 
         const prData = await productModel.find({
             isActive: true,
@@ -20,7 +22,7 @@ const loadHome = async (req, res) => {
             leagueStatus: true,
             brandStatus: true
         }).populate('brand').populate('category').sort({ createdAt: -1 }).limit(6)
-        res.render('user/home', { user, prData,bannerData })
+        res.render('user/home', { user, prData, bannerData })
     } catch (error) {
         console.log(error.message);
     }
@@ -111,7 +113,6 @@ const sendForgotOtp = async (req, res) => {
     try {
         const { email } = req.body
         const matchUser = await userModel.findOne({ email: email })
-        console.log(matchUser + '  this is match user');
         if (!matchUser) {
             res.status(400).json({ message: 'user Not Found !' })
         } else {
@@ -127,12 +128,12 @@ const sendForgotOtp = async (req, res) => {
     }
 }
 
+
 const checkOtp = async (req, res) => {
 
 
     try {
         const user = req.session.userEmail || ''
-        console.log('inside check otp');
         const otpFromPage = req.body.otp
         if (!req.body.otp) {
             const errMessage = 'all fields must be filled'
@@ -148,20 +149,77 @@ const checkOtp = async (req, res) => {
 
             if (req.session.ROtp == otpFromPage) {
 
-
+                const referralCode = await generateReferralCode()
+                let referredBy = null
+                if (req.session.referralCode != null) {
+                    const referringUser = await checkReferredUser(req.session.referralCode);
+                    if (referringUser) {
+                        referredBy = referringUser._id;
+                    }
+                }
                 const data = new userModel({
                     name: req.session.fullname,
                     email: req.session.email,
                     phone: req.session.phoneno,
-                    password: req.session.password
+                    password: req.session.password,
+                    referralCode: referralCode,
+                    referredBy: referredBy
                 })
                 await data.save()
+                const newUserId = data._id;
+             
+
+
+                if (referredBy != null) {
+                    const walletData = await walletModel.findOne({ userId: referredBy })
+                    const historyData = {
+                        amount: 50,
+                        type: 'credit'
+                    }
+                    if (walletData) {
+                        walletData.balance += 50
+                        walletData.history.push(historyData)
+                        await walletData.save()
+                    } else {
+                        const createWallet = new walletModel({
+                            userId: referredBy,
+                            balance: 50,
+                            history: historyData
+
+                        })
+                        await createWallet.save()
+                    }
+                    const newUserHistory = {
+                        amount: 100,
+                        type: 'credit'
+                    }
+                    const newUserWallet = new walletModel({
+                        userId: newUserId,
+                        balance: 100,
+                        history: newUserHistory
+                    })
+
+                    await newUserWallet.save()
+
+
+                }else{
+                    const defaultWallet = new walletModel({
+                        userId: newUserId,
+                        balance: 0
+                    })
+
+                    await defaultWallet.save()
+                }
+
+
+
                 delete req.session.fullname;
                 delete req.session.email;
                 delete req.session.phoneno;
                 delete req.session.password;
                 delete req.session.ROtp;
                 delete req.session.registerOtp
+                delete req.session.referralCode
 
                 const sMessage = 'Registration Successfull'
                 return res.redirect(`/login?sMessage=${encodeURIComponent(sMessage)}`);
@@ -171,15 +229,11 @@ const checkOtp = async (req, res) => {
         }
 
         if (req.session.forgotOtp != null) {
-            console.log('inside forgot otp check');
             if (req.session.FOtp != otpFromPage) {
                 const errMessage = 'incorrect OTP'
                 return res.render('user/otp', { errMessage, email: '', user })
             }
             if (req.session.FOtp == otpFromPage) {
-                console.log('otp is matching');
-
-
                 res.render('user/forgotPassword', { user, message: '', otpCheck: 'success' })
             }
         }
@@ -193,15 +247,11 @@ const checkOtp = async (req, res) => {
 
 const changePassword = async (req, res) => {
     try {
-        console.log(req.body);
-        console.log(req.session.FEmail + 'this is session email');
-
         const userPass = req.body.password
         const forgotPassEmail = req.session.FEmail
         const hashedPass = await hashPassword(userPass)
         const userData = await userModel.findOneAndUpdate({ email: forgotPassEmail }, { password: hashedPass })
         delete req.session.ROtp
-        console.log('inside changePassword');
         if (userData) {
             res.status(200).json({ message: 'success' })
         }
@@ -215,13 +265,14 @@ const changePassword = async (req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-        console.log('inside register user');
         const firstname = req.body.firstName
         const lastname = req.body.lastName
         const email = req.body.email
         const phoneno = req.body.phoneno
         const user = req.session.userEmail || ''
         const userPass = req.body.password
+        const referralCode = req.body.referralCode.toUpperCase()
+
         const userMatch = await userModel.find({ email: email })
         const phoneMatch = await userModel.find({ phone: phoneno })
         if (userMatch.length > 0) {
@@ -238,6 +289,7 @@ const registerUser = async (req, res) => {
             req.session.email = email
             req.session.phoneno = phoneno
             req.session.password = hashedPass
+            req.session.referralCode = referralCode
             const otp = generateOTP()
             req.session.ROtp = otp
             await sendOtp(email, otp)
@@ -290,7 +342,6 @@ const checkuser = async (req, res) => {
             return res.redirect(`/login?message=${message}`)
         }
         const isValidEmail = validator.isEmail(email);
-        console.log(isValidEmail + 'validate result')
         if (!isValidEmail) {
             const message = 'Please enter a valid email';
             return res.redirect(`/login?message=${message}&email=${email}`)
@@ -343,9 +394,9 @@ const loadUserDashboard = async (req, res) => {
             const orderData = await orderModel.find({ userId: userId }).populate('items.productId').sort({ orderedAt: -1 })
             return res.render('user/userOrders', { user, userData, message: message, sMessage: sMessage, orderData })
         }
-        if(goto == 'user wallet'){
-            const walletData=await walletModel.findOne({userId:userId})
-            return res.render('user/userWallet',{user,userData,walletData})
+        if (goto == 'user wallet') {
+            const walletData = await walletModel.findOne({ userId: userId })
+            return res.render('user/userWallet', { user, userData, walletData })
         }
     } catch (error) {
         console.log(error.message);
@@ -358,7 +409,6 @@ const userUpdate = async (req, res) => {
 
         const goto = req.query.goto
         const id = req.query._id
-        console.log('this is ' + goto);
         if (goto == 'password update') {
             const currentPassword = req.body.currentPassword
             const newPassword = req.body.newPassword

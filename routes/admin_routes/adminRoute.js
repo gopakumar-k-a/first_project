@@ -14,7 +14,7 @@ const couponController=require('../../controllers/adminController/couponControll
 
 const bannerController=require('../../controllers/adminController/bannerController')
 //requiring storage engine for multer
-const upload = require('../../multer')
+const upload = require('../../utility/multer')
 //admin auth
 const adminAuth = require('../../middleware/adminAuth')
 
@@ -124,6 +124,10 @@ admin.patch('/coupon-status',adminAuth.isLogin,couponController.changeActive)
 
 admin.get('/banner',adminAuth.isLogin,bannerController.loadBanner)
 admin.post('/banner-image',adminAuth.isLogin,upload.single('croppedImage'),bannerController.PostBannerImage)
+admin.patch('/block-banner',adminAuth.isLogin,bannerController.blockBanner)
+admin.get('/banner/edit',adminAuth.isLogin,bannerController.loadEditBanner)
+admin.post('/banner/edit',adminAuth.isLogin,upload.single('croppedImage'),bannerController.editBanner)
+// admin.post('/banner/edit',adminAuth.isLogin,bannerController.updateBannerDet)
 
 
 

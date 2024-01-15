@@ -104,15 +104,15 @@
                                         const urlParams = new URLSearchParams(window.location.search);
 
                                         const sortByFromUrl = urlParams.get('sortBy');
-                                        const search=urlParams.get('keyword')
-                                        
+                                        const search = urlParams.get('keyword')
+
                                         const sortSelect = document.getElementById('sortSelect');
-                                        console.log(sortSelect.value,'this is sortSelect');
+                                        console.log(sortSelect.value, 'this is sortSelect');
                                         sortSelect.value = sortByFromUrl || 'relevance';
-                                        if(search ){
+                                        if (search) {
                                             sortSelect.value = sortByFromUrl || 'relevance';
                                         }
-// console.log('this is ');
+                                        // console.log('this is ');
                                         // Check if sortByFromUrl is null or undefined (indicating no sortBy parameter in the URL)
                                         // If so, set the value to 'relevance'
                                         // if (sortByFromUrl === null || sortByFromUrl === undefined) {
@@ -162,7 +162,7 @@
                                                                     <div class="product-image">
                                                                         <a
                                                                             href="/single-product-view?_id=<%=prData[i]._id%>">
-                                                                            <img src="/admin-assets/uploads/<%=prData[i].imagesUrl[1]%>"
+                                                                            <img src="/admin-assets/uploads/<%=prData[i].imagesUrl[0]%>"
                                                                                 alt="Li's Product Image">
                                                                         </a>
                                                                         <!-- <span class="sticker">New</span> -->
@@ -240,7 +240,7 @@
                                                                     <div class="product-image">
                                                                         <a
                                                                             href="/single-product-view?_id=<%=prData[i]._id%>">
-                                                                            <img src="/admin-assets/uploads/<%=prData[i].imagesUrl[1]%>"
+                                                                            <img src="/admin-assets/uploads/<%=prData[i].imagesUrl[0]%>"
                                                                                 alt="Li's Product Image">
                                                                         </a>
                                                                         <!-- <span class="sticker">New</span> -->
@@ -312,7 +312,7 @@
                                                 </div>
                                             </div>
                                             <% if (foundCheck) { %>
-                                                <% if (pageCount > 1) { %>
+                                                <% if (pageCount> 1) { %>
                                                     <div class="pagination-area">
                                                         <div class="row">
                                                             <div class="col-lg-6 col-md-6">
@@ -320,54 +320,64 @@
                                                             </div>
                                                             <div class="col-lg-6 col-md-6">
                                                                 <ul class="pagination-box">
-                                                                    <% for (let i = 1; i <= pageCount; i++) { %>
-                                                                        <li class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
-                                                                            <a href="<%= `/shop?page=${i}${keyword ? `&keyword=${keyword}` : ''}${sortBy ? `&sortBy=${sortBy}` : ''}` %>">
+                                                                    <% for (let i=1; i <=pageCount; i++) { %>
+                                                                        <li
+                                                                            class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
+                                                                            <a
+                                                                                href="<%= `/shop?page=${i}${keyword ? `&keyword=${keyword}` : ''}${sortBy ? `&sortBy=${sortBy}` : ''}` %>">
                                                                                 <%= i %>
                                                                             </a>
                                                                         </li>
-                                                                    <% } %>
+                                                                        <% } %>
                                                                 </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <% } %>
-                                            <% } else { %>
-                                                <% if (pageCount > 1) { %>
-                                                    <div class="pagination-area">
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-md-6">
-                                                                <!-- <p>Showing 1-12 of 13 item(s)</p> -->
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-6">
-                                                                <ul class="pagination-box">
-                                                                    <% if (currentPage > 1) { %>
-                                                                        <li>
-                                                                            <a href="/shop?page=<%= parseInt(currentPage) - 1 %><%= sortBy ? `&sortBy=${sortBy}` : '' %>"
-                                                                               class="Previous"><i class="fa fa-chevron-left"></i> Previous</a>
-                                                                        </li>
+                                                    <% } %>
+                                                        <% } else { %>
+                                                            <% if (pageCount> 1) { %>
+                                                                <div class="pagination-area">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-md-6">
+                                                                            <!-- <p>Showing 1-12 of 13 item(s)</p> -->
+                                                                        </div>
+                                                                        <div class="col-lg-6 col-md-6">
+                                                                            <ul class="pagination-box">
+                                                                                <% if (currentPage> 1) { %>
+                                                                                    <li>
+                                                                                        <a href="/shop?page=<%= parseInt(currentPage) - 1 %><%= sortBy ? `&sortBy=${sortBy}` : '' %>"
+                                                                                            class="Previous"><i
+                                                                                                class="fa fa-chevron-left"></i>
+                                                                                            Previous</a>
+                                                                                    </li>
+                                                                                    <% } %>
+                                                                                        <% for (let i=1; i <=pageCount;
+                                                                                            i++) { %>
+                                                                                            <li
+                                                                                                class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
+                                                                                                <a
+                                                                                                    href="<%= `/shop?page=${i}${sortBy ? `&sortBy=${sortBy}` : ''}` %>">
+                                                                                                    <%= i %>
+                                                                                                </a>
+                                                                                            </li>
+                                                                                            <% } %>
+                                                                                                <% if (currentPage <
+                                                                                                    pageCount) { %>
+                                                                                                    <li>
+                                                                                                        <a href="/shop?page=<%= parseInt(currentPage) + 1 %><%= sortBy ? `&sortBy=${sortBy}` : '' %>"
+                                                                                                            class="Next">Next
+                                                                                                            <i
+                                                                                                                class="fa fa-chevron-right"></i></a>
+                                                                                                    </li>
+                                                                                                    <% } %>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <% } %>
                                                                     <% } %>
-                                                                    <% for (let i = 1; i <= pageCount; i++) { %>
-                                                                        <li class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
-                                                                            <a href="<%= `/shop?page=${i}${sortBy ? `&sortBy=${sortBy}` : ''}` %>">
-                                                                                <%= i %>
-                                                                            </a>
-                                                                        </li>
-                                                                    <% } %>
-                                                                    <% if (currentPage < pageCount) { %>
-                                                                        <li>
-                                                                            <a href="/shop?page=<%= parseInt(currentPage) + 1 %><%= sortBy ? `&sortBy=${sortBy}` : '' %>"
-                                                                               class="Next">Next <i class="fa fa-chevron-right"></i></a>
-                                                                        </li>
-                                                                    <% } %>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <% } %>
-                                            <% } %>
-                                            
-                                            
+
+
 
 
                                         </div>
@@ -375,43 +385,75 @@
                                     <!-- shop-products-wrapper end -->
                 </div>
 
-                        <!-- filtering part  -->
-                <!-- <div class="col-lg-3 order-2 order-lg-1">
+                <!-- filtering part  -->
+                <%if(categoryData && categoryData.length>0 || brandData && brandData.length>0){%>
+                    <div class="col-lg-3 order-2 order-lg-1">
 
-                    <div class="sidebar-categores-box">
-                        <div class="sidebar-title">
-                            <h2>Filter By</h2>
-                        </div>
-                        <button class="btn-clear-all mb-sm-30 mb-xs-30">Clear all</button>
-                        <div class="filter-sub-area">
-                            <h5 class="filter-sub-titel">Brand</h5>
-                            <div class="categori-checkbox">
-                                <form action="#">
-                                    <ul>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Prime Video
-                                                (13)</a></li>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Computers
-                                                (12)</a></li>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Electronics
-                                                (11)</a></li>
-                                    </ul>
-                                </form>
+                        <div class="sidebar-categores-box">
+                            <div class="sidebar-title">
+                                <h2>Filter By</h2>
                             </div>
-                        </div>
-                        <div class="filter-sub-area pt-sm-10 pt-xs-10">
-                            <h5 class="filter-sub-titel">Categories</h5>
-                            <div class="categori-checkbox">
-                                <form action="#">
-                                    <ul>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Graphic
-                                                Corner (10)</a></li>
-                                        <li><input type="checkbox" name="product-categori"><a href="#"> Studio
-                                                Design (6)</a></li>
-                                    </ul>
-                                </form>
+                            <!-- <button class="btn-clear-all mb-sm-30 mb-xs-30">Clear all</button> -->
+                            <div class="filter-sub-area pt-sm-10 pt-xs-10">
+                                <h5 class="filter-sub-titel"></h5>
+                                <div class="categori-checkbox">
+
+                                    <li class="filter-sub-area <%= filterStatus ? '' : 'bg-warning' %>">
+                                        <a href="/shop?keyword=<%= keyword %>&sortBy=<%= sortBy %>">
+
+                                            All </a>
+                                    </li>
+                                </div>
                             </div>
-                        </div>
-                        <div class="filter-sub-area pt-sm-10 pt-xs-10">
+
+                            <div class="filter-sub-area pt-sm-10 pt-xs-10">
+                                <h5 class="filter-sub-titel">Categories</h5>
+                                <div class="categori-checkbox">
+                                    <form action="#">
+                                        <ul>
+                                            <%if(categoryData && categoryData.length>0){%>
+                                                <% for (let category of categoryData) { %>
+                                                    <li
+                                                        class="<%= category._id == categoryFilter ? 'bg-warning' : '' %>">
+                                                        <a
+                                                            href="/shop?categoryfilter=<%= category._id %>&brandfilter=<%= brandFilter %>&keyword=<%= keyword %>&sortBy=<%= sortBy %>">
+                                                            <%= category.name %>
+                                                        </a>
+                                                    </li>
+
+                                                    <% } %>
+                                                        <%}%>
+
+                                        </ul>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="filter-sub-area">
+                                <h5 class="filter-sub-titel">Brand</h5>
+                                <div class="categori-checkbox">
+                                    <form action="#">
+                                        <ul>
+                                            <%if(brandData && brandData.length>0){%>
+                                                <%for(let brand of brandData){%>
+                                                    <li class="<%= brand._id == brandFilter ? 'bg-warning' : '' %>">
+
+                                                        <a
+                                                            href="/shop?brandfilter=<%=brand._id%>&categoryfilter=<%= categoryFilter %>&keyword=<%= keyword %>&sortBy=<%= sortBy %>">
+                                                            <%=brand.name%>
+                                                        </a>
+                                                    </li>
+                                                    <%}%>
+                                                        <%}%>
+
+                                                            <!-- <li><input type="checkbox" name="product-categori"><a href="#">Electronics
+                                                (11)</a></li> -->
+                                        </ul>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- <div class="filter-sub-area pt-sm-10 pt-xs-10">
                             <h5 class="filter-sub-titel">Size</h5>
                             <div class="size-checkbox">
                                 <form action="#">
@@ -423,8 +465,8 @@
                                     </ul>
                                 </form>
                             </div>
-                        </div>
-                        <div class="filter-sub-area pt-sm-10 pt-xs-10">
+                        </div> -->
+                            <!-- <div class="filter-sub-area pt-sm-10 pt-xs-10">
                             <h5 class="filter-sub-titel">Color</h5>
                             <div class="color-categoriy">
                                 <form action="#">
@@ -436,8 +478,8 @@
                                     </ul>
                                 </form>
                             </div>
-                        </div>
-                        <div class="filter-sub-area pt-sm-10 pb-sm-15 pb-xs-15">
+                        </div> -->
+                            <!-- <div class="filter-sub-area pt-sm-10 pb-sm-15 pb-xs-15">
                             <h5 class="filter-sub-titel">Dimension</h5>
                             <div class="categori-checkbox">
                                 <form action="#">
@@ -451,10 +493,10 @@
                                     </ul>
                                 </form>
                             </div>
+                        </div> -->
                         </div>
-                    </div>
-                 
-                    <div class="sidebar-categores-box mb-sm-0 mb-xs-0">
+
+                        <!-- <div class="sidebar-categores-box mb-sm-0 mb-xs-0">
                         <div class="sidebar-title">
                             <h2>Laptop</h2>
                         </div>
@@ -468,9 +510,11 @@
                                 <li><a href="# ">Accessories</a></li>
                             </ul>
                         </div>
-                       
+
+                    </div> -->
                     </div>
-                </div> -->
+                    <%}%>
+                        <!-- filtering ends -->
             </div>
         </div>
     </div>

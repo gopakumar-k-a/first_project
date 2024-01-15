@@ -1,13 +1,15 @@
 
 const cartModel = require('../../models/cartModel')
-
+const productModel = require('../../models/productModel')
 
 const loadCart = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId || ''
         const cartData = await cartModel.findOne({ userId: userId }).populate('products.productId')
-        res.render('user/cart', { user, cartData })
+        const errMessage=req.query.errMessage || ''
+
+        res.render('user/cart', { user, cartData,errMessage })
     } catch (error) {
         console.log(error.message);
     }
@@ -20,44 +22,48 @@ const addTocart = async (req, res) => {
         const productId = req.query.productId
         const quantity = parseInt(req.query.qty, 10);
         const size = req.query.size
-        console.log(size + ' this is size');
         const cartData = await cartModel.findOne({ userId: userId });
+        const productData = await productModel.findOne({ _id: productId })
 
-        if (cartData) {
-            const existingProductWithSameSize = cartData.products.find(item => item.productId.toString() === productId && item.size === size);
+        const availableQuantity = productData.size[size].quantity
+        if (quantity <= availableQuantity) {
+            if (cartData) {
+                const existingProductWithSameSize = cartData.products.find(item => item.productId.toString() === productId && item.size === size);
 
-            if (existingProductWithSameSize) {
-                console.log('Product with the same size found.');
-                existingProductWithSameSize.quantity += quantity;
+                if (existingProductWithSameSize) {
+                    existingProductWithSameSize.quantity += quantity;
+                } else {
+
+
+                    const newProduct = {
+                        productId: productId,
+                        quantity: quantity,
+                        size: size
+                    };
+
+                    cartData.products.push(newProduct);
+                }
+
+                await cartData.save();
             } else {
-                console.log('Product with a different size or new product.');
 
+                const newUserCartData = new cartModel({
+                    userId: userId,
+                    products: [{
+                        productId: productId,
+                        quantity: quantity,
+                        size: size
+                    }]
+                });
 
-                const newProduct = {
-                    productId: productId,
-                    quantity: quantity,
-                    size: size
-                };
-
-                cartData.products.push(newProduct);
+                await newUserCartData.save();
             }
-
-            await cartData.save();
-        } else {
-
-            const newUserCartData = new cartModel({
-                userId: userId,
-                products: [{
-                    productId: productId,
-                    quantity: quantity,
-                    size: size
-                }]
-            });
-
-            await newUserCartData.save();
+            res.redirect('/user-cart');
+        } else if (quantity > availableQuantity || availableQuantity == 0) {
+            res.redirect(`/single-product-view?_id=${productId}&size=${size}`)
         }
 
-        res.redirect('/user-cart');
+
 
     } catch (error) {
         console.log(error.message);
@@ -71,7 +77,6 @@ const removeProduct = async (req, res) => {
         const cartData = await cartModel.findOne({ userId: userId });
         cartData.products.splice(cartId, 1)
         await cartData.save()
-        console.log(cartId);
         res.status(200).json({ message: 'Document deleted successfully' });
     } catch (error) {
         console.log(error.message);

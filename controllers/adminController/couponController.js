@@ -4,7 +4,6 @@ const couponModel = require('../../models/couponModel');
 const loadCoupon = async (req, res) => {
     try {
         const couponData = await couponModel.find({}).sort({ createdAt: -1 })
-        // console.log(couponData);
         const data = req.query.data || ''
         const status = req.query.status || ''
         let successMsg = ''
@@ -30,7 +29,6 @@ const loadCoupon = async (req, res) => {
 
 const addNewCoupon = async (req, res) => {
     try {
-        // console.log(req.body,'req.body in backend');
         const {
             couponName,
             minPurchase,
@@ -115,7 +113,6 @@ const editCoupon = async (req, res) => {
 
 const changeActive = async (req, res) => {
     try {
-        console.log(req.body);
         const {couponId,status}=req.body
         await couponModel.findByIdAndUpdate(couponId,{$set:{isActive:status}})
         

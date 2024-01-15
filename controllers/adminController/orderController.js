@@ -94,8 +94,6 @@ const loadAllOrders = async (req, res) => {
         const skip = (page - 1) * limit
         const orderData = await orderModel.find({}).sort({ orderedAt: -1 }).limit(limit).skip(skip)
         const userIndices = orderData.map((user, index) => index + 1 + skip);
-
-        // console.log(orderData);
         res.render('admin/allOrders', {
             orderData,
             userIndices: userIndices,
@@ -111,8 +109,6 @@ const loadSingleOrderDetails = async (req, res) => {
     try {
         const id = new mongoose.Types.ObjectId(req.query._id);
         const orderData = await orderModel.findOne({ _id: id }).populate('userId').populate('items.productId')
-
-        console.log(orderData);
         res.render('admin/singleOrderDetails', { orderData });
     } catch (error) {
         console.log(error);

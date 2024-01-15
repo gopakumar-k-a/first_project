@@ -145,9 +145,6 @@ const loadDashboard = async (req, res) => {
             }
           ]);
           
-
-       console.log('this is total collection  ',totalCollection);
-
         const orderCount = await orderModel.aggregate([
             {
                 $group: {

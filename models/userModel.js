@@ -67,7 +67,15 @@ const user=new mongoose.Schema({
             type:String,
             required:true
         }
-    }]
+    }],
+    referralCode: {
+        type: String,
+        unique: true,
+    },
+    referredBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+    },
 
 })
 

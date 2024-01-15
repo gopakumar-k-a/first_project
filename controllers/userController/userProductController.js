@@ -1,15 +1,14 @@
 const productModel = require('../../models/productModel')
+const brandModel = require('../../models/brandModel')
+const categoryModel = require('../../models/categoryModel')
+const mongoose = require('mongoose')
 
 const loadSingleProduct = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const id = req.query._id
         const product = await productModel.findOne({ _id: id }).populate('brand').populate('category').populate('team').populate('league')
-
         const relatedProductsBrands = await productModel.find({ brand: product.brand._id }).populate('brand').limit(5)
-        if (relatedProductsBrands) {
-            console.log(relatedProductsBrands + 'this is related products');
-        }
         return res.render('user/singleProduct', { user, product, relatedProductsBrands })
     } catch (error) {
         console.log(error.message);
@@ -19,10 +18,13 @@ const loadShop = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
         const keyword = req.query.keyword || ''
-        const sortBy=req.query.sortBy || ''
+        const sortBy = req.query.sortBy || ''
+        const brandFilter = req.query.brandfilter || ''
+        const categoryFilter = req.query.categoryfilter || ''
+        const filterStatus = brandFilter != '' ||  categoryFilter != '' ? true : false
 
 
-      
+
 
         if (keyword != 'not found') {
             let sortOptions = {};
@@ -40,9 +42,9 @@ const loadShop = async (req, res) => {
                 case 'price-desc':
                     sortOptions = { price: -1 };
                     break;
-                    case 'relevance':
-                        sortOptions={createdAt:-1}
-    
+                case 'relevance':
+                    sortOptions = { createdAt: -1 }
+
                 default:
                     sortOptions = { createdAt: -1 };
                     break;
@@ -59,6 +61,7 @@ const loadShop = async (req, res) => {
                         catStatus: true,
                         leagueStatus: true,
                         brandStatus: true,
+
                         $or: [
                             { name: { $regex: keyword, $options: 'i' } },
                             { description: { $regex: keyword, $options: 'i' } },
@@ -67,8 +70,12 @@ const loadShop = async (req, res) => {
                             { 'league.name': { $regex: keyword, $options: 'i' } },
                             { 'category.name': { $regex: keyword, $options: 'i' } },
                         ],
+                        ...(categoryFilter && { category: new mongoose.Types.ObjectId(categoryFilter) }), // Convert to ObjectId if not empty
+                        ...(brandFilter && { brand: new mongoose.Types.ObjectId(brandFilter) }),
+
+
                     }
-                },  
+                },
                 {
                     $sort: sortOptions,
                 },
@@ -79,7 +86,7 @@ const loadShop = async (req, res) => {
 
 
             ])
-     
+
 
 
 
@@ -90,6 +97,7 @@ const loadShop = async (req, res) => {
                         catStatus: true,
                         leagueStatus: true,
                         brandStatus: true,
+
                         $or: [
                             { name: { $regex: keyword, $options: 'i' } },
                             { description: { $regex: keyword, $options: 'i' } },
@@ -98,6 +106,9 @@ const loadShop = async (req, res) => {
                             { 'league.name': { $regex: keyword, $options: 'i' } },
                             { 'category.name': { $regex: keyword, $options: 'i' } },
                         ],
+                        ...(categoryFilter && { category: new mongoose.Types.ObjectId(categoryFilter) }), // Convert to ObjectId if not empty
+                        ...(brandFilter && { brand: new mongoose.Types.ObjectId(brandFilter) }),
+
                     }
                 },
                 { $group: { _id: null, totalCount: { $sum: 1 } } }
@@ -107,9 +118,11 @@ const loadShop = async (req, res) => {
 
             ])
 
-            const count = countOfDocuments[0].totalCount
+            // const count = countOfDocuments[0].totalCount
+            const count = countOfDocuments.length > 0 ? countOfDocuments[0].totalCount : 0;
 
-
+            const brandData = await brandModel.find({})
+            const categoryData = await categoryModel.find({})
 
 
             const userIndices = prData.map((user, index) => index + 1 + skip);
@@ -120,9 +133,14 @@ const loadShop = async (req, res) => {
                 currentPage: page,
                 limit: limit,
                 keyword: keyword,
-                sortBy:sortBy,
-                foundCheck: true
-                
+                sortBy: sortBy,
+                foundCheck: true,
+                brandData: brandData,
+                categoryData: categoryData,
+                brandFilter: brandFilter,
+                categoryFilter: categoryFilter,
+                filterStatus:filterStatus
+
             })
         }
 
@@ -145,9 +163,8 @@ const loadShop = async (req, res) => {
 const searchProduct = async (req, res) => {
     try {
 
-        // const { keyword } = req.body;
         const keyword = req.body.keyword;
-        const sortBy=req.body.sortBy;
+        const sortBy = req.body.sortBy;
         const regexPattern = new RegExp(keyword, "i");
 
         const searchResults = await productModel.aggregate([
@@ -160,13 +177,11 @@ const searchProduct = async (req, res) => {
                         { 'team.name': { $regex: regexPattern } },
                         { 'league.name': { $regex: regexPattern } },
                         { 'category.name': { $regex: regexPattern } },
-                      
+
                     ],
                 },
             },
         ])
-
-        // console.log(searchResults, '  this is search results');
 
 
         if (searchResults.length > 0) {

@@ -13,6 +13,13 @@
     </div>
     <!-- Li's Breadcrumb Area End Here -->
     <!--Shopping Cart Area Strat-->
+    <%if(errMessage && errMessage!=null){%>
+        <%if(cartData && cartData.length>0){%>
+            <h3 class="text-center text-danger">Please <strong>decrease the Quantity</strong> of Products Which Have No
+                Available Quantity <br> or <strong>Remove The Product</strong> From the Cart <br> <strong>to
+                    Continue</strong></h3>
+            <%}%>
+                <%}%> 
     <div class="Shopping-cart-area pt-60 pb-60">
         <div class="container">
             <div class="row">
@@ -50,6 +57,7 @@
                                                 <th class="li-product-price">Unit Price</th>
                                                 <th class="li-product-quantity">Quantity</th>
                                                 <th class="li-product-subtotal">Total</th>
+                                                <th>stock</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -103,6 +111,14 @@
                                                     </td>
                                                     <td class="product-subtotal"><span class="amount"
                                                             id="totalAmount<%=index%>"></span></td>
+                                                            <td>
+                                                                <div class="text-center text-success">
+                                                                          <li>stock left </li> 
+                                                                          <li><%= product.productId.size[product.size].quantity %></li>
+                                                                        </div>
+                                                          
+                                                        </td>
+                                                            
                                                 </tr>
 
                                                 <%})%>

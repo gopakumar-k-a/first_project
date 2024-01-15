@@ -360,27 +360,28 @@
                                                             name="orderTotal"></span></strong>
                                                 </td>
                                             </tr>
-                                            <%if(couponData && couponData.length>0){%>
-                                                <tr class="order-total">
-                                                    <td>
-                                                        <div id="couponDiv">
-                                                            <input style="background-color: white;"
-                                                                placeholder="Coupon code" type="text" id="couponName">
 
-                                                            <div class="order-button-payment">
-                                                                <input value="apply coupon" type="button"
-                                                                    id="couponButton">
-                                                            </div>
-                                                            <li class="text-danger" id="couponFieldError"></li>
+                                            <tr class="order-total" id="couponRow" style="<% if (!(couponData && couponData.length > 0)) { %>display: none;<% } %>">
+                                                <td>
+                                                    <div id="couponDiv">
+                                                        <input style="background-color: white;"
+                                                            placeholder="Coupon code" type="text" id="couponName">
+
+                                                        <div class="order-button-payment">
+                                                            <input value="apply coupon" type="button" id="couponButton"
+                                                                onclick="applyCoupon()">
                                                         </div>
-                                                        <input type="text" id="currentCouponNameHidden" hidden>
-                                                        <input type="text" id="currentCouponTypeHidden" hidden>
-                                                        <input type="text" id="currentCouponValueHidden" hidden>
+                                                        <li class="text-danger" id="couponFieldError"></li>
+                                                    </div>
+                                                    <input type="text" id="currentCouponNameHidden" hidden>
+                                                    <input type="text" id="currentCouponTypeHidden" hidden>
+                                                    <input type="text" id="currentCouponValueHidden" hidden>
 
 
-                                                    </td>
-                                                </tr>
-                                                <%}%>
+
+                                                </td>
+                                            </tr>
+
                                         </tfoot>
                                     </table>
                                 </div>
@@ -424,10 +425,15 @@
 
                                     //couponFetch
 
+                                    // Check the condition and hide the element if needed
+                             
+
+
                                     // Variable to store the currently applied discount
                                     let currentDiscount = 0;
 
                                     function applyCoupon() {
+                                        console.log('inside coupon fn');
                                         const couponName = document.getElementById('couponName').value.trim().toUpperCase();
                                         const couponFieldError = document.getElementById('couponFieldError');
                                         const couponAmount = document.getElementById('couponAmount');
@@ -441,8 +447,8 @@
                                         couponFieldError.innerHTML = '';
 
                                         // Disable the fetch button to prevent multiple clicks
-                                        const fetchButton = document.getElementById("couponButton");
-                                        fetchButton.disabled = true;
+                                        // const fetchButton = document.getElementById("couponButton");
+                                        // fetchButton.disabled = true;
 
                                         const totalElement = document.getElementById('total');
                                         let totalVal = parseInt(totalElement.innerHTML);
@@ -457,6 +463,7 @@
                                             }
                                         }).then(response => response.json())
                                             .then(data => {
+                                                console.log('message ', data.message);
                                                 console.log('data in response', data);
 
                                                 const message = data.message;
@@ -472,8 +479,8 @@
                                                     currentCouponNameHidden.value = couponName
                                                     const currentCouponTypeHidden = document.getElementById('currentCouponTypeHidden')
                                                     currentCouponTypeHidden.value = couponType
-                                                    const currentCouponValueHidden=document.getElementById('currentCouponValueHidden')
-                                                    currentCouponValueHidden.value=discountValue
+                                                    const currentCouponValueHidden = document.getElementById('currentCouponValueHidden')
+                                                    currentCouponValueHidden.value = discountValue
                                                     if (couponType === 'flat') {
                                                         totalVal -= discountPrice;
                                                         currentDiscount = discountPrice;
@@ -496,7 +503,7 @@
                                                     couponFieldError.innerHTML = 'Cannot apply coupon';
                                                 } else if (message === 'notFound') {
                                                     couponFieldError.innerHTML = 'Cannot find coupon Enter a valid Coupon Name';
-                                                }else if(message=='alreadyApplied'){
+                                                } else if (message == 'alreadyApplied') {
                                                     couponFieldError.innerHTML = 'Cannot apply this coupon user already used the coupon';
 
                                                 }
@@ -506,11 +513,10 @@
                                             })
                                             .finally(() => {
                                                 // Enable the fetch button after the operation is complete
-                                                fetchButton.disabled = false;
+                                                // fetchButton.disabled = false;
                                             });
                                     }
 
-                                    document.getElementById("couponButton").addEventListener("click", applyCoupon);
 
 
 
@@ -617,7 +623,7 @@
 
                                                     })
                                                     .catch(error => {
-                                                        console.log('Error updating cart quantity:', error);
+                                                        console.log('Error in wallet updating:', error);
                                                     });
 
                                             } else {
@@ -632,6 +638,7 @@
                                                 codDiv.style.display = 'block'
                                                 upiDiv.style.display = 'block'
                                                 couponDataDiv.style.display = 'block'
+                                                window.location.reload()
 
                                             }
                                         });
@@ -643,7 +650,7 @@
                                     <div class="payment-accordion">
                                         <div id="accordion">
                                             <div class="card">
-                                                <%if(walletData && walletData!=null && walletData.balance>0){%>
+                                                <%if(walletData && walletData!=null){%>
                                                     <div class="categori-checkbox" id="#payment-1">
                                                         <h5 class="panel-title">
                                                             <input type="checkbox" name="wallet" value="wallet"
@@ -758,9 +765,17 @@
                                                     }).then(response => response.json())
                                                         .then(data => {
                                                             console.log(data.message);
-                                                            orderId = data.razorOrder
-                                                            totalAmount = data.totalAmount
-                                                            initializePayment(orderId, totalAmount)
+                                                            console.log('stock not available');
+                                                            const errMessage = true
+                                                            if (data.message == 'noStock') {
+                                                                const errMessage = true
+                                                                window.location = `/user-cart?errMessage=${errMessage}`
+                                                            } else {
+                                                                orderId = data.razorOrder
+                                                                totalAmount = data.totalAmount
+                                                                initializePayment(orderId, totalAmount)
+                                                            }
+
 
                                                         })
                                                         .catch(error => {
@@ -945,28 +960,32 @@
                                                 let moneyFromCoupon = 0
                                                 let couponName = ''
                                                 let couponType = ''
-                                                let couponDis=0
+                                                let couponDis = 0
+                                                if (walletCheckbox) {
 
-                                                if (walletCheckbox.checked) {
-                                                    walletStatus = true
-                                                    moneyFromWallet = parseInt(document.getElementById('walletBal').innerHTML)
+                                                    if (walletCheckbox.checked) {
+                                                        walletStatus = true
+                                                        moneyFromWallet = parseInt(document.getElementById('walletBal').innerHTML)
+                                                    }
                                                 }
                                                 if (couponAmount.innerHTML > 0) {
                                                     couponStatus = true
                                                     moneyFromCoupon = parseInt(couponAmount.innerHTML)
                                                     couponName = document.getElementById('currentCouponNameHidden').value
-                                                    couponType=document.getElementById('currentCouponTypeHidden').value
-                                                    couponDis=parseInt(document.getElementById('currentCouponValueHidden').value)
+                                                    couponType = document.getElementById('currentCouponTypeHidden').value
+                                                    couponDis = parseInt(document.getElementById('currentCouponValueHidden').value)
                                                 }
 
 
-                                                const total =parseInt( document.getElementById('subTotal').innerHTML)
+                                                const total = parseInt(document.getElementById('subTotal').innerHTML)
                                                 let selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
                                                 const indexOfUserAddress = document.querySelector('input[name="indexOfAddress"]:checked').value;
                                                 const amountPaid = parseInt(document.getElementById('total').innerHTML)
+                                                if (walletCheckbox) {
+                                                    if (walletCheckbox.checked && amountPaid == 0) {
+                                                        selectedPaymentMethod = 'wallet'
+                                                    }
 
-                                                if (walletCheckbox.checked && amountPaid == 0) {
-                                                    selectedPaymentMethod = 'wallet'
                                                 }
 
                                                 const data = {
@@ -980,8 +999,8 @@
                                                     couponStatus: couponStatus,
                                                     moneyFromCoupon: moneyFromCoupon,
                                                     couponName: couponName,
-                                                    couponType:couponType,
-                                                    couponDiscount:couponDis,
+                                                    couponType: couponType,
+                                                    couponDiscount: couponDis,
 
 
                                                 };
@@ -995,8 +1014,15 @@
                                                 }).then(response => response.json())
                                                     .then(data => {
                                                         console.log(data.message);
+                                                        if (data.message == 'noStock') {
+                                                            const errMessage = true
+                                                            window.location = '/user-cart?errMessage=errMessage';
 
-                                                        window.location.href = '/user-dashboard?goto=user+orders';
+                                                        } else {
+
+                                                            window.location = '/user-dashboard?goto=user+orders';
+                                                        }
+
 
 
 

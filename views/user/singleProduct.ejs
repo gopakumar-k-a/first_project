@@ -63,18 +63,21 @@
                             </span>
                             <style>
                                 .product-details-ref {
-                                    font-size: 16px; /* Adjust the font size as needed */
-                                    display: block; /* Make each span appear on a new line */
-                                    margin-bottom: 5px; /* Add some spacing between lines */
+                                    font-size: 16px;
+                                    /* Adjust the font size as needed */
+                                    display: block;
+                                    /* Make each span appear on a new line */
+                                    margin-bottom: 5px;
+                                    /* Add some spacing between lines */
                                 }
                             </style>
-                            
+
                             <h2>
                                 <%= product.name %>
                             </h2>
-                         
-                           
-                            
+
+
+
                             <div class="rating-box pt-20">
                                 <ul class="rating rating-with-review-item">
                                     <li><i class="fa fa-star-o"></i></li>
@@ -86,7 +89,7 @@
                                     <li class="review-item"><a href="#">Write Review</a></li>
                                 </ul>
                             </div>
-                            
+
                             <div class="price-box pt-20">
                                 <span class="new-price new-price-2">&#8377;<%=product.price.salePrice%></span>
                                 <span class="new-price new-price-2"
@@ -104,17 +107,39 @@
                             <span class="product-details-ref">
                                 league: <%= product.league.name %>
                             </span>
-                        
+
                             <div class="product-variants">
                                 <div class="produt-variants-size">
                                     <label>Select Size</label>
                                     <select class="nice-select" id="sizeSelect" name="size"
                                         onchange="selectedSize(this)">
                                         <option value="s" title="S">Small</option>
-                                        <option value="m" title="M" selected="selected">Medium</option>
+                                        <option value="m" title="M">Medium</option>
                                         <option value="l" title="L">Large</option>
 
                                     </select>
+                                    <script>
+                                        function setSelectedSize() {
+                                            const queryString = window.location.search;
+
+                                            if (queryString.includes('size')) {
+                                                const sizeParam = new URLSearchParams(queryString).get('size');
+                                                const sizeSelect = document.getElementById('sizeSelect');
+                                                const options = sizeSelect.options;
+
+                                                for (let i = 0; i < options.length; i++) {
+                                                    if (options[i].value === sizeParam) {
+                                                        options[i].selected = true;
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+                                                document.querySelector('#sizeSelect option[value="m"]').selected = true;
+                                            }
+                                        }
+
+                                        document.addEventListener('DOMContentLoaded', setSelectedSize);
+                                    </script>
 
                                     <input type="text" id="sQty" value="<%=product.size.s.quantity%>" hidden>
                                     <input type="text" id="mQty" value="<%=product.size.m.quantity%>" hidden>
@@ -400,12 +425,21 @@
                 <div id="product-details" class="tab-pane" role="tabpanel">
                     <div class="product-details-manufacturer">
                         <a href="#">
-                            <img src="admin-assets/uploads/<%=product.brand.imageUrl%>" alt="Product Manufacturer Image">
+                            <img src="admin-assets/uploads/<%=product.brand.imageUrl%>"
+                                alt="Product Manufacturer Image">
                         </a>
-                        <p><span>Brand </span> <%=product.brand.name%></p>
-                        <p><span>category </span> <%= product.category.name %></p>
-                        <p><span>Team </span> <%=product.team.name%></p>
-                        <p><span>League </span> <%=product.league.name%></p>
+                        <p><span>Brand </span>
+                            <%=product.brand.name%>
+                        </p>
+                        <p><span>category </span>
+                            <%= product.category.name %>
+                        </p>
+                        <p><span>Team </span>
+                            <%=product.team.name%>
+                        </p>
+                        <p><span>League </span>
+                            <%=product.league.name%>
+                        </p>
                     </div>
                 </div>
                 <div id="reviews" class="tab-pane" role="tabpanel">
@@ -529,144 +563,144 @@
     <!-- Product Area End Here -->
     <!-- Begin Li's Laptop Product Area -->
     <%if(relatedProductsBrands.length>1){%>
-    <section class="product-area li-laptop-product pt-30 pb-50">
-        <div class="container">
-            <div class="row">
-                <!-- Begin Li's Section Area -->
-                <div class="col-lg-12">
-                    <div class="li-section-title">
-                        <h2>
-                            <span>Related products in the same Brand:</span>
-                        </h2>
-                    </div>
-                    <div class="row">
-                        <div class="product-active owl-carousel">
+        <section class="product-area li-laptop-product pt-30 pb-50">
+            <div class="container">
+                <div class="row">
+                    <!-- Begin Li's Section Area -->
+                    <div class="col-lg-12">
+                        <div class="li-section-title">
+                            <h2>
+                                <span>Related products in the same Brand:</span>
+                            </h2>
+                        </div>
+                        <div class="row">
+                            <div class="product-active owl-carousel">
 
 
 
 
-                            <%for(let j=0;j<relatedProductsBrands.length;j++){%>
-                                <div class="col-lg-12">
-                                    <!-- single-product-wrap start -->
-                                    <div class="single-product-wrap">
-                                        <div class="product-image">
-                                            <a href="/single-product-view?_id=<%=relatedProductsBrands[j]._id%>">
-                                                <img src="admin-assets/uploads/<%=relatedProductsBrands[j].imagesUrl[0]%>"
-                                                    alt="Li's Product Image">
-                                            </a>
-                                            <!-- <span class="sticker">New</span> -->
-                                        </div>
-                                        <div class="product_desc">
-                                            <div class="product_desc_info">
-                                                <div class="product-review">
-                                                    <h5 class="manufacturer">
-                                                        <a href="#">
-                                                            <%=relatedProductsBrands[j].brand.name%>
-                                                        </a>
-                                                    </h5>
-                                                    <div class="rating-box">
-                                                        <ul class="rating">
-                                                            <li><i class="fa fa-star-o"></i></li>
-                                                            <li><i class="fa fa-star-o"></i></li>
-                                                            <li><i class="fa fa-star-o"></i></li>
-                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                        </ul>
+                                <%for(let j=0;j<relatedProductsBrands.length;j++){%>
+                                    <div class="col-lg-12">
+                                        <!-- single-product-wrap start -->
+                                        <div class="single-product-wrap">
+                                            <div class="product-image">
+                                                <a href="/single-product-view?_id=<%=relatedProductsBrands[j]._id%>">
+                                                    <img src="admin-assets/uploads/<%=relatedProductsBrands[j].imagesUrl[0]%>"
+                                                        alt="Li's Product Image">
+                                                </a>
+                                                <!-- <span class="sticker">New</span> -->
+                                            </div>
+                                            <div class="product_desc">
+                                                <div class="product_desc_info">
+                                                    <div class="product-review">
+                                                        <h5 class="manufacturer">
+                                                            <a href="#">
+                                                                <%=relatedProductsBrands[j].brand.name%>
+                                                            </a>
+                                                        </h5>
+                                                        <div class="rating-box">
+                                                            <ul class="rating">
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <h4><a class="product_name"
-                                                        href="/single-product-view?_id=<%=relatedProductsBrands[j]._id%>">
-                                                        <%= relatedProductsBrands[j].name.length> 50 ?
-                                                            relatedProductsBrands[j].name.substring(0, 50) + '...' :
-                                                            relatedProductsBrands[j].name %>
-                                                    </a></h4>
-                                                <div class="price-box">
-                                                    <span class="new-price"
-                                                        style="font-size: 18px;font-weight: 900;">&#8377;<%=
-                                                            relatedProductsBrands[j].price.salePrice %></span>
-                                                    <span class="old-price" style="font-size: 15px;">&#8377;<%=
-                                                            relatedProductsBrands[j].price.regularPrice %></span>
-                                                    <!-- <span class="discount-percentage">-7%</span> -->
-                                                </div>
+                                                    <h4><a class="product_name"
+                                                            href="/single-product-view?_id=<%=relatedProductsBrands[j]._id%>">
+                                                            <%= relatedProductsBrands[j].name.length> 50 ?
+                                                                relatedProductsBrands[j].name.substring(0, 50) + '...' :
+                                                                relatedProductsBrands[j].name %>
+                                                        </a></h4>
+                                                    <div class="price-box">
+                                                        <span class="new-price"
+                                                            style="font-size: 18px;font-weight: 900;">&#8377;<%=
+                                                                relatedProductsBrands[j].price.salePrice %></span>
+                                                        <span class="old-price" style="font-size: 15px;">&#8377;<%=
+                                                                relatedProductsBrands[j].price.regularPrice %></span>
+                                                        <!-- <span class="discount-percentage">-7%</span> -->
+                                                    </div>
 
-                                            </div>
-                                            <div class="add-actions">
-                                                <ul class="add-actions-link">
+                                                </div>
+                                                <div class="add-actions">
+                                                    <ul class="add-actions-link">
 
-                                                    <li><a class="links-details" href="wishlist.html"><i
-                                                                class="fa fa-heart-o"></i></a></li>
-                                                    <li><a href="#" title="quick view" class="quick-view-btn"
-                                                            data-toggle="modal"
-                                                            data-target="#exampleModalCenter<%=j%>"><i
-                                                                class="fa fa-eye"></i></a></li>
-                                                </ul>
+                                                        <li><a class="links-details" href="wishlist.html"><i
+                                                                    class="fa fa-heart-o"></i></a></li>
+                                                        <li><a href="#" title="quick view" class="quick-view-btn"
+                                                                data-toggle="modal"
+                                                                data-target="#exampleModalCenter<%=j%>"><i
+                                                                    class="fa fa-eye"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
+                                        <!-- for looping -->
                                     </div>
-                                    <!-- for looping -->
-                                </div>
-                                <% } %>
+                                    <% } %>
+
+                            </div>
+
 
                         </div>
-
-
                     </div>
                 </div>
             </div>
-        </div>
 
 
-        <%for(let i=0;i<relatedProductsBrands.length;i++){%>
-            <div class="modal fade modal-wrapper" id="exampleModalCenter<%=i%>">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <div class="modal-inner-area row">
-                                <div class="col-lg-5 col-md-6 col-sm-6">
-                                    <!-- Product Details Left -->
-                                    <div class="product-details-left">
-                                        <div class="product-details-images slider-navigation-1">
-                                            <div class="lg-image">
-                                                <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[0]%>"
-                                                    alt="product image">
+            <%for(let i=0;i<relatedProductsBrands.length;i++){%>
+                <div class="modal fade modal-wrapper" id="exampleModalCenter<%=i%>">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <div class="modal-inner-area row">
+                                    <div class="col-lg-5 col-md-6 col-sm-6">
+                                        <!-- Product Details Left -->
+                                        <div class="product-details-left">
+                                            <div class="product-details-images slider-navigation-1">
+                                                <div class="lg-image">
+                                                    <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[0]%>"
+                                                        alt="product image">
+                                                </div>
+                                                <div class="lg-image">
+                                                    <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[1]%>"
+                                                        alt="product image">
+                                                </div>
+                                                <div class="lg-image">
+                                                    <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[2]%>"
+                                                        alt="product image">
+                                                </div>
                                             </div>
-                                            <div class="lg-image">
-                                                <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[1]%>"
-                                                    alt="product image">
-                                            </div>
-                                            <div class="lg-image">
-                                                <img src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[2]%>"
-                                                    alt="product image">
+                                            <div class="product-details-thumbs slider-thumbs-1">
+                                                <div class="sm-image"><img
+                                                        src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[0]%>"
+                                                        alt="product image thumb"></div>
+                                                <div class="sm-image"><img
+                                                        src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[1]%>"
+                                                        alt="product image thumb"></div>
+                                                <div class="sm-image"><img
+                                                        src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[2]%>"
+                                                        alt="product image thumb"></div>
                                             </div>
                                         </div>
-                                        <div class="product-details-thumbs slider-thumbs-1">
-                                            <div class="sm-image"><img
-                                                    src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[0]%>"
-                                                    alt="product image thumb"></div>
-                                            <div class="sm-image"><img
-                                                    src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[1]%>"
-                                                    alt="product image thumb"></div>
-                                            <div class="sm-image"><img
-                                                    src="/admin-assets/uploads/<%=relatedProductsBrands[i].imagesUrl[2]%>"
-                                                    alt="product image thumb"></div>
-                                        </div>
+                                        <!--// Product Details Left -->
                                     </div>
-                                    <!--// Product Details Left -->
-                                </div>
 
-                                <div class="col-lg-7 col-md-6 col-sm-6">
-                                    <div class="product-details-view-content pt-60">
-                                        <div class="product-info">
-                                            <h2>
-                                                <%=relatedProductsBrands[i].name%>
-                                            </h2>
-                                            <span class="product-details-ref">
-                                                <%=relatedProductsBrands[i].brand.name%>
-                                            </span>
-                                            <!-- <div class="rating-box pt-20">
+                                    <div class="col-lg-7 col-md-6 col-sm-6">
+                                        <div class="product-details-view-content pt-60">
+                                            <div class="product-info">
+                                                <h2>
+                                                    <%=relatedProductsBrands[i].name%>
+                                                </h2>
+                                                <span class="product-details-ref">
+                                                    <%=relatedProductsBrands[i].brand.name%>
+                                                </span>
+                                                <!-- <div class="rating-box pt-20">
                                             <ul class="rating rating-with-review-item">
                                                 <li><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
@@ -677,19 +711,19 @@
                                                 <li class="review-item"><a href="#">Write Review</a></li>
                                             </ul>
                                         </div> -->
-                                            <div class="price-box pt-20">
-                                                <span class="new-price new-price-2">
-                                                    <%=relatedProductsBrands[i].price.salePrice%>
-                                                </span>
-                                            </div>
-                                            <div class="product-desc">
-                                                <p>
-                                                    <span>
-                                                        <%=relatedProductsBrands[i].description%>
+                                                <div class="price-box pt-20">
+                                                    <span class="new-price new-price-2">
+                                                        <%=relatedProductsBrands[i].price.salePrice%>
                                                     </span>
-                                                </p>
-                                            </div>
-                                            <!-- <div class="product-variants">
+                                                </div>
+                                                <div class="product-desc">
+                                                    <p>
+                                                        <span>
+                                                            <%=relatedProductsBrands[i].description%>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <!-- <div class="product-variants">
                                             <div class="produt-variants-size">
                                                 <label>Dimension</label>
                                                 <select class="nice-select">
@@ -699,7 +733,7 @@
                                                 </select>
                                             </div>
                                         </div> -->
-                                            <!-- <div class="single-add-to-cart">
+                                                <!-- <div class="single-add-to-cart">
                                             <form action="#" class="cart-quantity">
                                                 <div class="quantity">
                                                     <label>Quantity</label>
@@ -713,10 +747,10 @@
                                                 <button class="add-to-cart" type="submit">Add to cart</button>
                                             </form>
                                         </div> -->
-                                            <div class="product-additional-info pt-25">
-                                                <a class="wishlist-btn" href="wishlist.html"><i
-                                                        class="fa fa-heart-o"></i>Add to wishlist</a>
-                                                <!-- <div class="product-social-sharing pt-25">
+                                                <div class="product-additional-info pt-25">
+                                                    <a class="wishlist-btn" href="wishlist.html"><i
+                                                            class="fa fa-heart-o"></i>Add to wishlist</a>
+                                                    <!-- <div class="product-social-sharing pt-25">
                                                 <ul>
                                                     <li class="facebook"><a href="#"><i
                                                                 class="fa fa-facebook"></i>Facebook</a></li>
@@ -728,6 +762,7 @@
                                                                 class="fa fa-instagram"></i>Instagram</a></li>
                                                 </ul>
                                             </div> -->
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -736,8 +771,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <%}%>
-    </section>
-    <%}%>
-    <%- include('footer.ejs') %>
+                <%}%>
+        </section>
+        <%}%>
+            <%- include('footer.ejs') %>

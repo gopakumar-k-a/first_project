@@ -27,7 +27,7 @@
                                                     <%=bannerData[i].description%> </span>
                                                 </h3>
                                                 <div class="default-btn slide-btn">
-                                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
+                                                    <a class="links" href="<%=bannerData[i].targetUrl%>">Shop Now</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -116,7 +116,7 @@
                                                         <div class="single-product-wrap">
                                                             <div class="product-image">
                                                                 <a href="/single-product-view?_id=<%=prData[i]._id%>">
-                                                                    <img src="/admin-assets/uploads/<%= prData[i].imagesUrl[1] %>"
+                                                                    <img src="/admin-assets/uploads/<%= prData[i].imagesUrl[0] %>"
                                                                         alt="Li's Product Image">
                                                                 </a>
                                                                 <span class="sticker">New</span>
