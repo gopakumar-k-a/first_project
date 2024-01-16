@@ -1,6 +1,6 @@
 const couponModel = require('../../models/couponModel');
 
-
+//load coupon page
 const loadCoupon = async (req, res) => {
     try {
         const couponData = await couponModel.find({}).sort({ createdAt: -1 })
@@ -26,7 +26,7 @@ const loadCoupon = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//add new coupon
 const addNewCoupon = async (req, res) => {
     try {
         const {
@@ -64,7 +64,7 @@ const addNewCoupon = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//edit coupon page
 const editCoupon = async (req, res) => {
     try {
         // console.log(req.body);
@@ -110,7 +110,7 @@ const editCoupon = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//change status of coupon
 const changeActive = async (req, res) => {
     try {
         const {couponId,status}=req.body

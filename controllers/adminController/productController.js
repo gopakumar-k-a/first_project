@@ -5,8 +5,8 @@ const brandModel = require('../../models/brandModel')
 const productModel = require('../../models/productModel')
 const sharp = require('sharp')
 const fs = require('node:fs')
-
-const loadProjectList = async (req, res) => {
+//load product details
+const loadProductList = async (req, res) => {
     try {
         const page = req.query.page || 1
         const count = await productModel.find().count()
@@ -26,7 +26,7 @@ const loadProjectList = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//load adding new product page
 const loadAddProduct = async (req, res) => {
     try {
         const errMessage = req.query.errMessage || ''
@@ -42,7 +42,7 @@ const loadAddProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//load edit product page
 const loadEditProduct = async (req, res) => {
     try {
         const id = req.query._id
@@ -65,7 +65,7 @@ const loadEditProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//load category
 const loadCategory = async (req, res) => {
     try {
 
@@ -90,7 +90,7 @@ const loadCategory = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//load edit category
 const loadEditCategory = async (req, res) => {
     try {
 
@@ -104,6 +104,7 @@ const loadEditCategory = async (req, res) => {
         console.log(error.message)
     }
 }
+//adding new category
 const addCategory = async (req, res) => {
     try {
 
@@ -132,6 +133,7 @@ const addCategory = async (req, res) => {
         console.log(error.message)
     }
 }
+//update category name
 const updateCatName = async (req, res) => {
     try {
         const catName = req.body.catName;
@@ -149,8 +151,7 @@ const updateCatName = async (req, res) => {
         return res.redirect('/admin/category-management?errorMessage=' + encodeURIComponent(error.message));
     }
 };
-
-
+//block category
 const blockCat = async (req, res) => {
     try {
         const categoryId = req.query._id
@@ -162,7 +163,7 @@ const blockCat = async (req, res) => {
     }
 
 }
-
+//unblock category
 const unblockCat = async (req, res) => {
     try {
         const categoryId = req.query._id
@@ -174,7 +175,7 @@ const unblockCat = async (req, res) => {
     }
 
 }
-
+//insert league
 const insertLeague = async (req, res) => {
     try {
 
@@ -202,7 +203,7 @@ const insertLeague = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//update league name
 const updateLeagueName = async (req, res) => {
     try {
         const leagueName = req.body.leagueName;
@@ -219,7 +220,7 @@ const updateLeagueName = async (req, res) => {
 
     }
 };
-
+//block league
 const blockLeague = async (req, res) => {
     try {
         const leagueId = req.query._id
@@ -231,13 +232,14 @@ const blockLeague = async (req, res) => {
     }
 
 }
+//unblock league
 const unblockLeague = async (req, res) => {
     const leagueId = req.query._id
     await leagueModel.updateOne({ _id: leagueId }, { isActive: true })
     await productModel.updateMany({ _id: leagueId }, { $set: { leagueStatus: true } })
     return res.redirect('/admin/category-management')
 }
-
+//insert new team
 const insertTeam = async (req, res) => {
     try {
 
@@ -266,7 +268,7 @@ const insertTeam = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//update team name
 const updateTeamName = async (req, res) => {
     try {
         const teamName = req.body.teamName;
@@ -283,7 +285,7 @@ const updateTeamName = async (req, res) => {
 
     }
 };
-
+//insert new brand
 const insertBrand = async (req, res) => {
     try {
         const brand = req.body.brandName;
@@ -317,7 +319,7 @@ const insertBrand = async (req, res) => {
         return res.status(500).send('Internal Server Error');
     }
 };
-
+//update brand name
 const updateBrandName = async (req, res) => {
     try {
         const brandName = req.body.brandName;
@@ -335,7 +337,7 @@ const updateBrandName = async (req, res) => {
 
     }
 };
-
+//block brand
 const blockBrand = async (req, res) => {
     try {
         const brandId = req.query._id
@@ -347,6 +349,7 @@ const blockBrand = async (req, res) => {
     }
 
 }
+//unblock brand
 const unblockBrand = async (req, res) => {
     try {
         const brandId = req.query._id
@@ -358,7 +361,7 @@ const unblockBrand = async (req, res) => {
     }
 
 }
-
+//block product
 const blockProduct = async (req, res) => {
     try {
         let productId = req.query._id
@@ -375,10 +378,6 @@ const blockProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
-
-
 //insert product
 const insertProduct = async (req, res) => {
     try {
@@ -435,6 +434,7 @@ const insertProduct = async (req, res) => {
         console.log(error.message)
     }
 }
+//edit product
 const editProduct = async (req, res) => {
     try {
         const id = req.query._id
@@ -495,7 +495,7 @@ const editProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//delete brand image
 const deleteImage = async (req, res) => {
     try {
         const id = req.query.pr_id;
@@ -516,12 +516,8 @@ const deleteImage = async (req, res) => {
 }
 
 
-
-
-
-
 module.exports = {
-    loadProjectList, loadAddProduct, loadCategory, addCategory,
+    loadProductList, loadAddProduct, loadCategory, addCategory,
     loadEditCategory, blockCat, unblockCat, updateCatName,
     insertLeague, blockLeague, unblockLeague, insertTeam,
     updateLeagueName, updateTeamName, insertBrand, blockBrand,

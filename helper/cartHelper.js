@@ -1,4 +1,4 @@
-const cartModel = require('../../models/cartModel')
+const cartModel = require('../models/cartModel')
 // const couponModel = require('../../models/couponModel')
 // const walletModel = require('../../models/walletModel')
 

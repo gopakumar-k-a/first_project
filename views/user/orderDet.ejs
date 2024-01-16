@@ -546,9 +546,29 @@
                                                 <h6><strong>Order Status : </strong>
                                                     <%=orderData.orderStatus%>
                                                 </h6>
-                                                <h6><strong>Grand Total : </strong>
-                                                    <%=orderData.totalAmount%>
+                                              
+                                                <%if(orderData.walletStatus==true){%>
+                                                    <h6><strong>Wallet Applied: </strong>
+                                                        <%=orderData.moneyFromWallet%>
+                                                    </h6>
+                                                    <%}%>
+                                                    <%if(orderData.couponStatus==true){%>
+                                                        <h6><strong>Coupon Name: </strong>
+                                                            <%=orderData.couponName%>
+                                                        </h6>
+                                                 
+                                                        <h6><strong>Coupon Discount Amount: </strong>
+                                                            <%=orderData.moneyFromCoupon%>
+                                                        </h6>
+                                                        <%}%>
+                                                        <h6><strong>Grand Total : </strong>
+                                                            <%=orderData.totalAmount%>
+                                                        </h6>
+                                                <h6><strong>Amount Paid : </strong>
+                                                    <%=orderData.amountPaid%>
                                                 </h6>
+                                             
+                                                
                                                 <h3>Delivery Address</h3>
                                                 <h6>
                                                     <%= `${orderData.address[0].firstName}
@@ -589,6 +609,7 @@
                                                             <th>sl.No</th>
                                                             <th>Product Name</th>
                                                             <th></th>
+                                                            <th>size</th>
                                                             <th>Price</th>
                                                             <th>Quantity</th>
                                                             <th>Total</th>
@@ -606,6 +627,9 @@
                                                                 <td><img class="product-image"
                                                                         src="/admin-assets/uploads/<%=orderData.items[i].productId.imagesUrl[0]%>"
                                                                         alt="Product 1"></td>
+                                                                        <td>
+                                                                            <%=orderData.items[i].size%>
+                                                                        </td>
                                                                 <td id="unit-price<%=i%>">
                                                                     <%=orderData.items[i].productId.price.salePrice%>
                                                                 </td>

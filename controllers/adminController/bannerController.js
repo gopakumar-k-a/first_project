@@ -1,6 +1,6 @@
 const bannerModel = require('../../models/bannerModel')
 
-
+//load banner page
 const loadBanner = async (req, res) => {
     try {
         const bannerData = await bannerModel.find({})
@@ -9,6 +9,7 @@ const loadBanner = async (req, res) => {
         console.log(error.message);
     }
 }
+//load edit banner page
 const loadEditBanner = async (req, res) => {
     try {
         const { id } = req.query
@@ -20,7 +21,7 @@ const loadEditBanner = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//update banner data with image
 const PostBannerImage = async (req, res) => {
     try {
         const { name, title, subtitle,
@@ -56,6 +57,7 @@ const PostBannerImage = async (req, res) => {
         console.log(error.message);
     }
 }
+//update banner data with out image
 const editBanner = async (req, res) => {
     try {
         const {
@@ -105,8 +107,7 @@ const editBanner = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
+//block banner
 const blockBanner = async (req, res) => {
     try {
         const { id, operation } = req.body

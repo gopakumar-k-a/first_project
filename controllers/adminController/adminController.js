@@ -6,7 +6,7 @@ const categoryModel = require('../../models/categoryModel')
 const bcrypt = require('bcrypt');
 const validator = require("validator");
 
-
+//load admin login
 const loadLogin = async (req, res) => {
 
     try {
@@ -15,7 +15,7 @@ const loadLogin = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//log out admin
 const logout = async (req, res) => {
     try {
         req.session.destroy()
@@ -24,7 +24,7 @@ const logout = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//check email and password before login
 const checkAdmin = async (req, res) => {
 
     try {
@@ -64,8 +64,7 @@ const checkAdmin = async (req, res) => {
     }
 
 }
-
-
+//load admin dashboard
 const loadDashboard = async (req, res) => {
     try {
         const userAddedObject = await userModel.aggregate([
@@ -245,6 +244,7 @@ const loadDashboard = async (req, res) => {
         console.log(error.message);
     }
 }
+//load sales report page
 const loadSalesReport = async (req, res) => {
     try {
         const fromDate = isValidDate(req.query.fromDate) ? new Date(req.query.fromDate) : new Date('2022-02-05');
@@ -344,7 +344,7 @@ const loadSalesReport = async (req, res) => {
         console.log(error.message);
     }
 }
-//getting date from the front end
+//getting date from the front end for sales report
 const dateOfSalesReport = async (req, res) => {
     try {
         const { fromDate, toDate } = req.body
@@ -353,8 +353,7 @@ const dateOfSalesReport = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
+//load users list in the admin side
 const loadUsersList = async (req, res) => {
     try {
         const page = req.query.page || 1
@@ -376,7 +375,7 @@ const loadUsersList = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//block specific user
 const blockUser = async (req, res) => {
     try {
         const id = req.query._id
@@ -386,7 +385,7 @@ const blockUser = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//un-block specific user
 const unBlockUser = async (req, res) => {
     try {
         const id = req.query._id

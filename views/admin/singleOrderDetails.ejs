@@ -153,6 +153,19 @@
                                             <br> Pay method: <%=orderData.paymentMethod%> <br>Order Status:
                                                 <%=orderData.orderStatus%>
                                                     <br>Payment Status: <%=orderData.paymentStatus%>
+                                                    <%if(orderData.walletStatus==true){%>
+
+                                                    <br>Wallet Applied: <%=orderData.moneyFromWallet%>
+
+                                                    <%if(orderData.couponStatus==true){%>
+                                                    <br>Coupon Name: <%=orderData.couponName%>
+                                                    <br>Coupon Discount Amount: <%=orderData.moneyFromCoupon%>
+                                                    <br>Amount Paid : <%=orderData.amountPaid%>
+
+                                                 
+                                                     
+                                                        <%}%>
+                                                        <%}%>
                                         </p>
                                         <!-- <a href="#">Download info</a> -->
                                     </div>
@@ -170,6 +183,7 @@
                                                     <%=orderData.address[0].houseName%>,
                                                         <%=orderData.address[0].landMark%> <br> pincode:
                                                             <%=orderData.address[0].pincode%>
+                                                            
                                         </p>
                                         <!-- <a href="#">View profile</a> -->
                                     </div>
@@ -203,7 +217,7 @@
                                                             </div>
                                                         </a>
                                                     </td>
-                                                    <td id="itemPrice<%=index%>">
+                                                    <td  id="itemPrice<%=index%>">
                                                         <%=item.productId.price.salePrice%>
                                                     </td>
                                                     <td id="quantity<%=index%>">

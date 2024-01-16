@@ -2,7 +2,7 @@ const orderModel = require('../../models/orderModel')
 const productModel=require('../../models/productModel')
 const walletModel=require('../../models/walletModel')
 const mongoose = require('mongoose')
-
+//load order details of user
 const loadOrderDetails = async (req, res) => {
     try {
         const id = req.query.id
@@ -85,7 +85,7 @@ const changeOrderStatus = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//load order list
 const loadAllOrders = async (req, res) => {
     try {
         const page = req.query.page || 1
@@ -105,6 +105,7 @@ const loadAllOrders = async (req, res) => {
         console.log(error.message);
     }
 }
+//load single order details
 const loadSingleOrderDetails = async (req, res) => {
     try {
         const id = new mongoose.Types.ObjectId(req.query._id);

@@ -1,7 +1,7 @@
 
 const cartModel = require('../../models/cartModel')
 const productModel = require('../../models/productModel')
-
+//laoding cart page
 const loadCart = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -14,7 +14,7 @@ const loadCart = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//add products to the cart
 const addTocart = async (req, res) => {
     try {
 
@@ -69,7 +69,7 @@ const addTocart = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//remove product from the cart
 const removeProduct = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -82,7 +82,7 @@ const removeProduct = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//increase or decrease product quantity from the cart page
 const cartQuantity = async (req, res) => {
     try {
 

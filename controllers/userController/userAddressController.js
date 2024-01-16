@@ -1,5 +1,5 @@
 const userModel = require('../../models/userModel')
-
+//add new address for user
 const addAddress = async (req, res) => {
     try {
         const { firstName, lastName, phone, altPhone, houseName,
@@ -34,6 +34,7 @@ const addAddress = async (req, res) => {
         console.log(error.message);
     }
 }
+//load editing page for the user
 const loadAddressEdit = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -48,7 +49,7 @@ const loadAddressEdit = async (req, res) => {
         console.log(error.message);
     }
 }
-
+// updating the user address
 const updateAddress = async (req, res) => {
     try {
         const id = req.session.userId
@@ -86,7 +87,7 @@ const updateAddress = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//deleting address from the users document
 const deleteAddress = async (req, res) => {
     try {
         const userId = req.session.userId

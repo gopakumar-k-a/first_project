@@ -8,9 +8,9 @@ const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
 const walletModel = require('../../models/walletModel');
 const bannerModel = require('../../models/bannerModel');
 require('dotenv').config();
-const { generateReferralCode, checkReferredUser } = require('../helper/referralCode')
+const { generateReferralCode, checkReferredUser } = require('../../helper/referralCode')
 
-
+//load home page
 const loadHome = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -28,7 +28,7 @@ const loadHome = async (req, res) => {
     }
 
 }
-
+//load login page
 const loadLogin = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -44,6 +44,7 @@ const loadLogin = async (req, res) => {
     }
 }
 
+//log out operation
 const logout = async (req, res) => {
     try {
         await req.session.destroy()
@@ -52,7 +53,7 @@ const logout = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//load regiseter page
 const loadRegister = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -65,7 +66,7 @@ const loadRegister = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//load forgot to password page
 const loadForgotPassword = async (req, res) => {
     try {
         if (req.session.registerOtp) {
@@ -77,7 +78,7 @@ const loadForgotPassword = async (req, res) => {
         console.log();
     }
 }
-
+//load about page
 const loadAbout = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -86,7 +87,7 @@ const loadAbout = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//load contact page
 const loadContact = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -95,7 +96,7 @@ const loadContact = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//load otp page
 const loadOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -108,7 +109,7 @@ const loadOtp = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//otp in forgot password
 const sendForgotOtp = async (req, res) => {
     try {
         const { email } = req.body
@@ -128,7 +129,7 @@ const sendForgotOtp = async (req, res) => {
     }
 }
 
-
+//validating otp from user
 const checkOtp = async (req, res) => {
 
 
@@ -244,7 +245,7 @@ const checkOtp = async (req, res) => {
     }
 
 }
-
+//updating password of the user from forgot otp
 const changePassword = async (req, res) => {
     try {
         const userPass = req.body.password
@@ -260,9 +261,7 @@ const changePassword = async (req, res) => {
 
     }
 }
-
-
-
+//registering new user
 const registerUser = async (req, res) => {
     try {
         const firstname = req.body.firstName
@@ -307,7 +306,7 @@ const registerUser = async (req, res) => {
         console.log(error.message)
     }
 }
-
+//resend otp functionality
 const resendOtp = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -331,7 +330,7 @@ const resendOtp = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//checking user before log in
 const checkuser = async (req, res) => {
 
     try {
@@ -369,7 +368,7 @@ const checkuser = async (req, res) => {
     }
 
 }
-
+//load user dashboard
 const loadUserDashboard = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -402,8 +401,7 @@ const loadUserDashboard = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
+//user data update through user dashboard
 const userUpdate = async (req, res) => {
     try {
 

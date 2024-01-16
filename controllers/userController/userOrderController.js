@@ -4,15 +4,15 @@ const orderModel = require('../../models/orderModel')
 const productModel = require('../../models/productModel')
 const walletModel = require('../../models/walletModel')
 const couponModel = require('../../models/couponModel')
-const { updateQuantity, cartTotal } = require('../helper/cartHelper')
+const { updateQuantity, cartTotal } = require('../../helper/cartHelper')
 require('dotenv').config();
-
+//razorpay configuration
 const Razorpay = require('razorpay')
 var instance = new Razorpay({
     key_id: process.env.RAZOR_KEY_ID,
     key_secret: process.env.RAZOR_KEY_SECRET,
 });
-
+//load checkout page
 const loadCheckout = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -148,7 +148,7 @@ const walletApply = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//placing order
 const placeOrder = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -206,6 +206,7 @@ const placeOrder = async (req, res) => {
             if (couponStatus) {
                 const couponData = await couponModel.findOne({ name: couponName })
                 couponData.users.push(userId)
+                couponData.limit--
                 await couponData.save()
             }
             const newOrder = new orderModel({
@@ -240,7 +241,7 @@ const placeOrder = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//razor pay integration
 const onlinePayment = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -271,9 +272,7 @@ const onlinePayment = async (req, res) => {
         console.log(error.message);
     }
 }
-
-
-
+//cancel order
 const cancelOrder = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -318,7 +317,7 @@ const cancelOrder = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//return order
 const returnOrder = async (req, res) => {
     try {
         const userId = req.session.userId
@@ -365,7 +364,7 @@ const returnOrder = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//show order details
 const orderDetails = async (req, res) => {
     try {
         const user = req.session.userEmail || ''

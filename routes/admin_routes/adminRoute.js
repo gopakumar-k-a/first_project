@@ -41,7 +41,7 @@ admin.patch('/unblock-user', adminAuth.isLogin, adminController.unBlockUser)
 
 
 //load projectlist page
-admin.get('/product-list', adminAuth.isLogin, productController.loadProjectList)
+admin.get('/product-list', adminAuth.isLogin, productController.loadProductList)
 //load addproduct page
 admin.get('/add-product', adminAuth.isLogin, productController.loadAddProduct)
 admin.get('/edit-product', adminAuth.isLogin, productController.loadEditProduct)

@@ -2,7 +2,7 @@ const productModel = require('../../models/productModel')
 const brandModel = require('../../models/brandModel')
 const categoryModel = require('../../models/categoryModel')
 const mongoose = require('mongoose')
-
+//load single product details page
 const loadSingleProduct = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -14,6 +14,7 @@ const loadSingleProduct = async (req, res) => {
         console.log(error.message);
     }
 }
+//load shop page
 const loadShop = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
@@ -159,7 +160,7 @@ const loadShop = async (req, res) => {
         console.log(error.message);
     }
 }
-
+//search product from the shop page
 const searchProduct = async (req, res) => {
     try {
 
