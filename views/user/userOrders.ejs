@@ -37,7 +37,7 @@
                                                         data-toggle="modal" data-target="#exampleModalCenter">
                                                         Add New Address
                                                     </button> -->
-
+                                            <%if(orderData && orderData.length>0){%>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
@@ -90,6 +90,20 @@
                                                                 <% }); %>
                                                         </tbody>
                                                     </table>
+                                            <%}else{%>
+                                                <h4 class="login-title">You haven't ordered anything yet </h4>
+                                                <h4>-----</h4>
+                                            <a href="/shop">
+                                                <button class="register-button mt-0 custom-width-button"
+                                                >
+                                                Shop Now
+                                             </button>
+                                            </a>
+                                            
+                                          
+
+                                                        <%}%>
+                                               
 
                                                     <script>
                                                        
@@ -170,6 +184,10 @@
                                                             event.preventDefault();
                                                         }
                                                     </script>
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -177,10 +195,43 @@
                                 </div>
 
                             </div>
+
+                            
+                            
                         </div>
+                        <% if (pageCount > 1) { %>
+                            <div class="pagination-area" style="background-color: #f6f6f6;">
+                              <div class="row">
+                             
+                                <div class="col-lg-6 col-md-6">
+                                  <ul class="pagination-box">
+                                    <% if (currentPage > 1) { %>
+                                      <li>
+                                        <a href="/user-dashboard?goto=user+orders&page=<%= parseInt(currentPage) - 1 %>" class="Previous"><i class="fa fa-chevron-left"></i> Previous</a>
+                                      </li>
+                                    <% } %>
+                                    <% for (let i = 1; i <= pageCount; i++) { %>
+                                      <li class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
+                                        <a href="/user-dashboard?goto=user+orders&page=<%= encodeURIComponent(i) %>"><%= i %></a>
+                                      </li>
+                                    <% } %>
+                                    <% if (currentPage < pageCount) { %>
+                                      <li>
+                                        <a href="/user-dashboard?goto=user+orders&page=<%= parseInt(currentPage) + 1 %>" class="Next">Next <i class="fa fa-chevron-right"></i></a>
+                                      </li>
+                                    <% } %>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
                     </div>
             </div>
         </div>
+        
+       
+            
+
         <!-- Li's Main Content Area End Here -->
     </div>
     </div>

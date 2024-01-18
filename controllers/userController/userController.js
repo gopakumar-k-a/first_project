@@ -168,7 +168,7 @@ const checkOtp = async (req, res) => {
                 })
                 await data.save()
                 const newUserId = data._id;
-             
+
 
 
                 if (referredBy != null) {
@@ -203,7 +203,7 @@ const checkOtp = async (req, res) => {
                     await newUserWallet.save()
 
 
-                }else{
+                } else {
                     const defaultWallet = new walletModel({
                         userId: newUserId,
                         balance: 0
@@ -381,6 +381,9 @@ const loadUserDashboard = async (req, res) => {
         const fullName = userData.name.split(' ');
         const firstName = fullName[0]
         const lastName = fullName[1]
+        const page = req.query.page || 1
+        const limit = 10
+        const skip = (page - 1) * limit
 
 
         if (goto == 'account overview') {
@@ -390,12 +393,31 @@ const loadUserDashboard = async (req, res) => {
             return res.render('user/userAddress', { user, userData, message: message, sMessage: sMessage })
         }
         if (goto == 'user orders') {
-            const orderData = await orderModel.find({ userId: userId }).populate('items.productId').sort({ orderedAt: -1 })
-            return res.render('user/userOrders', { user, userData, message: message, sMessage: sMessage, orderData })
+            const orderData = await orderModel.find({ userId: userId }).populate('items.productId').sort({ orderedAt: -1 }).skip(skip).limit(limit)
+            const orderCount = await orderModel.countDocuments({ userId: userId });
+
+
+
+            return res.render('user/userOrders', {
+                user,
+                userData,
+                message: message,
+                sMessage: sMessage,
+                orderData,
+                pageCount: Math.ceil(orderCount / limit),
+                currentPage: page
+            })
         }
         if (goto == 'user wallet') {
-            const walletData = await walletModel.findOne({ userId: userId })
-            return res.render('user/userWallet', { user, userData, walletData })
+            const walletData = await walletModel.findOne({ userId: userId }).sort({ 'history.createdAt': -1 }).skip(skip).limit(limit);
+            // const walletCount = await walletModel.countDocuments({ userId: userId });
+
+
+            return res.render('user/userWallet', {
+                user,
+                userData,
+                walletData,
+            })
         }
     } catch (error) {
         console.log(error.message);

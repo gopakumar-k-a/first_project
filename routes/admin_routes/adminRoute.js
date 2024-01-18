@@ -90,13 +90,10 @@ admin.post('/edit-team', adminAuth.isLogin, productController.updateTeamName)
 // //unblocking team
 // admin.get('/unblockTeam',productController.unblockTeam)
 
-
-//-----------------------brand-management-------------------------
 //inserting new brand
 admin.post('/add-brand', adminAuth.isLogin, upload.single('brandInput'), productController.insertBrand)
 //update-brand
 admin.post('/edit-brand', adminAuth.isLogin, productController.updateBrandName)
-
 //blocking brand
 admin.get('/block-brand', adminAuth.isLogin, productController.blockBrand)
 //unblocking brand
@@ -121,11 +118,15 @@ admin.post('/coupon',adminAuth.isLogin,couponController.addNewCoupon)
 admin.patch('/coupon',adminAuth.isLogin,couponController.editCoupon)
 //change status of the coupon
 admin.patch('/coupon-status',adminAuth.isLogin,couponController.changeActive)
-
+//load banner page
 admin.get('/banner',adminAuth.isLogin,bannerController.loadBanner)
+//add new banner data
 admin.post('/banner-image',adminAuth.isLogin,upload.single('croppedImage'),bannerController.PostBannerImage)
+//block banner
 admin.patch('/block-banner',adminAuth.isLogin,bannerController.blockBanner)
+//edit banner details with out image
 admin.get('/banner/edit',adminAuth.isLogin,bannerController.loadEditBanner)
+//edit banner details with image
 admin.post('/banner/edit',adminAuth.isLogin,upload.single('croppedImage'),bannerController.editBanner)
 // admin.post('/banner/edit',adminAuth.isLogin,bannerController.updateBannerDet)
 

@@ -2,18 +2,27 @@ const productModel = require('../../models/productModel')
 const brandModel = require('../../models/brandModel')
 const categoryModel = require('../../models/categoryModel')
 const mongoose = require('mongoose')
+const wishlistHelper = require('../../helper/wishlistHelper')
 //load single product details page
 const loadSingleProduct = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
+        const userId = req.session.userId
         const id = req.query._id
+        const size = req.query.size || 'm'
         const product = await productModel.findOne({ _id: id }).populate('brand').populate('category').populate('team').populate('league')
         const relatedProductsBrands = await productModel.find({ brand: product.brand._id }).populate('brand').limit(5)
-        return res.render('user/singleProduct', { user, product, relatedProductsBrands })
+        let productInWishlist=false
+        if (user) {
+             productInWishlist =await wishlistHelper.wishlistCheck(userId, id, size)
+        }
+        return res.render('user/singleProduct', { user, product, relatedProductsBrands,productInWishlist })
+        // res.redirect(`/single-product-view?_id=${productId}&size=${size}`)
     } catch (error) {
         console.log(error.message);
     }
 }
+
 //load shop page
 const loadShop = async (req, res) => {
     try {
@@ -22,7 +31,7 @@ const loadShop = async (req, res) => {
         const sortBy = req.query.sortBy || ''
         const brandFilter = req.query.brandfilter || ''
         const categoryFilter = req.query.categoryfilter || ''
-        const filterStatus = brandFilter != '' ||  categoryFilter != '' ? true : false
+        const filterStatus = brandFilter != '' || categoryFilter != '' ? true : false
 
 
 
@@ -140,7 +149,7 @@ const loadShop = async (req, res) => {
                 categoryData: categoryData,
                 brandFilter: brandFilter,
                 categoryFilter: categoryFilter,
-                filterStatus:filterStatus
+                filterStatus: filterStatus
 
             })
         }

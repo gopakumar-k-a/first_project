@@ -7,6 +7,7 @@ const isLogin=async(req,res,next)=>{
             res.redirect('/admin')
             return
         }     
+
         // next()
         
     } catch (err) {
@@ -23,6 +24,8 @@ const isLogout=async(req,res,next)=>{
  
         next();
     }
+
+
     // next()
         
         

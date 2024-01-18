@@ -38,7 +38,12 @@
                                                         Add New Address
                                                     </button>
                                                     <div class="container mt-5">
+                                                        <%if(userData && userData.address.length>0){%>
                                                         <h3>User Addresses</h3>
+                                                        <%}else{%>
+                                                        <h3>Add your Address</h3>
+
+                                                            <%}%>
                                                         <hr>
 
                                                         <!-- Loop through user addresses and display each one -->

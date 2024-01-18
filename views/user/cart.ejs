@@ -1,6 +1,55 @@
 <%- include('header.ejs') %>
     <!-- Header Area End Here -->
     <!-- Begin Li's Breadcrumb Area -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+    
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center; /* Center-align the content */
+        }
+    
+        .li-product-thumbnail img {
+            width: 100%; /* Make images responsive */
+            height: auto;
+        }
+    
+        /* Optional: Add some styling for better readability on small screens */
+        th, td {
+            text-align: center;
+        }
+    
+        /* Optional: Highlight the header row */
+        th {
+            background-color: #f2f2f2;
+        }
+    
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            th, td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+    
+            .li-product-name,
+            .cart-product-name,
+            .li-product-quantity {
+                max-width: none;
+                word-wrap: normal;
+            }
+    
+            .quantity {
+                text-align: center;
+            }
+        }
+    </style>
+    
     <div class="breadcrumb-area">
         <div class="container">
             <div class="breadcrumb-content">
@@ -57,7 +106,7 @@
                                                 <th class="li-product-price">Unit Price</th>
                                                 <th class="li-product-quantity">Quantity</th>
                                                 <th class="li-product-subtotal">Total</th>
-                                                <th>stock</th>
+                                                <!-- <th>stock</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -75,7 +124,8 @@
                                                                 style="width: 150px; height: 150px;">
                                                         </a>
                                                     </td>
-                                                    <td class="li-product-name"><a href="#">
+                                                    <td class="li-product-name" style=" max-width: 200px; /* Adjust the value based on your design */
+                                                    word-wrap: break-word;"><a href="#">
                                                             <%=product.productId.name%>
                                                         </a></td>
                                                     <td class="li-product-name"><a href="#">
@@ -111,13 +161,13 @@
                                                     </td>
                                                     <td class="product-subtotal"><span class="amount"
                                                             id="totalAmount<%=index%>"></span></td>
-                                                            <td>
+                                                            <!-- <td>
                                                                 <div class="text-center text-success">
                                                                           <li>stock left </li> 
                                                                           <li><%= product.productId.size[product.size].quantity %></li>
                                                                         </div>
                                                           
-                                                        </td>
+                                                        </td> -->
                                                             
                                                 </tr>
 

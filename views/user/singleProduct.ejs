@@ -1,4 +1,7 @@
 <%- include("header.ejs") %>
+    <link rel="stylesheet" href="path/to/sweetalert2.css">
+    <script src="path/to/sweetalert2.js"></script>
+
     <div class="breadcrumb-area">
         <div class="container">
             <div class="breadcrumb-content">
@@ -58,6 +61,7 @@
                 <div class="col-lg-7 col-md-6">
                     <div class="product-details-view-content pt-60">
                         <div class="product-info">
+
                             <span class="product-details-ref">
                                 brand: <%=product.brand.name%>
                             </span>
@@ -112,13 +116,18 @@
                                 <div class="produt-variants-size">
                                     <label>Select Size</label>
                                     <select class="nice-select" id="sizeSelect" name="size"
-                                        onchange="selectedSize(this)">
+                                        onchange="sizeQty('<%=product._id%>');selectedSize(this)">
                                         <option value="s" title="S">Small</option>
                                         <option value="m" title="M">Medium</option>
                                         <option value="l" title="L">Large</option>
 
                                     </select>
                                     <script>
+                                        function sizeQty(productId){
+                                            let size=document.getElementById('sizeSelect').value
+                                            window.location.href=`/single-product-view?_id=${productId}&size=${size}`
+
+                                        }
                                         function setSelectedSize() {
                                             const queryString = window.location.search;
 
@@ -349,20 +358,27 @@
                                     };
                                 </script>
                             </div>
-                            <div class="product-additional-info pt-25">
-                                <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to
-                                    wishlist</a>
-                                <div class="product-social-sharing pt-25">
-                                    <ul>
-                                        <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
-                                        <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
-                                        <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google
-                                                +</a></li>
-                                        <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a>
-                                        </li>
-                                    </ul>
+                            <%if(productInWishlist){%>
+                                 <!-- ---added to wishlist--- -->
+                                 <div class="product-additional-info pt-25">
+
+                                    <a class="wishlist-btn" href="#"><i
+                                        class="fa fa-heart" style="color: red;"></i>Added to wishList
+                                </a>
                                 </div>
+    
+                            <%}else{%>
+<!-- ----add to wishlist-- -->
+
+                            <div class="product-additional-info pt-25">
+                                <a class="wishlist-btn" href="#" onclick="addToWish('<%=product._id%>')"><i
+                                        class="fa fa-heart-o"></i>Add to wishList
+                                </a>
+                             
+
                             </div>
+                            <%}%>
+
                             <div class="block-reassurance">
                                 <ul>
                                     <li>
@@ -397,6 +413,64 @@
             </div>
         </div>
     </div>
+    <script>
+        function addToWish(prId) {
+            let size = document.getElementById('sizeSelect').value
+
+            const requestData = {
+                size: size,
+                prId: prId
+            };
+
+            fetch('/add-to-wish', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+            })
+                .then(data => {
+                    console.log(data.message);
+                    if (data.message === 'success') {
+                        // Product can be added, show success message
+                        swal.fire({
+                            title: "Success",
+                            text: "Product added to wishlist!",
+                            icon: "success",
+                            showConfirmButton: false  
+                            });
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 1000);
+                    } else if (data.message === 'canAdd') {
+                        // Product is already in the wishlist, show a different message
+                        swal.fire("Info", "Product is already in the wishlist.", "info");
+                    } else {
+                        swal.fire({
+                            title: "Info",
+                            text: "Please Login to continue",
+                            icon: "info",
+                            
+                        }).then(() => {
+                            // Redirect to login page
+                            window.location.href = '/login';
+                        });
+
+                    }
+                    // window.location.reload();
+                })
+                .catch(error => {
+                    console.log('Error adding product to wishlist', error);
+                });
+
+        }
+    </script>
     <!-- content-wraper end -->
     <!-- Begin Product Area -->
     <div class="product-area pt-35">
@@ -425,8 +499,8 @@
                 <div id="product-details" class="tab-pane" role="tabpanel">
                     <div class="product-details-manufacturer">
                         <a href="#">
-                            <img src="admin-assets/uploads/<%=product.brand.imageUrl%>"
-                                alt="Product Manufacturer Image">
+                            <img src="admin-assets/uploads/<%=product.brand.imageUrl%>" alt="Product Manufacturer Image"
+                                width="200px" height="200px" style="object-fit: cover;">
                         </a>
                         <p><span>Brand </span>
                             <%=product.brand.name%>
@@ -694,6 +768,7 @@
                                     <div class="col-lg-7 col-md-6 col-sm-6">
                                         <div class="product-details-view-content pt-60">
                                             <div class="product-info">
+
                                                 <h2>
                                                     <%=relatedProductsBrands[i].name%>
                                                 </h2>
@@ -747,22 +822,7 @@
                                                 <button class="add-to-cart" type="submit">Add to cart</button>
                                             </form>
                                         </div> -->
-                                                <div class="product-additional-info pt-25">
-                                                    <a class="wishlist-btn" href="wishlist.html"><i
-                                                            class="fa fa-heart-o"></i>Add to wishlist</a>
-                                                    <!-- <div class="product-social-sharing pt-25">
-                                                <ul>
-                                                    <li class="facebook"><a href="#"><i
-                                                                class="fa fa-facebook"></i>Facebook</a></li>
-                                                    <li class="twitter"><a href="#"><i
-                                                                class="fa fa-twitter"></i>Twitter</a></li>
-                                                    <li class="google-plus"><a href="#"><i
-                                                                class="fa fa-google-plus"></i>Google +</a></li>
-                                                    <li class="instagram"><a href="#"><i
-                                                                class="fa fa-instagram"></i>Instagram</a></li>
-                                                </ul>
-                                            </div> -->
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

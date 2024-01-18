@@ -6,6 +6,7 @@ const userController=require('../../controllers/userController/userController')
 const userAddressController=require('../../controllers/userController/userAddressController')
 const userCartController=require('../../controllers/userController/userCartController')
 const userOrderController=require('../../controllers/userController/userOrderController')
+const userWishlistController=require('../../controllers/userController/userWishlistController')
 const session = require('express-session');
 require('dotenv').config();
 
@@ -13,10 +14,6 @@ require('dotenv').config();
 
 
 user.use(userAuth.isUserBlock)
-
-
-
-
 //load homepage
 user.get('/',userController.loadHome)
 //load login page
@@ -37,7 +34,6 @@ user.post('/resend-otp',userController.resendOtp)
 user.get('/forgot-password',userController.loadForgotPassword)
 //change password
 user.patch('/changePass',userController.changePassword)
-
 //send otp after checking email for forgot password
 user.post('/forgot-password-send-otp',userController.sendForgotOtp)
 //load about page
@@ -88,6 +84,10 @@ user.get('/order-details',userAuth.isLogin,userOrderController.orderDetails)
 user.get('/get-coupon-data',userAuth.isLogin,userOrderController.couponDetails)
 //give walllet details to checkout
 user.get('/get-wallet-data',userAuth.isLogin,userOrderController.walletApply)
+//load wishlist
+user.get('/wishlist',userAuth.isLogin,userWishlistController.loadWishList)
+//add product to wishList
+user.post('/add-to-wish',userWishlistController.addToWish)
 
 
 

@@ -20,7 +20,7 @@ const addTocart = async (req, res) => {
 
         const userId = req.session.userId
         const productId = req.query.productId
-        const quantity = parseInt(req.query.qty, 10);
+        const quantity = parseInt(req.query.qty, 10) || 1;
         const size = req.query.size
         const cartData = await cartModel.findOne({ userId: userId });
         const productData = await productModel.findOne({ _id: productId })

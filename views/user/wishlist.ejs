@@ -1,0 +1,342 @@
+<%- include('header.ejs') %>
+    <!-- Header Area End Here -->
+    <!-- Begin Li's Breadcrumb Area -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            /* Center-align the content */
+        }
+
+        .li-product-thumbnail img {
+            width: 100%;
+            /* Make images responsive */
+            height: auto;
+        }
+
+        /* Optional: Add some styling for better readability on small screens */
+        th,
+        td {
+            text-align: center;
+        }
+
+        /* Optional: Highlight the header row */
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+
+            th,
+            td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .li-product-name,
+            .cart-product-name,
+            .li-product-quantity {
+                max-width: none;
+                word-wrap: normal;
+            }
+
+            .quantity {
+                text-align: center;
+            }
+        }
+    </style>
+
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">wishlist</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
+    <!--Shopping Cart Area Strat-->
+    <%if(errMessage && errMessage!=null){%>
+        <%if(wishlistData && wishlistData.length>0){%>
+            <h3 class="text-center text-danger">Please <strong>decrease the Quantity</strong> of Products Which Have No
+                Available Quantity <br> or <strong>Remove The Product</strong> From the Cart <br> <strong>to
+                    Continue</strong></h3>
+            <%}%>
+                <%}%>
+                    <div class="Shopping-cart-area pt-60 pb-60">
+                        <div class="container">
+                            <div class="row">
+                                <%if(wishlistData && wishlistData!=null){%>
+                                    <div class="col-12">
+                                        <form action="#">
+                                            <%if(wishlistData.products.length==0){%>
+                                                <h3>your Wishlist is empty !
+                                                </h3>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <a href="/">
+                                                            <div class="coupon-all">
+
+                                                                <div class="coupon2">
+                                                                    <input class="button" name="update_cart"
+                                                                        value="Continue Shopping" type="button">
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <%}else{%>
+                                                    <div class="table-content table-responsive">
+
+
+
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="li-product-remove">remove</th>
+                                                                    <th class="li-product-thumbnail">images</th>
+                                                                    <th class="cart-product-name">Product</th>
+                                                                    <th class="cart-product-name">Size</th>
+                                                                    <th class="li-product-price">Unit Price</th>
+                                                                    <th></th>
+
+                                                                    <!-- <th>stock</th> -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% wishlistData.products.forEach((product,index)=>{%>
+                                                                    <tr>
+                                                                        <td class="li-product-remove">
+                                                                            <a href="#"
+                                                                                onclick="removeProduct('<%=index%>')">
+                                                                                <i class="fa fa-times"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                        <td class="li-product-thumbnail">
+                                                                            <a href="#">
+                                                                                <img src="/admin-assets/uploads/<%=product.productId.imagesUrl[1]%>"
+                                                                                    alt="Li's Product Image"
+                                                                                    style="width: 80px; height: 80px;">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td class="li-product-name" style=" max-width: 200px; /* Adjust the value based on your design */
+                                                    word-wrap: break-word;"><a href="#">
+                                                                                <%=product.productId.name%>
+                                                                            </a></td>
+                                                                        <td class="li-product-name"><a href="#">
+                                                                                <%=product.size%>
+                                                                            </a></td>
+                                                                        <td class="li-product-price"><span
+                                                                                class="amount" id="price<%=index%>">
+                                                                                <%=product.productId.price.salePrice%>
+                                                                            </span></td>
+                                                                        <%if(product.addedToCart){%>
+
+                                                                            <td>
+                                                                                <div class="cart-page-total">
+
+                                                                                    <h6> already added to cart</h6>
+                                                                                </div>
+                                                                            </td>
+                                                                            <%}else{%>
+                                                                                <td>
+                                                                                    <div class="cart-page-total">
+
+                                                                                        <a href="#"
+                                                                                            onclick="addToCart('<%=product.productId._id%>','<%=product.size%>')">Add
+                                                                                            to cart</a>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <script>
+                                                                                    function addToCart(prId,size) {
+                                                                                        window.location.href = `/add-to-cart?productId=${prId}&size=${size}`;
+                                                                                    }
+                                                                                </script>
+                                                                                <%}%>
+                                                                                    <!-- ----quantitiy--------- -->
+
+
+                                                                                    <%})%>
+
+
+
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!-- <div class="row">
+                            <div class="col-12">
+                                <div class="coupon-all">
+                                    <div class="coupon">
+                                        <input id="coupon_code" class="input-text" name="coupon_code" value=""
+                                            placeholder="Coupon code" type="text">
+                                        <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
+                                    </div>
+                                    <div class="coupon2">
+                                        <input class="button" name="update_cart" value="Update cart" type="submit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                                                    <div class="row">
+                                                        <div class="col-md-5 ml-auto">
+                                                            <div class="cart-page-total" style="text-align: right;">
+
+                                                                <a href="/user-cart">goto cart</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <%}%>
+                                        </form>
+                                    </div>
+
+
+                                    <script>
+
+
+
+
+                                        // Attach event listeners to quantity inputs
+
+
+
+
+
+
+
+
+                                        function removeProduct(cartId) {
+                                            Swal.fire({
+                                                title: 'Remove Product?',
+                                                text: 'Do you want to Remove this Product From The Cart?',
+                                                icon: 'question',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Yes, Remove!',
+                                                cancelButtonText: 'No, cancel'
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    fetch(`/remove-product?cartId=${cartId}`, {
+                                                        method: 'DELETE',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                        },
+                                                    }).then(response => {
+                                                        window.location.reload();
+                                                    }).catch(error => {
+                                                        console.error('Error removing product:', error);
+                                                    });
+                                                } else {
+                                                    Swal.fire('Cancelled', 'Your is not Removed.', 'info');
+                                                }
+                                            });
+                                        }
+                                    </script>
+
+                                    <%}else if(wishlistData==null || wishlistData.length==0){%>
+
+                                        <div class="col-12">
+                                            <form action="#">
+                                                <h3>your Wishlist is empty !
+                                                </h3>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <a href="/">
+                                                            <div class="coupon-all">
+
+                                                                <div class="coupon2">
+                                                                    <input class="button" name="update_cart"
+                                                                        value="Continue Shopping" type="button">
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <%}%>
+
+                                        </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <style>
+                            body {
+                                overflow-x: hidden;
+                            }
+
+                            .quantity-form {
+                                width: 300px;
+                                margin: 0 auto;
+                                text-align: center;
+                                padding-top: 50px;
+                            }
+
+                            .value-button {
+                                display: inline-block;
+                                border: 1px solid #ddd;
+                                margin: 0px;
+                                width: 40px;
+                                height: 40px;
+                                text-align: center;
+                                vertical-align: middle;
+                                padding: 11px 0;
+                                background: #eee;
+                                -webkit-touch-callout: none;
+                                -webkit-user-select: none;
+                                -khtml-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                                user-select: none;
+                            }
+
+                            .value-button:hover {
+                                cursor: pointer;
+                            }
+
+                            .quantity-form #decrease {
+                                margin-right: -4px;
+                                border-radius: 8px 0 0 8px;
+                            }
+
+                            .quantity-form #increase {
+                                margin-left: -4px;
+                                border-radius: 0 8px 8px 0;
+                            }
+
+                            .quantity-form #input-wrap {
+                                margin: 0px;
+                                padding: 0px;
+                            }
+
+                            input#number {
+                                text-align: center;
+                                border: none;
+                                border-top: 1px solid #ddd;
+                                border-bottom: 1px solid #ddd;
+                                margin: 0px;
+                                width: 40px;
+                                height: 40px;
+                            }
+
+                            input[type=number]::-webkit-inner-spin-button,
+                            input[type=number]::-webkit-outer-spin-button {
+                                -webkit-appearance: none;
+                                margin: 0;
+                            }
+                        </style>
+                        <!--Shopping Cart Area End-->
+                        <%- include('footer.ejs') %>

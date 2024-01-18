@@ -1,5 +1,6 @@
 <%-include('header.ejs') %>
     <div class="screen-overlay"></div>
+
     <%- include('sideNav.ejs') %>
         <main class="main-wrap">
             <!-- <header class="main-header navbar">
@@ -72,111 +73,172 @@
                     </ul>
                 </div>
             </header> -->
+            <style>
+                @media print {
+                    .hide-on-print {
+                        display: none;
+                    }
+
+                    .show-table-on-print {
+                        display: table !important;
+                    }
+
+
+
+                    /* #orderTableHidden {
+                        display: table !important;
+                    } */
+
+
+                }
+
+                .table-responsive {
+                    overflow-x: hidden;
+                }
+            </style>
+            <script>
+                function printPage() {
+                    window.print();
+                }
+                // function printTable() {
+                //     const orderTable = document.getElementById('orderTableHidden');
+                //     orderTable.style.display = 'table'; /* Use 'table' for table elements */
+                //     window.print();
+                //     orderTable.style.display = 'none';
+                // }
+
+
+
+
+                // function printPage() {
+                //     const printBody = document.getElementById('print-body');
+                //     printBody.style.display = 'block';
+                //     window.print();
+                //     printBody.style.display = 'none';
+                // }
+
+
+                // function printPage() {
+
+
+                //     const printBody = document.getElementById('print-body');
+
+                //     // Set display to block before printing
+                //     printBody.style.display = 'block';
+
+                //     // Use onbeforeprint event to ensure styles are applied before printing
+                //     window.onbeforeprint = function () {
+                //         printBody.style.display = 'block';
+                //     };
+
+                //     // Use onafterprint event to reset the display property after printing
+                //     window.onafterprint = function () {
+                //         printBody.style.display = 'none';
+                //     };
+
+                //     // Trigger the print dialog
+                //     window.print();
+                // }
+
+
+
+            </script>
 
             <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Sales Report</h2>
-                        <!-- <p>Lorem ipsum dolor sit amet.</p> -->
+                <%if(orderData.length>0){%>
+                    <div class="content-header">
+                        <div>
+                            <h2 class="content-title card-title">Sales Report</h2>
+                            <!-- <p>Lorem ipsum dolor sit amet.</p> -->
+                        </div>
+                        <div>
+                            <a href="#" onclick="printPage()" class="btn btn-primary hide-on-print" id="printButton"><i
+                                    class="text-muted material-icons md-post_add hide-on-print"></i>sales Report</a>
+                        </div>
+
+
+                        <div>
+                        </div>
                     </div>
-                    <div>
-                        <a href="#" onclick="printPage()" class="btn btn-primary hide-on-print" id="printButton"><i
-                                class="text-muted material-icons md-post_add hide-on-print"></i>sales Report</a>
-                    </div>
-                    <script>
-                        function printPage() {
-                            window.print();
-                        }
-
-                    </script>
-                    <style>
-                        @media print {
-                            .hide-on-print {
-                                display: none;
-                            }
-                        }
-                    </style>
-                    <div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-9">
-                        <div class="card mb-4">
-                            <header class="card-header">
-                                <div class="row gx-3">
-                                    <div class="col-lg-4 col-md-6 text-end">
-                                        <img src="/admin-assets/imgs/theme/logo.svg" alt="Evara Dashboard">
-                                    </div>
-                                    <div class="col-lg-8 col-md-6 d-flex align-items-center">
-                                        <form action="/admin/dateofsalesreport" method="post" class="d-flex"
-                                            id="dateForm" onsubmit="return dateValidation()">
-                                            <div class="me-3">
-                                                <label for="fromDate" class="m-0">From:</label>
-                                                <input type="date" value="<%=fromDateToFrontEnd%>" class="form-control"
-                                                    name="fromDate" style="width: 100%;"
-                                                  id="fromDate" onchange="toggleButtonVisibility()">
+                    <%}%>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="card mb-4">
+                                    <header class="card-header">
+                                        <div class="row gx-3">
+                                            <div class="col-lg-4 col-md-6 text-end">
+                                                <img src="/admin-assets/imgs/theme/logo.svg" alt="Evara Dashboard">
                                             </div>
-                                            <div class="me-3">
-                                                <label for="toDate" class="m-0">To:</label>
-                                                <input type="date" value="<%=toDateToFrontEnd%>" class="form-control"
-                                                    name="toDate" style="width: 100%;"
-                                                    id="toDate" onchange="toggleButtonVisibility()">
+                                            <div class="col-lg-8 col-md-6 d-flex align-items-center">
+                                                <form action="/admin/dateofsalesreport" method="post" class="d-flex"
+                                                    id="dateForm" onsubmit="return dateValidation()">
+                                                    <div class="me-3">
+                                                        <label for="fromDate" class="m-0">From:</label>
+                                                        <input type="date" value="<%=fromDateToFrontEnd%>"
+                                                            class="form-control" name="fromDate" style="width: 100%;"
+                                                            id="fromDate" onchange="toggleButtonVisibility()">
+                                                    </div>
+                                                    <div class="me-3">
+                                                        <label for="toDate" class="m-0">To:</label>
+                                                        <input type="date" value="<%=toDateToFrontEnd%>"
+                                                            class="form-control" name="toDate" style="width: 100%;"
+                                                            id="toDate" onchange="toggleButtonVisibility()">
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="me-3 hide-on-print">
+                                                            <!-- <label for="submitButton" id="submitButtonLabel" class="m-0" style="display: none;">Report</label> -->
+                                                            <button id="submitButton" type="submit"
+                                                                class="btn btn-primary btn-sm hide-on-print"
+                                                                style="display: none;">Show
+                                                                Report</button>
+                                                        </div>
+                                                        <h6 class="text-center text-danger" id="dateError"></h6>
+                                                    </div>
+                                                </form>
                                             </div>
+                                        </div>
 
-                                            <div>
-                                                <div class="me-3 hide-on-print">
-                                                    <!-- <label for="submitButton" id="submitButtonLabel" class="m-0" style="display: none;">Report</label> -->
-                                                    <button id="submitButton" type="submit"
-                                                        class="btn btn-primary btn-sm hide-on-print"
-                                                      style="display: none;" >Show
-                                                        Report</button>
-                                                </div>
-                                                <h6 class="text-center text-danger" id="dateError"></h6>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <script>
-                                    function dateValidation() {
-                                        const fromDate = new Date(document.getElementById('fromDate').value)
-                                        const toDate = new Date(document.getElementById('toDate').value)
-                                        const dateError = document.getElementById('dateError')
-                                        const dateForm = document.getElementById('dateForm')
-                            
-
-                                        console.log(fromDate);
-                                        console.log(toDate);
-
-                                        if (fromDate>=toDate) {
-                                            dateError.innerHTML = 'fromDate should be before toDate';
-                                            return false
-                                        } else {
-                                            dateError.innerHTML = '';
-                                            return true
-                                        }
-                                       return false
-                                    }
+                                        <script>
+                                            function dateValidation() {
+                                                const fromDate = new Date(document.getElementById('fromDate').value)
+                                                const toDate = new Date(document.getElementById('toDate').value)
+                                                const dateError = document.getElementById('dateError')
+                                                const dateForm = document.getElementById('dateForm')
 
 
-                                    function toggleButtonVisibility() {
-                                        var fromDate = document.getElementsByName('fromDate')[0].value;
-                                        var toDate = document.getElementsByName('toDate')[0].value;
-                                        var submitButton = document.getElementById('submitButton');
-                                        var submitButtonLabel = document.getElementById('submitButtonLabel');
+                                                console.log(fromDate);
+                                                console.log(toDate);
 
-                                        // Display the button and label only if either fromDate or toDate has a value
-                                        if (fromDate || toDate) {
-                                            submitButton.style.display = 'inline-block';
-                                            submitButtonLabel.style.display = 'inline-block';
-                                        } else {
-                                            submitButton.style.display = 'none';
-                                            submitButtonLabel.style.display = 'none';
-                                        }
-                                    }
-                                </script>
+                                                if (fromDate >= toDate) {
+                                                    dateError.innerHTML = 'fromDate should be before toDate';
+                                                    return false
+                                                } else {
+                                                    dateError.innerHTML = '';
+                                                    return true
+                                                }
+                                                return false
+                                            }
 
-                                <!-- <div class="col-md-2 col-6">
+
+                                            function toggleButtonVisibility() {
+                                                var fromDate = document.getElementsByName('fromDate')[0].value;
+                                                var toDate = document.getElementsByName('toDate')[0].value;
+                                                var submitButton = document.getElementById('submitButton');
+                                                var submitButtonLabel = document.getElementById('submitButtonLabel');
+
+                                                // Display the button and label only if either fromDate or toDate has a value
+                                                if (fromDate || toDate) {
+                                                    submitButton.style.display = 'inline-block';
+                                                    submitButtonLabel.style.display = 'inline-block';
+                                                } else {
+                                                    submitButton.style.display = 'none';
+                                                    submitButtonLabel.style.display = 'none';
+                                                }
+                                            }
+                                        </script>
+
+                                        <!-- <div class="col-md-2 col-6">
                                     <label for="fromDate">from</label>
                                     <input type="date" class="form-control" name="fromDate">
                                 </div>
@@ -184,85 +246,104 @@
                                     <label for="toDate">to</label>
                                     <input type="date" class="form-control" name="toDate">
                                 </div> -->
-                        </div>
-                        </header>
+                                </div>
+                                </header>
 
-                        <!-- card-header end// -->
+                                <!-- card-header end// -->
 
-                        <div class="card-body">
+                                <div class="card-body">
 
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <%if(orderData && orderData.length>0){%>
-                                        <tr>
-                                            <th>#ID</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col"></th>
-                                            <th scope="col">Total</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col" class="text-end hide-on-print"> Action </th>
-                                        </tr>
-                                        <%}else{%>
-                                            <h3 class="text-center">No orders During these Dates</h3>
-                                            <%}%>
-                                    </thead>
-                                    <tbody>
-                                        <%for(let i=0;i<orderData.length;i++){%>
-                                            <tr>
-                                                <td>
-                                                    <%=orderData[i].orderId%>
-                                                </td>
-                                                <td><b>
-                                                        <%=orderData[i].userData.name%>
-                                                    </b></td>
-                                                <td>
-
-                                                </td>
-                                                <td>
-                                                    <%=orderData[i].totalAmount%>
-                                                </td>
-                                                <% if(orderData[i].orderStatus=='pending' ){ %>
-                                                    <td><span class="badge rounded-pill alert-warning">Pending</span>
-                                                    </td>
-                                                    <% } %>
-                                                        <% if(orderData[i].orderStatus=='processing' ){ %>
-                                                            <td><span
-                                                                    class="badge rounded-pill alert-warning">processing</span>
+                                    <div class="table-responsive">
+                                        <!-- -------data with pagination for showing in frontend  start--------- -->
+                                        <div class="hide-on-print">
+                                            <table class="table table-hover " id="orderTable">
+                                                <thead>
+                                                    <%if(orderData && orderData.length>0){%>
+                                                        <tr>
+                                                            <th>sl.no</th>
+                                                            <th>#ID</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col" class="text-end hide-on-print"> Action </th>
+                                                        </tr>
+                                                        <%}else{%>
+                                                            <h3 class="text-center">No orders During these Dates</h3>
+                                                            <%}%>
+                                                </thead>
+                                                <tbody>
+                                                    <%for(let i=0;i<orderData.length;i++){%>
+                                                        <tr>
+                                                            <td>  <%= orderIndices[i] %></td>
+                                                            <td>
+                                                                <%=orderData[i].orderId%>
                                                             </td>
-                                                            <% } %>
-                                                                <% if(orderData[i].orderStatus=='shipped' ){ %>
-                                                                    <td><span
-                                                                            class="badge rounded-pill alert-warning">shipped</span>
-                                                                    </td>
-                                                                    <% } %>
-                                                                        <% if(orderData[i].orderStatus=='delivered' ){
-                                                                            %>
-                                                                            <td><span
-                                                                                    class="badge rounded-pill alert-success">delivered</span>
-                                                                            </td>
-                                                                            <% } %>
-                                                                                <% if(orderData[i].orderStatus=='cancelled'
-                                                                                    ){ %>
-                                                                                    <td><span
-                                                                                            class="badge rounded-pill alert-danger">cancelled</span>
-                                                                                    </td>
-                                                                                    <% } %>
+                                                            <td><b>
+                                                                    <%=orderData[i].userData.name%>
+                                                                </b></td>
+                                                            <td>
 
-                                                                                        <td>
-                                                                                            <%= new
-                                                                                                Date(orderData[i].orderedAt).toLocaleDateString("en-US",
-                                                                                                { day: 'numeric' ,
-                                                                                                month: 'numeric' ,
-                                                                                                year: 'numeric' }) %>
+                                                            </td>
+                                                            <td>
+                                                                <%=orderData[i].totalAmount%>
+                                                            </td>
+                                                            <% if(orderData[i].orderStatus=='pending' ){ %>
+                                                                <td><span
+                                                                        class="badge rounded-pill alert-warning">Pending</span>
+                                                                </td>
+                                                                <% } %>
+                                                                    <% if(orderData[i].orderStatus=='processing' ){ %>
+                                                                        <td><span
+                                                                                class="badge rounded-pill alert-warning">processing</span>
+                                                                        </td>
+                                                                        <% } %>
+                                                                            <% if(orderData[i].orderStatus=='shipped' ){
+                                                                                %>
+                                                                                <td><span
+                                                                                        class="badge rounded-pill alert-warning">shipped</span>
+                                                                                </td>
+                                                                                <% } %>
+                                                                                    <% if(orderData[i].orderStatus=='delivered'
+                                                                                        ){ %>
+                                                                                        <td><span
+                                                                                                class="badge rounded-pill alert-success">delivered</span>
                                                                                         </td>
+                                                                                        <% } %>
+                                                                                            <% if(orderData[i].orderStatus=='cancelled'
+                                                                                                ){ %>
+                                                                                                <td><span
+                                                                                                        class="badge rounded-pill alert-danger">cancelled</span>
+                                                                                                </td>
+                                                                                                <% } %>
+                                                                                                    <% if
+                                                                                                        (orderData[i].orderStatus=='returned'
+                                                                                                        ) { %>
+                                                                                                        <td><span
+                                                                                                                class="badge rounded-pill alert-danger">Returned</span>
+                                                                                                        </td>
+                                                                                                        <% } %>
 
-                                                                                        <td
-                                                                                            class="text-end hide-on-print">
-                                                                                            <a href="/admin/single-order-details?_id=<%=orderData[i]._id%>"
-                                                                                                class="btn btn-md rounded font-sm hide-on-print">Detail</a>
-                                                                                            <!-- <div class="dropdown">
+                                                                                                            <td>
+                                                                                                                <%= new
+                                                                                                                    Date(orderData[i].orderedAt).toLocaleDateString("en-US",
+                                                                                                                    {
+                                                                                                                    day: 'numeric'
+                                                                                                                    ,
+                                                                                                                    month: 'numeric'
+                                                                                                                    ,
+                                                                                                                    year: 'numeric'
+                                                                                                                    })
+                                                                                                                    %>
+                                                                                                            </td>
+
+                                                                                                            <td
+                                                                                                                class="text-end hide-on-print">
+                                                                                                                <a href="/admin/single-order-details?_id=<%=orderData[i]._id%>"
+                                                                                                                    class="btn btn-md rounded font-sm hide-on-print">Detail</a>
+                                                                                                              
+                                                                                                                <!-- <div class="dropdown">
                                                                                                 <a href="#"
                                                                                                     data-bs-toggle="dropdown"
                                                                                                     class="btn btn-light rounded btn-sm font-sm">
@@ -281,109 +362,270 @@
                                                                                                         href="#">Delete</a>
                                                                                                 </div>
                                                                                             </div> -->
-                                                                                            <!-- dropdown //end -->
+                                                                                                                <!-- dropdown //end -->
+                                                                                                            </td>
+                                                        </tr>
+                                                        <%}%>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <!-- ----pagination area start--- -->
+                                        <div class="pagination-area mt-30 mb-50 hide-on-print">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination justify-content-start">
+                                                  
+                                                        <% for (let i=1; i <=pageCount; i++) { %>
+            
+                                                            <li
+                                                                class=" <%= i == currentPage ? 'page-item active' : 'page-item ' %>">
+                                                                <a class="page-link" href="<%= `/admin/salesreport?page=${i}` %>">
+                                                                    <%= i %>
+                                                                </a>
+                                                            </li>
+                                                            <% } %>
+            
+            
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                        <!-- ----pagination area end--- -->
+
+                                        <!-- -------data with pagination for showing in frontend  ends--------- -->
+
+
+                                        <!-- ---------data for printing------ -->
+                                        <div class="show-table-on-print" style="display: none; ">
+                                            <table class="table table-hover" id="orderTableHidden">
+                                                <thead>
+                                                    <%if(orderPrintData && orderPrintData.length>0){%>
+                                                        <tr>
+                                                            <th>sl no</th>
+                                                            <th>#ID</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col" class="text-end hide-on-print"> Action </th>
+                                                        </tr>
+                                                        <%}else{%>
+                                                            <h3 class="text-center">No orders During these Dates</h3>
+                                                            <%}%>
+                                                </thead>
+                                                <tbody>
+                                                    <%for(let i=0;i<orderPrintData.length;i++){%>
+                                                        <tr>
+                                                            <td>
+                                                               <%=i+1%>
+                                                            </td>
+                                                            <td>
+                                                                <%=orderPrintData[i].orderId%>
+                                                            </td>
+                                                            <td><b>
+                                                                    <%=orderPrintData[i].userData.name%>
+                                                                </b></td>
+                                                            <td>
+
+                                                            </td>
+                                                            <td>
+                                                                <%=orderPrintData[i].totalAmount%>
+                                                            </td>
+                                                            <% if(orderPrintData[i].orderStatus=='pending' ){ %>
+                                                                <td><span
+                                                                        class="badge rounded-pill alert-warning">Pending</span>
+                                                                </td>
+                                                                <% } %>
+                                                                    <% if(orderPrintData[i].orderStatus=='processing' ){ %>
+                                                                        <td><span
+                                                                                class="badge rounded-pill alert-warning">processing</span>
+                                                                        </td>
+                                                                        <% } %>
+                                                                            <% if(orderPrintData[i].orderStatus=='shipped' ){
+                                                                                %>
+                                                                                <td><span
+                                                                                        class="badge rounded-pill alert-warning">shipped</span>
+                                                                                </td>
+                                                                                <% } %>
+                                                                                    <% if(orderPrintData[i].orderStatus=='delivered'
+                                                                                        ){ %>
+                                                                                        <td><span
+                                                                                                class="badge rounded-pill alert-success">delivered</span>
                                                                                         </td>
-                                            </tr>
-                                            <%}%>
+                                                                                        <% } %>
+                                                                                            <% if(orderPrintData[i].orderStatus=='cancelled'
+                                                                                                ){ %>
+                                                                                                <td><span
+                                                                                                        class="badge rounded-pill alert-danger">cancelled</span>
+                                                                                                </td>
+                                                                                                <% } %>
+                                                                                                    <% if
+                                                                                                        (orderPrintData[i].orderStatus=='returned'
+                                                                                                        ) { %>
+                                                                                                        <td><span
+                                                                                                                class="badge rounded-pill alert-danger">Returned</span>
+                                                                                                        </td>
+                                                                                                        <% } %>
 
-                                    </tbody>
-                                </table>
-                            </div> <!-- table-responsive //end -->
-                        </div> <!-- card-body end// -->
-                    </div> <!-- card end// -->
-                    <style>
-                        .underline {
-                            border-bottom: 1px solid #000;
-                            /* You can adjust the color and thickness as needed */
-                            display: inline-block;
-                            /* Ensures that the border only spans the width of the text */
-                            padding-bottom: 5px;
-                            /* Adjust as needed to control the distance between text and border */
-                        }
-                    </style>
-                    <%if(orderData && orderData.length>0){%>
-                    <div class="col-md-3">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h4 class="mb-3 underline">Transaction Details</h4>
-                                <form>
-                                    <h5>From Date</h5>
-                                    <div class="mb-4">
-                                        <!-- <input type="text" placeholder="Type here" class="form-control" id="order_id"> -->
-                                        <h6 id='from-date-h6'>
-                                            <%=fromDateToFrontEnd%>
-                                        </h6>
-                                    </div>
-                                    <h5>To Date</h5>
-                                    <div class="mb-4">
-                                        <h6>
-                                            <%=toDateToFrontEnd%>
-                                        </h6>
-                                    </div>
+                                                                                                            <td>
+                                                                                                                <%= new
+                                                                                                                    Date(orderPrintData[i].orderedAt).toLocaleDateString("en-US",
+                                                                                                                    {
+                                                                                                                    day: 'numeric'
+                                                                                                                    ,
+                                                                                                                    month: 'numeric'
+                                                                                                                    ,
+                                                                                                                    year: 'numeric'
+                                                                                                                    })
+                                                                                                                    %>
+                                                                                                            </td>
 
-                                    <h5>Total Orders</h5>
+                                                                                                            <td
+                                                                                                                class="text-end hide-on-print">
+                                                                                                                <a href="#"
+                                                                                                                    class="btn btn-md rounded font-sm hide-on-print">Detail</a>
+                                                                                                                <!-- <div class="dropdown">
+                                                                                                        <a href="#"
+                                                                                                            data-bs-toggle="dropdown"
+                                                                                                            class="btn btn-light rounded btn-sm font-sm">
+                                                                                                            <i
+                                                                                                                class="material-icons md-more_horiz"></i>
+                                                                                                        </a>
+                                                                                                        <div
+                                                                                                            class="dropdown-menu">
+                                                                                                            <a class="dropdown-item"
+                                                                                                                href="#">View
+                                                                                                                detail</a>
+                                                                                                            <a class="dropdown-item"
+                                                                                                                href="#">Edit
+                                                                                                                info</a>
+                                                                                                            <a class="dropdown-item text-danger"
+                                                                                                                href="#">Delete</a>
+                                                                                                        </div>
+                                                                                                    </div> -->
+                                                                                                                <!-- dropdown //end -->
+                                                                                                            </td>
+                                                        </tr>
+                                                        <%}%>
 
-                                    <div class="mb-4">
-                                        <h6>
-                                            <%=totalOrders%>
-                                        </h6>
-                                    </div>
-                                    <h5>Order Status</h5>
+                                                </tbody>
+                                            </table>
+                                        </div>
 
-                                    <div class="mb-4">
-                                        <h6>Pending: <%=orderPendingCount%>
-                                        </h6>
-                                        <h6>processing: <%=orderProcessingCount%>
-                                        </h6>
-                                        <h6>Shipped: <%=orderShippedCount%>
-                                        </h6>
-                                        <h6>Delivered: <%=orderDeliveredCount%>
-                                        </h6>
-                                        <h6>cancelled: <%=orderCancelledCount%>
-                                        </h6>
-                                    </div>
-
-                                    <h5>COD Orders</h5>
-                                    <div class="mb-4">
-                                        <h6>
-                                            <%=codCount%>
-                                        </h6>
-                                    </div>
-
-                                    <h5>COD Total Amount
-                                    </h5>
-                                    <div class="mb-4">
-                                        <h6><strong>
-                                                <%=codPaymentAmount%>
-                                            </strong></h6>
-                                    </div>
+                                        <!-- ----data for printing ends-------- -->
 
 
-                                    <h5>UPI Orders</h5>
-                                    <div class="mb-4">
-                                        <h6>
-                                            <%=upiCount%>
-                                        </h6>
-                                    </div>
-                                    <h5>UPI Total Amount
-                                    </h5>
-                                    <div class="mb-4">
-                                        <h6><strong>
-                                                <%=upiPaymentAmount%>
-                                            </strong></h6>
-                                    </div>
-                                    <h3>Total Amount</h3>
-                                    <div class="mb-4">
-                                        <h4><strong>
-                                                <%=totalAmount%>
-                                            </strong></h4>
-                                    </div>
-                                </form>
+
+
+                                    </div> <!-- table-responsive //end -->
+                                </div>
+
+
+                                <!-- --------data for printing--------- -->
+
+
+                                <!-- card-body end// -->
                             </div>
-                        </div> <!-- card end// -->
-                    </div>
-                    <%}%>
-                    <!-- <div class="pagination-area mt-15 mb-50">
+
+
+                            <!-- card end// -->
+                            <!-- ----print data----- -->
+
+                            <style>
+                                .underline {
+                                    border-bottom: 1px solid #000;
+                                    /* You can adjust the color and thickness as needed */
+                                    display: inline-block;
+                                    /* Ensures that the border only spans the width of the text */
+                                    padding-bottom: 5px;
+                                    /* Adjust as needed to control the distance between text and border */
+                                }
+                            </style>
+                            <%if(orderData && orderData.length>0){%>
+                                <div class="col-md-3">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h4 class="mb-3 underline">Transaction Details</h4>
+                                            <form>
+                                                <h5>From Date</h5>
+                                                <div class="mb-4">
+                                                    <!-- <input type="text" placeholder="Type here" class="form-control" id="order_id"> -->
+                                                    <h6 id='from-date-h6'>
+                                                        <%=fromDateToFrontEnd%>
+                                                    </h6>
+                                                </div>
+                                                <h5>To Date</h5>
+                                                <div class="mb-4">
+                                                    <h6>
+                                                        <%=toDateToFrontEnd%>
+                                                    </h6>
+                                                </div>
+
+                                                <h5>Total Orders</h5>
+
+                                                <div class="mb-4">
+                                                    <h6>
+                                                        <%=totalOrders%>
+                                                    </h6>
+                                                </div>
+                                                <h5>Order Status</h5>
+
+                                                <div class="mb-4">
+                                                    <h6>Pending: <%=orderPendingCount%>
+                                                    </h6>
+                                                    <h6>processing: <%=orderProcessingCount%>
+                                                    </h6>
+                                                    <h6>Shipped: <%=orderShippedCount%>
+                                                    </h6>
+                                                    <h6>Delivered: <%=orderDeliveredCount%>
+                                                    </h6>
+                                                    <h6>cancelled: <%=orderCancelledCount%>
+                                                    </h6>
+                                                </div>
+
+                                                <h5>COD Orders</h5>
+                                                <div class="mb-4">
+                                                    <h6>
+                                                        <%=codCount%>
+                                                    </h6>
+                                                </div>
+
+                                                <h5>COD Total Amount
+                                                </h5>
+                                                <div class="mb-4">
+                                                    <h6><strong>
+                                                            <%=codPaymentAmount%>
+                                                        </strong></h6>
+                                                </div>
+
+
+                                                <h5>UPI Orders</h5>
+                                                <div class="mb-4">
+                                                    <h6>
+                                                        <%=upiCount%>
+                                                    </h6>
+                                                </div>
+                                                <h5>UPI Total Amount
+                                                </h5>
+                                                <div class="mb-4">
+                                                    <h6><strong>
+                                                            <%=upiPaymentAmount%>
+                                                        </strong></h6>
+                                                </div>
+                                                <h3>Total Amount</h3>
+                                                <div class="mb-4">
+                                                    <h4><strong>
+                                                            <%=totalAmount%>
+                                                        </strong></h4>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div> <!-- card end// -->
+                                </div>
+                                <%}%>
+                                    <!-- <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
                             <li class="page-item active"><a class="page-link" href="#">01</a></li>
