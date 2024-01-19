@@ -125,14 +125,17 @@
                                                                             </a>
                                                                         </td>
                                                                         <td class="li-product-thumbnail">
-                                                                            <a href="#">
+                                                                            <a href="/single-product-view?_id=<%=product.productId._id%>&size=<%=product.size%>">
+
                                                                                 <img src="/admin-assets/uploads/<%=product.productId.imagesUrl[1]%>"
                                                                                     alt="Li's Product Image"
                                                                                     style="width: 80px; height: 80px;">
                                                                             </a>
                                                                         </td>
                                                                         <td class="li-product-name" style=" max-width: 200px; /* Adjust the value based on your design */
-                                                    word-wrap: break-word;"><a href="#">
+                                                    word-wrap: break-word;">
+                                                
+                                                    <a href="/single-product-view?_id=<%=product.productId._id%>&size=<%=product.size%>">
                                                                                 <%=product.productId.name%>
                                                                             </a></td>
                                                                         <td class="li-product-name"><a href="#">
@@ -218,17 +221,17 @@
 
 
 
-                                        function removeProduct(cartId) {
+                                        function removeProduct(wishIndex) {
                                             Swal.fire({
                                                 title: 'Remove Product?',
-                                                text: 'Do you want to Remove this Product From The Cart?',
+                                                text: 'Do you want to Remove this Product From The Wishlist?',
                                                 icon: 'question',
                                                 showCancelButton: true,
                                                 confirmButtonText: 'Yes, Remove!',
                                                 cancelButtonText: 'No, cancel'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    fetch(`/remove-product?cartId=${cartId}`, {
+                                                    fetch(`/remove-from-wishlist?wishIndex=${wishIndex}`, {
                                                         method: 'DELETE',
                                                         headers: {
                                                             'Content-Type': 'application/json',
@@ -239,7 +242,7 @@
                                                         console.error('Error removing product:', error);
                                                     });
                                                 } else {
-                                                    Swal.fire('Cancelled', 'Your is not Removed.', 'info');
+                                                    Swal.fire('Cancelled', 'Product is not Removed.', 'info');
                                                 }
                                             });
                                         }

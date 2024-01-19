@@ -52,11 +52,11 @@ const productSchema = new mongoose.Schema({
 
         salePrice: {
             type: Number,
-            required:true
+            required: true
         },
         regularPrice: {
             type: Number,
-            required:true
+            required: true
         }
     },
     imagesUrl: {
@@ -65,23 +65,43 @@ const productSchema = new mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default:true
+        default: true
     },
     createdAt: {
         type: Date,
         default: () => Date.now()
     },
-    catStatus:{
-      type:Boolean,
-      default:true
+    catStatus: {
+        type: Boolean,
+        default: true
     },
-    leagueStatus:{
-        type:Boolean,
-        default:true
+    leagueStatus: {
+        type: Boolean,
+        default: true
     },
-    brandStatus:{
-        type:Boolean,
-        default:true
+    brandStatus: {
+        type: Boolean,
+        default: true
+    },
+    review: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'user'
+
+        },
+        comment:{
+            type:String
+        },
+        rating:{
+            type:Number
+        },
+        createdAt:{
+            type:Date,
+            default: () => Date.now()
+        }
+    }],
+    avgRating:{
+        type:Number
     }
 
 

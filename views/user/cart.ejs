@@ -118,14 +118,17 @@
                                                         </a>
                                                     </td>
                                                     <td class="li-product-thumbnail">
-                                                        <a href="#">
+                                                        <a href="/single-product-view?_id=<%=product.productId._id%>&size=<%=product.size%>">
+
                                                             <img src="/admin-assets/uploads/<%=product.productId.imagesUrl[1]%>"
                                                                 alt="Li's Product Image"
-                                                                style="width: 150px; height: 150px;">
+                                                                style="width: 80px; height: 80px;">
                                                         </a>
                                                     </td>
                                                     <td class="li-product-name" style=" max-width: 200px; /* Adjust the value based on your design */
-                                                    word-wrap: break-word;"><a href="#">
+                                                    word-wrap: break-word;">
+                                                    <a href="/single-product-view?_id=<%=product.productId._id%>&size=<%=product.size%>">
+
                                                             <%=product.productId.name%>
                                                         </a></td>
                                                     <td class="li-product-name"><a href="#">

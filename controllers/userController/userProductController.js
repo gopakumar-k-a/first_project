@@ -10,7 +10,7 @@ const loadSingleProduct = async (req, res) => {
         const userId = req.session.userId
         const id = req.query._id
         const size = req.query.size || 'm'
-        const product = await productModel.findOne({ _id: id }).populate('brand').populate('category').populate('team').populate('league')
+        const product = await productModel.findOne({ _id: id }).populate('brand').populate('category').populate('team').populate('league').populate('review.userId')
         const relatedProductsBrands = await productModel.find({ brand: product.brand._id }).populate('brand').limit(5)
         let productInWishlist=false
         if (user) {

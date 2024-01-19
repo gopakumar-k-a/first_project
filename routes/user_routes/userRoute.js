@@ -7,6 +7,7 @@ const userAddressController=require('../../controllers/userController/userAddres
 const userCartController=require('../../controllers/userController/userCartController')
 const userOrderController=require('../../controllers/userController/userOrderController')
 const userWishlistController=require('../../controllers/userController/userWishlistController')
+const userReviewController=require('../../controllers/userController/userReviewController')
 const session = require('express-session');
 require('dotenv').config();
 
@@ -88,6 +89,11 @@ user.get('/get-wallet-data',userAuth.isLogin,userOrderController.walletApply)
 user.get('/wishlist',userAuth.isLogin,userWishlistController.loadWishList)
 //add product to wishList
 user.post('/add-to-wish',userWishlistController.addToWish)
+//remove product from wishlist
+user.delete('/remove-from-wishlist',userAuth.isLogin,userWishlistController.removeProduct)
+//add review to products 
+user.post('/createProductReview',userAuth.isLogin,userReviewController.addNewReview)
+
 
 
 

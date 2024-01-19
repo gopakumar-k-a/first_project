@@ -36,15 +36,11 @@ async function wishListData(user) {
 //checking product is in wishlist or not
 async function wishlistCheck(user, productId, size) {
     try {
-        console.log('user ', user);
-        console.log('product id ', productId);
-        console.log('size ', size);
         const wishlistData=await wishlistModel.findOne({userId:user})
         if(wishlistData && wishlistData.products.length>0){
             const foundProduct = wishlistData.products.find(product => (
                 product.productId.toString() === productId && product.size === size
             ));
-            console.log('foundProduct ',foundProduct);
             if(foundProduct){
                 return true
             }else{

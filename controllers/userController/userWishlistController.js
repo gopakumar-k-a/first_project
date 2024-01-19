@@ -52,8 +52,22 @@ const addToWish = async (req, res) => {
         console.log(error.message);
     }
 }
+//remove product from wishlist
+const removeProduct = async (req, res) => {
+    try {
+        const userId = req.session.userId
+        const wishIndex = req.query.wishIndex
+        const wishData = await wishlistModel.findOne({ userId: userId });
+        wishData.products.splice(wishIndex, 1)
+        await wishData.save()
+        return res.status(200).json({ message: 'Document deleted successfully' });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports = {
     loadWishList,
-    addToWish
+    addToWish,
+    removeProduct
 }
