@@ -70,7 +70,6 @@ const user=new mongoose.Schema({
     }],
     referralCode: {
         type: String,
-        unique: true,
     },
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,

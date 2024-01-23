@@ -33,9 +33,6 @@ const loadShop = async (req, res) => {
         const categoryFilter = req.query.categoryfilter || ''
         const filterStatus = brandFilter != '' || categoryFilter != '' ? true : false
 
-
-
-
         if (keyword != 'not found') {
             let sortOptions = {};
 
@@ -172,7 +169,6 @@ const loadShop = async (req, res) => {
 //search product from the shop page
 const searchProduct = async (req, res) => {
     try {
-        console.log('inside search ',req.body);
         const keyword = req.body.keyword || ''
         const sortBy = req.body.sortBy || ''
         const brandFilter=req.body.brandFilter || ''

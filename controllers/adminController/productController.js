@@ -6,6 +6,7 @@ const productModel = require('../../models/productModel')
 const sharp = require('sharp')
 const fs = require('node:fs')
 //load product details
+
 const loadProductList = async (req, res) => {
     try {
         const page = req.query.page || 1

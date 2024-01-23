@@ -3,13 +3,11 @@ const app = express()
 const path = require('path')
 const session = require('express-session');
 require('dotenv').config();
-
-
 const nocache = require('nocache');
 
-
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://127.0.0.1:27017/myJersyDB')
+const atlasConnectionString = process.env.ATLAS_CONNECTION_STRING;
+mongoose.connect(atlasConnectionString)
     .then(() => {
         console.log('dataBase connected successfully');
     })
