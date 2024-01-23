@@ -8,9 +8,7 @@ const nocache = require('nocache');
 const mongoose = require('mongoose')
 const {errorHandler}=require('./middleware/errorHandler')
 const atlasConnectionString = process.env.ATLAS_CONNECTION_STRING;
-const userRoute = require('./routes/user_routes/userRoute')
-const adminRoute = require('./routes/admin_routes/adminRoute')
-mongoose.connect('mongodb://localhost:27017/myJersyDB')
+mongoose.connect(atlasConnectionString)
     .then(() => {
         console.log('dataBase connected successfully');
     })
@@ -25,6 +23,8 @@ mongoose.connect('mongodb://localhost:27017/myJersyDB')
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
+const userRoute = require('./routes/user_routes/userRoute')
+const adminRoute = require('./routes/admin_routes/adminRoute')
 app.use('/',userRoute)
 app.use('/admin', adminRoute)
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +36,7 @@ app.use('*',(req,res)=>{
     res.render('error/404')
 })
 app.use(errorHandler)
+
 
 
 app.listen(3000, () => {
