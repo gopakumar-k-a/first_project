@@ -1,10 +1,11 @@
 const userModel = require('../../models/userModel')
 const productModel = require('../../models/productModel')
 const orderModel = require('../../models/orderModel')
+const brandModel=require('../../models/brandModel')
 const bcrypt = require('bcrypt');
 const hashPassword = require('../../utility/hashPassword')
 const validator = require("validator");
-const { generateOTP, sendOtp } = require('../../utility/nodeMailer');
+const { generateOTP, sendOtp, contactUsMailSender } = require('../../utility/nodeMailer');
 const walletModel = require('../../models/walletModel');
 const bannerModel = require('../../models/bannerModel');
 require('dotenv').config();
@@ -22,7 +23,8 @@ const loadHome = async (req, res) => {
             leagueStatus: true,
             brandStatus: true
         }).populate('brand').populate('category').sort({ createdAt: -1 }).limit(6)
-        res.render('user/home', { user, prData, bannerData })
+        const brandData=await brandModel.find()
+        res.render('user/home', { user, prData, bannerData ,brandData})
     } catch (error) {
         console.log(error.message);
     }
@@ -82,7 +84,9 @@ const loadForgotPassword = async (req, res) => {
 const loadAbout = async (req, res) => {
     try {
         const user = req.session.userEmail || ''
-        res.render('user/about', { user })
+        const bannerData=await bannerModel.find()
+       
+        res.render('user/about', { user,bannerData })
     } catch (error) {
         console.log(error.message)
     }
@@ -90,8 +94,13 @@ const loadAbout = async (req, res) => {
 //load contact page
 const loadContact = async (req, res) => {
     try {
+        // const message = req.flash();
+        // console.log('message ', message);
+        // const message = req.flash('success') || '' // Use the key you used when setting the flash message
+        const message=req.query.message || ''
+        console.log('message ', message);
         const user = req.session.userEmail || ''
-        res.render('user/contact', { user })
+        res.render('user/contact', { user,message })
     } catch (error) {
         console.log(error.message)
     }
@@ -493,6 +502,24 @@ const userUpdate = async (req, res) => {
     }
 }
 
+const contactUsMessage = async (req, res) => {
+    try {
+        const { customerName, customerEmail, contactSubject, contactMessage } = req.body
+        console.log(req.body);
+       const sendMail= await contactUsMailSender(customerName, customerEmail, contactSubject, contactMessage)
+      
+            const message='email send successfully'
+            return res.redirect(`/contact?message=${message}`)
+        
+
+       
+
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -500,5 +527,5 @@ module.exports = {
     loadHome, loadLogin, loadRegister, loadAbout, loadContact,
     registerUser, checkuser, loadOtp, checkOtp, logout,
     resendOtp, loadUserDashboard, userUpdate, loadForgotPassword,
-    sendForgotOtp, changePassword
+    sendForgotOtp, changePassword, contactUsMessage
 }

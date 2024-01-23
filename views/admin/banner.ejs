@@ -248,10 +248,10 @@
                         <h2 class="content-title card-title">Banner Management</h2>
                     </div>
                     <div>
-                        <a href="#" class="btn btn-light rounded font-md">Export</a>
-                        <a href="#" class="btn btn-light rounded  font-md">Import</a>
+           
                         <a href="#" class="btn btn-primary btn-sm rounded"
-                            onclick="document.getElementById('id01').style.display='block'">Create new</a>
+                            onclick="document.getElementById('id01').style.display='block'" 
+                            ;">Create new</a>
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -313,8 +313,8 @@
                                     </a>
                                     <!-- <div class="price mb-2">$179.00</div> -->
                                     <!-- price.// -->
-                                    <a href="/admin/banner/edit?id=<%=bannerData[0]._id%>" class="btn btn-sm font-sm rounded btn-brand"
-                                       >
+                                    <a href="/admin/banner/edit?id=<%=bannerData[0]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
                                         <i class="material-icons md-edit"></i> Edit
                                     </a>
                                     <%if(bannerData[0].isActive==true){%>
@@ -343,10 +343,10 @@
                                     </a>
                                     <!-- <div class="price mb-2">$179.00</div> -->
                                     <!-- price.// -->
-                                    <a href="/admin/banner/edit?id=<%=bannerData[1]._id%>" class="btn btn-sm font-sm rounded btn-brand"
-                                        >
-                                         <i class="material-icons md-edit"></i> Edit
-                                     </a>
+                                    <a href="/admin/banner/edit?id=<%=bannerData[1]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
                                     <%if(bannerData[1].isActive==true){%>
                                         <a href="#" class="btn btn-sm font-sm btn-light rounded block-btn"
                                             onclick="blockBanner('<%=bannerData[1]._id%>','block')">
@@ -375,9 +375,7 @@
 
                     <!-- row 1 end-------------------- -->
                     <!-- row 2--------------------- -->
-                    <div class="row">
-
-                    </div>
+      
                     <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
                         <div class="col">
                             <div class="card card-product-grid">
@@ -390,10 +388,10 @@
                                     </a>
                                     <!-- <div class="price mb-2">$179.00</div> -->
                                     <!-- price.// -->
-                                    <a href="/admin/banner/edit?id=<%=bannerData[2]._id%>" class="btn btn-sm font-sm rounded btn-brand"
-                                        >
-                                         <i class="material-icons md-edit"></i> Edit
-                                     </a>
+                                    <a href="/admin/banner/edit?id=<%=bannerData[2]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
                                     <%if(bannerData[2].isActive==true){%>
                                         <a href="#" class="btn btn-sm font-sm btn-light rounded block-btn"
                                             onclick="blockBanner('<%=bannerData[2]._id%>','block')">
@@ -420,10 +418,10 @@
                                     </a>
                                     <!-- <div class="price mb-2">$179.00</div> -->
                                     <!-- price.// -->
-                                    <a href="/admin/banner/edit?id=<%=bannerData[3]._id%>" class="btn btn-sm font-sm rounded btn-brand"
-                                        >
-                                         <i class="material-icons md-edit"></i> Edit
-                                     </a>
+                                    <a href="/admin/banner/edit?id=<%=bannerData[3]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
                                     <%if(bannerData[3].isActive==true){%>
                                         <a href="#" class="btn btn-sm font-sm btn-light rounded block-btn"
                                             onclick="blockBanner('<%=bannerData[3]._id%>','block')">
@@ -439,26 +437,116 @@
                                 </div>
                             </div> <!-- card-product  end// -->
                         </div> <!-- col.// -->
+                   
+                            
+                      
                         <!-- card-product  end// -->
                     </div>
+                    <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                    
+
+                        <div class="col">
+                            <h4>cricket Category Image</h4>
+
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img
+                                        src="/admin-assets/uploads/<%=bannerData[4].imageUrl%>" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate">
+                                        <%=bannerData[4].name%>
+                                    </a>
+                                    <!-- <div class="price mb-2">$179.00</div> -->
+                                    <!-- price.// -->
+                                    <a href="/admin/banner/edit?id=<%=bannerData[4]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <%if(bannerData[4].isActive==true){%>
+                                        <a href="#" class="btn btn-sm font-sm btn-light rounded block-btn"
+                                            onclick="blockBanner('<%=bannerData[4]._id%>','block')">
+                                            <i class="material-icons md-delete_forever"></i> Block
+                                        </a>
+
+                                        <%}else{%>
+                                            <a href="#" class="btn btn-sm font-sm btn-light rounded"
+                                                onclick="blockBanner('<%=bannerData[4]._id%>','unblock')">
+                                                <i class="material-icons md-delete_forever"></i> Un Block
+                                            </a>
+                                            <%}%>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div>
+                        <div class="col">
+                            <h4>football Category Image</h4>
+
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap"> <img
+                                        src="/admin-assets/uploads/<%=bannerData[5].imageUrl%>" alt="Product">
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title text-truncate">
+                                        <%=bannerData[5].name%>
+                                    </a>
+                                    <!-- <div class="price mb-2">$179.00</div> -->
+                                    <!-- price.// -->
+                                    <a href="/admin/banner/edit?id=<%=bannerData[5]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand">
+                                        <i class="material-icons md-edit"></i> Edit
+                                    </a>
+                                    <%if(bannerData[5].isActive==true){%>
+                                        <a href="#" class="btn btn-sm font-sm btn-light rounded block-btn"
+                                            onclick="blockBanner('<%=bannerData[5]._id%>','block')">
+                                            <i class="material-icons md-delete_forever"></i> Block
+                                        </a>
+
+                                        <%}else{%>
+                                            <a href="#" class="btn btn-sm font-sm btn-light rounded"
+                                                onclick="blockBanner('<%=bannerData[5]._id%>','unblock')">
+                                                <i class="material-icons md-delete_forever"></i> Un Block
+                                            </a>
+                                            <%}%>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div>
+
+                        <!-- col.// -->
+                    </div>
+                </div> 
+                <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                    
+
+                    
+                    <div class="col">
+                        <h4>About Page</h4>
+
+                        <div class="card card-product-grid">
+                            <a href="#" class="img-wrap"> <img
+                                    src="/admin-assets/uploads/<%=bannerData[6].imageUrl%>" alt="Product">
+                            </a>
+                            <div class="info-wrap">
+                                <a href="#" class="title text-truncate">
+                                    <%=bannerData[6].name%>
+                                </a>
+                                <!-- <div class="price mb-2">$179.00</div> -->
+                                <!-- price.// -->
+                                <a href="/admin/banner/edit?id=<%=bannerData[6]._id%>"
+                                    class="btn btn-sm font-sm rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> Edit
+                                </a>
+                      
+                            </div>
+                        </div> <!-- card-product  end// -->
+                    </div>
+
                     <!-- col.// -->
-                </div> <!-- row.// -->
+                </div>
+                <!-- row.// -->
                 </div> <!-- card-body end// -->
                 </div> <!-- card end// -->
             </section> <!-- content-main end// -->
             <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script> ©, Evara - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">
-                            All rights reserved
-                        </div>
-                    </div>
-                </div>
+                
             </footer>
         </main>
         <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>

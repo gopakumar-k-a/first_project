@@ -12,8 +12,6 @@ const session = require('express-session');
 require('dotenv').config();
 
 
-
-
 user.use(userAuth.isUserBlock)
 //load homepage
 user.get('/',userController.loadHome)
@@ -41,6 +39,8 @@ user.post('/forgot-password-send-otp',userController.sendForgotOtp)
 user.get('/about',userController.loadAbout)
 //load contact page
 user.get('/contact',userController.loadContact)
+//send mail through contact us page
+user.post('/contact',userController.contactUsMessage)
 //user logout
 user.get('/logout',userController.logout)
 //single product view

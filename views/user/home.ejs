@@ -74,6 +74,103 @@
 
 
                             <!-- Slider With Banner Area End Here -->
+
+                            <div class="li-main-blog-page pt-60 pb-55">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- Begin Li's Main Content Area -->
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="li-product-tab">
+                                                    <ul class="nav li-product-menu">
+                                                        <li><a class="active" data-toggle="tab"
+                                                                href="#li-new-product"><span>
+                                                                    Shop By Category</span></a></li>
+
+                                                    </ul>
+                                                </div>
+                                                <!-- Begin Li's Tab Menu Content Area -->
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="row li-main-content">
+                                                <!-- cricket category starts -->
+                                                <%if(bannerData && bannerData.length>0 ){%>
+
+                                                    <%for(let i=0;i<bannerData.length;i++){%>
+                                                        <% if(bannerData[i].name=='cricketCat' &&
+                                                            bannerData[i].isActive==true){%>
+                                                            <div class="col-lg-6 col-md-6">
+                                                                <div class="li-blog-single-item pb-25">
+                                                                    <div class="li-blog-banner">
+                                                                        <a href="<%=bannerData[i].targetUrl%>"><img
+                                                                                class="img-full"
+                                                                                src="/admin-assets/uploads/<%=bannerData[i].imageUrl%>"
+                                                                                alt=""></a>
+                                                                    </div>
+                                                                    <div class="li-blog-content">
+                                                                        <div class="li-blog-details">
+                                                                            <h3 class="li-blog-heading pt-25"><a
+                                                                                    href="<%=bannerData[i].targetUrl%>"><%=bannerData[i].title%></a></h3>
+                                                                            
+                                                                            <p><%=bannerData[i].description%></p>
+                                                                            <a class="read-more"
+                                                                                href="<%=bannerData[i].targetUrl%>">
+                                                                                Shop now...</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <%}%>
+                                                                <%}%>
+                                                                    <%}%>
+
+                                                                        <!-- --cricket category ends -->
+                                                                        <!-- ----foot ball Category -->
+                                                                        <%if(bannerData && bannerData.length>0 ){%>
+
+                                                                            <%for(let i=0;i<bannerData.length;i++){%>
+                                                                                <% if(bannerData[i].name=='footballCat' &&
+                                                                                    bannerData[i].isActive==true){%>
+                                                                                    <div class="col-lg-6 col-md-6">
+                                                                                        <div class="li-blog-single-item pb-25">
+                                                                                            <div class="li-blog-banner">
+                                                                                                <a href="<%=bannerData[i].targetUrl%>"><img
+                                                                                                        class="img-full"
+                                                                                                        src="/admin-assets/uploads/<%=bannerData[i].imageUrl%>"
+                                                                                                        alt=""></a>
+                                                                                            </div>
+                                                                                            <div class="li-blog-content">
+                                                                                                <div class="li-blog-details">
+                                                                                                    <h3 class="li-blog-heading pt-25"><a
+                                                                                                            href="<%=bannerData[i].targetUrl%>"><%=bannerData[i].title%></a></h3>
+                                                                                                    
+                                                                                                    <p><%=bannerData[i].description%></p>
+                                                                                                    <a class="read-more"
+                                                                                                        href="<%=bannerData[i].targetUrl%>">
+                                                                                                        Shop now...</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <%}%>
+                                                                                        <%}%>
+                                                                                            <%}%>
+                                                                        <!-- football category ends -->
+
+                                            </div>
+                                        </div>
+                                        <!-- Li's Main Content Area End Here -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- -----slider------ -->
+
+                            <!-- slider end -->
+
                             <!-- Begin Product Area -->
                             <div class="product-area pt-60 pb-50">
                                 <div class="container">
@@ -84,9 +181,7 @@
                                                     <li><a class="active" data-toggle="tab"
                                                             href="#li-new-product"><span>New
                                                                 Arrival</span></a></li>
-                                                    <!-- <li><a data-toggle="tab" href="#li-bestseller-product"><span>Bestseller</span></a></li>
-                            <li><a data-toggle="tab" href="#li-featured-product"><span>Featured Products</span></a>
-                            </li> -->
+
                                                 </ul>
                                             </div>
                                             <!-- Begin Li's Tab Menu Content Area -->
@@ -153,9 +248,7 @@
                                                                 <div class="add-actions">
                                                                     <ul class="add-actions-link">
                                                                         <!-- <li class="add-cart active"  onclick="addToCart('<%=prData[i]._id%>',event)"><a href="#">Add to cart</a></li> -->
-                                                                        <li><a class="links-details"
-                                                                                href="wishlist.html"><i
-                                                                                    class="fa fa-heart-o"></i></a></li>
+
                                                                         <li><a href="#" title="quick view"
                                                                                 class="quick-view-btn"
                                                                                 data-toggle="modal"
@@ -229,17 +322,7 @@
                                                                 <span class="product-details-ref">
                                                                     <%=prData[i].brand.name%>
                                                                 </span>
-                                                                <!-- <div class="rating-box pt-20">
-                                            <ul class="rating rating-with-review-item">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="review-item"><a href="#">Read Review</a></li>
-                                                <li class="review-item"><a href="#">Write Review</a></li>
-                                            </ul>
-                                        </div> -->
+
                                                                 <div class="price-box pt-20">
                                                                     <span class="new-price new-price-2">
                                                                         <%=prData[i].price.salePrice%>
@@ -252,47 +335,7 @@
                                                                         </span>
                                                                     </p>
                                                                 </div>
-                                                                <!-- <div class="product-variants">
-                                            <div class="produt-variants-size">
-                                                <label>Dimension</label>
-                                                <select class="nice-select">
-                                                    <option value="1" title="S" selected="selected">small</option>
-                                                    <option value="2" title="M">medium</option>
-                                                    <option value="3" title="L">large</option>
-                                                </select>
-                                            </div>
-                                        </div> -->
-                                                                <!-- <div class="single-add-to-cart">
-                                            <form action="#" class="cart-quantity">
-                                                <div class="quantity">
-                                                    <label>Quantity</label>
-                                                    <div class="cart-plus-minus">
-                                                        <input class="cart-plus-minus-box" value="1" type="text">
-                                                        <div class="dec qtybutton"><i class="fa fa-angle-down"></i>
-                                                        </div>
-                                                        <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                    </div>
-                                                </div>
-                                                <button class="add-to-cart" type="submit">Add to cart</button>
-                                            </form>
-                                        </div> -->
-                                                                <div class="product-additional-info pt-25">
-                                                                    <a class="wishlist-btn" href="wishlist.html"><i
-                                                                            class="fa fa-heart-o"></i>Add to
-                                                                        wishlist</a>
-                                                                    <!-- <div class="product-social-sharing pt-25">
-                                                <ul>
-                                                    <li class="facebook"><a href="#"><i
-                                                                class="fa fa-facebook"></i>Facebook</a></li>
-                                                    <li class="twitter"><a href="#"><i
-                                                                class="fa fa-twitter"></i>Twitter</a></li>
-                                                    <li class="google-plus"><a href="#"><i
-                                                                class="fa fa-google-plus"></i>Google +</a></li>
-                                                    <li class="instagram"><a href="#"><i
-                                                                class="fa fa-instagram"></i>Instagram</a></li>
-                                                </ul>
-                                            </div> -->
-                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -300,6 +343,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                                 </div>
                                 <%}%>
 
@@ -313,7 +357,9 @@
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <!-- Begin Li's Static Home Image Area -->
-                                                                <div class="li-static-home-image"  style="background-image: url('/admin-assets/uploads/<%=bannerData[i].imageUrl%>');"></div>
+                                                                <div class="li-static-home-image"
+                                                                    style="background-image: url('/admin-assets/uploads/<%=bannerData[i].imageUrl%>');">
+                                                                </div>
                                                                 <!-- Li's Static Home Image Area End Here -->
                                                                 <!-- Begin Li's Static Home Content Area -->
                                                                 <div class="li-static-home-content">
@@ -334,8 +380,7 @@
                                                                         <%=bannerData[i].description%> </span>
                                                                     </p>
                                                                     <div class="default-btn">
-                                                                        <a href="#"
-                                                                            class="links">Shopping Now</a>
+                                                                        <a href="#" class="links">Shopping Now</a>
                                                                     </div>
                                                                 </div>
                                                                 <!-- Li's Static Home Content Area End Here -->
@@ -347,4 +392,111 @@
                                                     <%}%>
                                                         <%}%>
                                                             <!-- banner 2 end------------------ -->
+                                                            <!-- shop by brand--- -->
+                                                            <div class="product-area pt-60 pb-50">
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="li-product-tab">
+                                                                                <ul class="nav li-product-menu">
+                                                                                    <li><a class="active"
+                                                                                            data-toggle="tab"
+                                                                                            href="#li-new-product"><span>Shop
+                                                                                                By Brand
+                                                                                            </span></a></li>
+
+                                                                                </ul>
+                                                                            </div>
+                                                                            <!-- Begin Li's Tab Menu Content Area -->
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div id="li-featured-product" class="tab-pane"
+                                                                        role="tabpanel">
+                                                                        <div class="row">
+                                                                            <style>
+                                                                                .product_desc_info {
+                                                                                    display: flex;
+                                                                                    flex-direction: column;
+                                                                                    height: 120px;
+                                                                                    /* Adjust the height as needed */
+                                                                                    justify-content: space-between;
+                                                                                }
+
+                                                                                .price-box {
+                                                                                    margin-top: auto;
+                                                                                }
+                                                                            </style>
+
+                                                                            <div class="product-active owl-carousel">
+                                                                                <% for (let i=0; i < brandData.length;
+                                                                                    i++) { %>
+                                                                                    <div class="col-lg-12">
+                                                                                        <!-- single-product-wrap start -->
+                                                                                        <!-- for looping -->
+                                                                                        <div
+                                                                                            class="single-product-wrap">
+
+                                                                                            <div class="product-image">
+                                                                                                <a
+                                                                                                    href="/shop?brandfilter=<%=brandData[i]._id%>&keyword=&sortBy=">
+                                                                                                    <img src="/admin-assets/uploads/<%= brandData[i].imageUrl %>"
+                                                                                                        alt="Li's Product Image">
+                                                                                                </a>
+                                                                                            </div>
+                                                                                            <div class="product_desc">
+                                                                                                <div
+                                                                                                    class="product_desc_info">
+
+                                                                                                    <h4>
+                                                                                                        <a class="product_name"
+                                                                                                            href="/shop?brandfilter=<%=brandData[i]._id%>&keyword=&sortBy="
+                                                                                                            title="<%= brandData[i].name %>">
+                                                                                                            <%=
+                                                                                                                brandData[i].name.length>
+                                                                                                                50 ?
+                                                                                                                brandData[i].name.substring(0,
+                                                                                                                50) +
+                                                                                                                '...'
+                                                                                                                :
+                                                                                                                brandData[i].name
+                                                                                                                %>
+                                                                                                        </a>
+                                                                                                    </h4>
+
+                                                                                                    <div
+                                                                                                        class="product_desc_info">
+                                                                                                        <div
+                                                                                                            class="product-review">
+                                                                                                            <h5
+                                                                                                                class="manufacturer">
+                                                                                                                Shop By
+                                                                                                                Brand
+                                                                                                            </h5>
+                                                                                                        </div>
+                                                                                                        <h4>
+
+                                                                                                        </h4>
+                                                                                                        <div
+                                                                                                            class="price-box">
+
+                                                                                                        </div>
+
+                                                                                                    </div>
+
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- for looping -->
+                                                                                    </div>
+                                                                                    <% } %>
+
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <%- include('footer.ejs')%>

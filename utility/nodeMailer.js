@@ -34,6 +34,39 @@ const sendOtp = async (email, otp) => {
         console.log(error.message);
     }
 }
+
+const contactUsMailSender=async(customerName,customerEmail,contactSubject,contactMessage)=>{
+    try {
+        const email='jersymanauth@gmail.com'
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+        const mailOptions = {
+            from: customerEmail,
+            to: email,
+            subject: contactSubject,
+            html: `<h style="color: blue;">${customerEmail}</h>
+            <h style="color: blue;">Hi i am, ${customerName}</h>
+            <p>${contactMessage}</p>`
+        };
+
+        transporter.sendMail(mailOptions)
+            .then((info) => {
+                console.log('Email sent:', info.response);
+         
+              
+            })
+            .catch((error) => {
+                console.error('Error sending email:', error.message);
+            });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 module.exports={
-    generateOTP,sendOtp
+    generateOTP,sendOtp,contactUsMailSender
 }

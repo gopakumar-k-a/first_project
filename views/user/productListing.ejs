@@ -66,6 +66,8 @@
                                             <form id="sortForm" action="/search" method="POST">
                                                 <input type="hidden" id="sortByInput" name="sortBy" value="">
                                                 <input type="hidden" id="keywordInput" name="keyword" value="">
+                                                <input type="hidden" id="brandFilterInput" name="brandFilter" value="<%=brandFilter%>">
+                                                <input type="hidden" id="categoryFilterInput" name="categoryFilter" value="<%=categoryFilter%>">
                                             </form>
 
                                             <p>Sort By:</p>
@@ -85,6 +87,22 @@
                                 </div>
                                 <%}%>
                                     <script>
+                                        // function updateFormAndSubmit() {
+                                        //     const selectedSortOption = document.getElementById('sortSelect').value;
+
+                                        //     // Define keywordElement using document.getElementById
+                                        //     const keywordElement = document.getElementById('keywordElement');
+
+                                        //     // Check if keywordElement is defined before accessing its properties
+                                        //     const keyword = keywordElement ? keywordElement.innerText || '' : '';
+
+                                        //     document.getElementById('sortByInput').value = selectedSortOption;
+                                        //     document.getElementById('keywordInput').value = keyword;
+
+                                        //     document.getElementById('sortForm').submit();
+                                        // }
+
+
                                         function updateFormAndSubmit() {
                                             const selectedSortOption = document.getElementById('sortSelect').value;
 
@@ -94,11 +112,17 @@
                                             // Check if keywordElement is defined before accessing its properties
                                             const keyword = keywordElement ? keywordElement.innerText || '' : '';
 
+                                            // Define brandFilterElement and categoryFilterElement using document.getElementById
+    
+
                                             document.getElementById('sortByInput').value = selectedSortOption;
                                             document.getElementById('keywordInput').value = keyword;
+                                            // document.getElementById('brandFilterInput').value = brandFilter;
+                                            // document.getElementById('categoryFilterInput').value = categoryFilter;
 
                                             document.getElementById('sortForm').submit();
                                         }
+
 
 
                                         const urlParams = new URLSearchParams(window.location.search);
@@ -217,9 +241,7 @@
                                                                                         data-target="#exampleModalCenter<%=i%>"><i
                                                                                             class="fa fa-eye"></i></a>
                                                                                 </li>
-                                                                                <li><a class="links-details"
-                                                                                        href="wishlist.html"><i
-                                                                                            class="fa fa-heart-o"></i></a>
+                                                                               
                                                                                 </li>
                                                                             </ul>
                                                                         </div>
@@ -292,10 +314,7 @@
                                                                     <div class="shop-add-action mb-xs-30">
                                                                         <ul class="add-actions-link">
                                                                             <!-- <li class="add-cart"><a href="#">Add to cart</a></li> -->
-                                                                            <li class="wishlist"><a
-                                                                                    href="wishlist.html"><i
-                                                                                        class="fa fa-heart-o"></i>Add to
-                                                                                    wishlist</a>
+                                                                           
                                                                             </li>
                                                                             <li><a href="#" title="quick view"
                                                                                     class="quick-view"
@@ -324,7 +343,7 @@
                                                                         <li
                                                                             class="<%= i == currentPage ? 'page-item active' : 'page-item' %>">
                                                                             <a
-                                                                                href="<%= `/shop?page=${i}${keyword ? `&keyword=${keyword}` : ''}${sortBy ? `&sortBy=${sortBy}` : ''}` %>">
+                                                                                href="<%= `/shop?page=${i}${keyword ? `&keyword=${keyword}` : ''}${sortBy ? `&sortBy=${sortBy}` : ''}${brandFilter ? `&brandfilter=${brandFilter}` : ''}${categoryFilter ? `&categoryfilter=${categoryFilter}` : ''}` %>">
                                                                                 <%= i %>
                                                                             </a>
                                                                         </li>
@@ -616,8 +635,7 @@
                                             </form>
                                         </div> -->
                                         <div class="product-additional-info pt-25">
-                                            <a class="wishlist-btn" href="wishlist.html"><i
-                                                    class="fa fa-heart-o"></i>Add to wishlist</a>
+
                                             <!-- <div class="product-social-sharing pt-25">
                                                 <ul>
                                                     <li class="facebook"><a href="#"><i

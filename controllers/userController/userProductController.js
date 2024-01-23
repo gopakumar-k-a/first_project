@@ -172,9 +172,11 @@ const loadShop = async (req, res) => {
 //search product from the shop page
 const searchProduct = async (req, res) => {
     try {
-
-        const keyword = req.body.keyword;
-        const sortBy = req.body.sortBy;
+        console.log('inside search ',req.body);
+        const keyword = req.body.keyword || ''
+        const sortBy = req.body.sortBy || ''
+        const brandFilter=req.body.brandFilter || ''
+        const categoryFilter=req.body.categoryFilter || ''
         const regexPattern = new RegExp(keyword, "i");
 
         const searchResults = await productModel.aggregate([
@@ -195,7 +197,7 @@ const searchProduct = async (req, res) => {
 
 
         if (searchResults.length > 0) {
-            res.redirect(`/shop?keyword=${keyword}&sortBy=${sortBy}`)
+            res.redirect(`/shop?keyword=${keyword}&sortBy=${sortBy}&brandfilter=${brandFilter}&categoryfilter=${categoryFilter}`)
         }
         if (searchResults.length == 0) {
 
