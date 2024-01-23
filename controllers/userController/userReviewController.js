@@ -1,7 +1,7 @@
 
 const productModel = require('../../models/productModel')
 //adding new product review
-const addNewReview = async (req, res) => {
+const addNewReview = async (req, res,next) => {
     try {
         const userId = req.session.userId
         const { rating, comment, productId } = req.body
@@ -28,6 +28,8 @@ const addNewReview = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

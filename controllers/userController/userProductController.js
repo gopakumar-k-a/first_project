@@ -4,7 +4,7 @@ const categoryModel = require('../../models/categoryModel')
 const mongoose = require('mongoose')
 const wishlistHelper = require('../../helper/wishlistHelper')
 //load single product details page
-const loadSingleProduct = async (req, res) => {
+const loadSingleProduct = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId
@@ -12,19 +12,21 @@ const loadSingleProduct = async (req, res) => {
         const size = req.query.size || 'm'
         const product = await productModel.findOne({ _id: id }).populate('brand').populate('category').populate('team').populate('league').populate('review.userId')
         const relatedProductsBrands = await productModel.find({ brand: product.brand._id }).populate('brand').limit(5)
-        let productInWishlist=false
+        let productInWishlist = false
         if (user) {
-             productInWishlist =await wishlistHelper.wishlistCheck(userId, id, size)
+            productInWishlist = await wishlistHelper.wishlistCheck(userId, id, size)
         }
-        return res.render('user/singleProduct', { user, product, relatedProductsBrands,productInWishlist })
+        return res.render('user/singleProduct', { user, product, relatedProductsBrands, productInWishlist })
         // res.redirect(`/single-product-view?_id=${productId}&size=${size}`)
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 
 //load shop page
-const loadShop = async (req, res) => {
+const loadShop = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const keyword = req.query.keyword || ''
@@ -164,15 +166,16 @@ const loadShop = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //search product from the shop page
-const searchProduct = async (req, res) => {
+const searchProduct = async (req, res,next) => {
     try {
         const keyword = req.body.keyword || ''
         const sortBy = req.body.sortBy || ''
-        const brandFilter=req.body.brandFilter || ''
-        const categoryFilter=req.body.categoryFilter || ''
+        const brandFilter = req.body.brandFilter || ''
+        const categoryFilter = req.body.categoryFilter || ''
         const regexPattern = new RegExp(keyword, "i");
 
         const searchResults = await productModel.aggregate([
@@ -204,6 +207,7 @@ const searchProduct = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 

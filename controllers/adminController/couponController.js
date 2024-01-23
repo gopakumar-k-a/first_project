@@ -1,7 +1,7 @@
 const couponModel = require('../../models/couponModel');
 
 //load coupon page
-const loadCoupon = async (req, res) => {
+const loadCoupon = async (req, res ,next) => {
     try {
         const couponData = await couponModel.find({}).sort({ createdAt: -1 })
         const data = req.query.data || ''
@@ -24,10 +24,12 @@ const loadCoupon = async (req, res) => {
         res.render('admin/coupon', { couponData, successMsg, errorMsg })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //add new coupon
-const addNewCoupon = async (req, res) => {
+const addNewCoupon = async (req, res ,next) => {
     try {
         const {
             couponName,
@@ -62,10 +64,12 @@ const addNewCoupon = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //edit coupon page
-const editCoupon = async (req, res) => {
+const editCoupon = async (req, res ,next) => {
     try {
         // console.log(req.body);
         const {
@@ -108,10 +112,12 @@ const editCoupon = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //change status of coupon
-const changeActive = async (req, res) => {
+const changeActive = async (req, res ,next) => {
     try {
         const {couponId,status}=req.body
         await couponModel.findByIdAndUpdate(couponId,{$set:{isActive:status}})
@@ -119,6 +125,8 @@ const changeActive = async (req, res) => {
         res.status(200).json({message:'success'})
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

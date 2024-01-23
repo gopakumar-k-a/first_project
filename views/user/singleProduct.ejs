@@ -80,19 +80,22 @@
                                 <%= product.name %>
                             </h2>
 
-
-
-                            <div class="rating-box pt-20">
-                                <ul class="rating rating-with-review-item">
-                                    <li><i class="fa fa-star-o"></i></li>
-                                    <li><i class="fa fa-star-o"></i></li>
-                                    <li><i class="fa fa-star-o"></i></li>
-                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                    <li class="review-item"><a href="#">Read Review</a></li>
-                                    <li class="review-item"><a href="#">Write Review</a></li>
+                            <!-- --------rating of product view--------- -->
+                            <%if(product.review.length>0){%>
+                            <div class="comment-review">
+                                <span>Rating <%= product.avgRating %></span>
+                                <ul class="rating">
+                                    <% for (let i=1; i <=5; i++) { %>
+                                        <li class="<%= i <= product.avgRating ? '' : 'no-star' %>">
+                                            <i
+                                                class="fa fa-star<%= i <= Math.ceil(product.avgRating) ? '' : '-o' %>"></i>
+                                        </li>
+                                        <% } %>
                                 </ul>
+
+
                             </div>
+                            <%}%>
 
                             <div class="price-box pt-20">
                                 <span class="new-price new-price-2">&#8377;<%=product.price.salePrice%></span>
@@ -123,9 +126,9 @@
 
                                     </select>
                                     <script>
-                                        function sizeQty(productId){
-                                            let size=document.getElementById('sizeSelect').value
-                                            window.location.href=`/single-product-view?_id=${productId}&size=${size}`
+                                        function sizeQty(productId) {
+                                            let size = document.getElementById('sizeSelect').value
+                                            window.location.href = `/single-product-view?_id=${productId}&size=${size}`
 
                                         }
                                         function setSelectedSize() {
@@ -359,54 +362,54 @@
                                 </script>
                             </div>
                             <%if(productInWishlist){%>
-                                 <!-- ---added to wishlist--- -->
-                                 <div class="product-additional-info pt-25">
+                                <!-- ---added to wishlist--- -->
+                                <div class="product-additional-info pt-25">
 
-                                    <a class="wishlist-btn" href="#"><i
-                                        class="fa fa-heart" style="color: red;"></i>Added to wishList
-                                </a>
+                                    <a class="wishlist-btn" href="#"><i class="fa fa-heart"
+                                            style="color: red;"></i>Added to wishList
+                                    </a>
                                 </div>
-    
-                            <%}else{%>
-<!-- ----add to wishlist-- -->
 
-                            <div class="product-additional-info pt-25">
-                                <a class="wishlist-btn" href="#" onclick="addToWish('<%=product._id%>')"><i
-                                        class="fa fa-heart-o"></i>Add to wishList
-                                </a>
-                             
+                                <%}else{%>
+                                    <!-- ----add to wishlist-- -->
 
-                            </div>
-                            <%}%>
+                                    <div class="product-additional-info pt-25">
+                                        <a class="wishlist-btn" href="#" onclick="addToWish('<%=product._id%>')"><i
+                                                class="fa fa-heart-o"></i>Add to wishList
+                                        </a>
 
-                            <div class="block-reassurance">
-                                <ul>
-                                    <li>
-                                        <div class="reassurance-item">
-                                            <div class="reassurance-icon">
-                                                <i class="fa fa-check-square-o"></i>
-                                            </div>
-                                            <p>Security policy : Your Security is Our Priority</p>
+
+                                    </div>
+                                    <%}%>
+
+                                        <div class="block-reassurance">
+                                            <ul>
+                                                <li>
+                                                    <div class="reassurance-item">
+                                                        <div class="reassurance-icon">
+                                                            <i class="fa fa-check-square-o"></i>
+                                                        </div>
+                                                        <p>Security policy : Your Security is Our Priority</p>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="reassurance-item">
+                                                        <div class="reassurance-icon">
+                                                            <i class="fa fa-truck"></i>
+                                                        </div>
+                                                        <p>Delivery policy : Safe Packaging</p>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="reassurance-item">
+                                                        <div class="reassurance-icon">
+                                                            <i class="fa fa-exchange"></i>
+                                                        </div>
+                                                        <p> Return policy : Easy Return Process</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <div class="reassurance-item">
-                                            <div class="reassurance-icon">
-                                                <i class="fa fa-truck"></i>
-                                            </div>
-                                            <p>Delivery policy : Safe Packaging</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="reassurance-item">
-                                            <div class="reassurance-icon">
-                                                <i class="fa fa-exchange"></i>
-                                            </div>
-                                            <p> Return policy : Easy Return Process</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -443,8 +446,8 @@
                             title: "Success",
                             text: "Product added to wishlist!",
                             icon: "success",
-                            showConfirmButton: false  
-                            });
+                            showConfirmButton: false
+                        });
                         setTimeout(() => {
                             window.location.reload()
                         }, 1000);
@@ -456,7 +459,7 @@
                             title: "Info",
                             text: "Please Login to continue",
                             icon: "info",
-                            
+
                         }).then(() => {
                             // Redirect to login page
                             window.location.href = '/login';
@@ -517,23 +520,24 @@
                     </div>
                 </div>
                 <%if(product.review.length>0){%>
-                <div id="reviews" class="tab-pane" role="tabpanel">
-                    <div class="product-reviews">
-                        <div class="product-details-comment-block">
-                            
-                            <div class="comment-review">
-                                <span>Rating <%= product.avgRating %></span>
-                                <ul class="rating">
-                                  <% for (let i = 1; i <= 5; i++) { %>
-                                    <li class="<%= i <= product.avgRating ? '' : 'no-star' %>">
-                                      <i class="fa fa-star<%= i <= Math.ceil(product.avgRating) ? '' : '-o' %>"></i>
-                                    </li>
-                                  <% } %>
-                                </ul>
-                                
-                                  
-                            </div>
-                            <!-- <div class="comment-author-infos pt-25">
+                    <div id="reviews" class="tab-pane" role="tabpanel">
+                        <div class="product-reviews">
+                            <div class="product-details-comment-block">
+
+                                <div class="comment-review">
+                                    <span>Rating <%= product.avgRating %></span>
+                                    <ul class="rating">
+                                        <% for (let i=1; i <=5; i++) { %>
+                                            <li class="<%= i <= product.avgRating ? '' : 'no-star' %>">
+                                                <i
+                                                    class="fa fa-star<%= i <= Math.ceil(product.avgRating) ? '' : '-o' %>"></i>
+                                            </li>
+                                            <% } %>
+                                    </ul>
+
+
+                                </div>
+                                <!-- <div class="comment-author-infos pt-25">
                                 <span>HTML 5</span>
                                 <em>01-12-18</em>
                             </div>
@@ -542,64 +546,63 @@
                                 <p>Plaza</p>
                             </div> -->
 
-                            <div class="li-comment-section">
-                                <h3><%=product.review.length%> comment</h3>
-                                <ul>
-                                    <%product.review.forEach((user)=>{%>
-                                    <li class="comment-children">
-                                     
-                                        
-                                 
-                                        
-                                        <div class="comment-body pl-15">
-                                                <!-- <span class="reply-btn pt-15 pt-xs-5"><a href="#">reply</a></span> -->
-                                            <h5 class="comment-author pt-15"><%=user.userId.name%></h5>
-                                            <div class="comment-post-date">
-                                                <% 
-                                                    const userDate = new Date(user.createdAt);
-                                                    const options = { 
-                                                        year: 'numeric', 
-                                                        month: 'short', 
-                                                        day: 'numeric', 
-                                                        hour: 'numeric', 
-                                                        minute: 'numeric', 
-                                                        hour12: true 
-                                                    };
-                                                    const formattedDate = userDate.toLocaleDateString('en-US', options);
-                                                %>
-                                                <%= formattedDate %>
-                                            </div>
-                                            <p><%=user.comment%></p>
-                                        </div>
-                                    </li>
-                                    <%})%>
-                                    
-                                </ul>
+                                <div class="li-comment-section">
+                                    <h3>
+                                        <%=product.review.length%> comment
+                                    </h3>
+                                    <ul>
+                                        <%product.review.forEach((user)=>{%>
+                                            <li class="comment-children">
+
+
+
+
+                                                <div class="comment-body pl-15">
+                                                    <!-- <span class="reply-btn pt-15 pt-xs-5"><a href="#">reply</a></span> -->
+                                                    <h5 class="comment-author pt-15">
+                                                        <%=user.userId.name%>
+                                                    </h5>
+                                                    <div class="comment-post-date">
+                                                        <% const userDate=new Date(user.createdAt); const options={
+                                                            year: 'numeric' , month: 'short' , day: 'numeric' ,
+                                                            hour: 'numeric' , minute: 'numeric' , hour12: true }; const
+                                                            formattedDate=userDate.toLocaleDateString('en-US', options);
+                                                            %>
+                                                            <%= formattedDate %>
+                                                    </div>
+                                                    <p>
+                                                        <%=user.comment%>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <%})%>
+
+                                    </ul>
+                                </div>
+
+
+
+
+
                             </div>
-
-
-
-
-
                         </div>
                     </div>
-                </div>
-                <%}else{%>
-                    <div id="reviews" class="tab-pane" role="tabpanel">
-                        <div class="product-reviews">
-                            <div class="product-details-comment-block">  
-                                <div class="review-btn">
-                                    <h4>No Reviews Yet!</h4>
+                    <%}else{%>
+                        <div id="reviews" class="tab-pane" role="tabpanel">
+                            <div class="product-reviews">
+                                <div class="product-details-comment-block">
+                                    <div class="review-btn">
+                                        <h4>No Reviews Yet!</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                 
-                    <%}%>
+
+                        <%}%>
             </div>
         </div>
     </div>
     <!-- Product Area End Here -->
     <!-- Begin Li's Laptop Product Area -->
-    
-            <%- include('footer.ejs') %>
+
+    <%- include('footer.ejs') %>

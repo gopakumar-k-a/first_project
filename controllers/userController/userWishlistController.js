@@ -2,7 +2,7 @@ const wishlistModel = require('../../models/wishlistModel')
 // const cartModel = require('../../models/cartModel')
 const wishlistHelper=require('../../helper/wishlistHelper')
 //load wishlist page
-const loadWishList = async (req, res) => {
+const loadWishList = async (req, res ,next) => {
     try {
         const user = req.session.userId
         const wishlistData=await wishlistHelper.wishListData(user)
@@ -10,10 +10,12 @@ const loadWishList = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //add to wishlist
-const addToWish = async (req, res) => {
+const addToWish = async (req, res ,next) => {
     try {
         const user = req.session.userId
         const { size, prId } = req.body
@@ -50,10 +52,12 @@ const addToWish = async (req, res) => {
         return res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //remove product from wishlist
-const removeProduct = async (req, res) => {
+const removeProduct = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const wishIndex = req.query.wishIndex
@@ -63,6 +67,8 @@ const removeProduct = async (req, res) => {
         return res.status(200).json({ message: 'Document deleted successfully' });
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

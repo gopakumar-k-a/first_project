@@ -1,7 +1,7 @@
 const userModel = require('../../models/userModel')
 const productModel = require('../../models/productModel')
 const orderModel = require('../../models/orderModel')
-const brandModel=require('../../models/brandModel')
+const brandModel = require('../../models/brandModel')
 const bcrypt = require('bcryptjs');
 const hashPassword = require('../../utility/hashPassword')
 const validator = require("validator");
@@ -12,7 +12,7 @@ require('dotenv').config();
 const { generateReferralCode, checkReferredUser } = require('../../helper/referralCode')
 
 //load home page
-const loadHome = async (req, res) => {
+const loadHome = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const bannerData = await bannerModel.find()
@@ -23,15 +23,16 @@ const loadHome = async (req, res) => {
             leagueStatus: true,
             brandStatus: true
         }).populate('brand').populate('category').sort({ createdAt: -1 }).limit(6)
-        const brandData=await brandModel.find()
-        res.render('user/home', { user, prData, bannerData ,brandData})
+        const brandData = await brandModel.find()
+        res.render('user/home', { user, prData, bannerData, brandData })
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 
 }
 //load login page
-const loadLogin = async (req, res) => {
+const loadLogin = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const email = req.session.lEmail || ''
@@ -43,20 +44,24 @@ const loadLogin = async (req, res) => {
 
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 
 //log out operation
-const logout = async (req, res) => {
+const logout = async (req, res, next) => {
     try {
         await req.session.destroy()
         res.redirect('/login')
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 //load regiseter page
-const loadRegister = async (req, res) => {
+const loadRegister = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const message = req.query.message || ''
@@ -66,10 +71,12 @@ const loadRegister = async (req, res) => {
         res.render('user/register', { message, user })
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 //load forgot to password page
-const loadForgotPassword = async (req, res) => {
+const loadForgotPassword = async (req, res, next) => {
     try {
         if (req.session.registerOtp) {
             req.session.registerOtp = null
@@ -77,49 +84,51 @@ const loadForgotPassword = async (req, res) => {
         const user = req.session.userEmail || ''
         return res.render('user/forgotPassword', { user, message: '', otpCheck: '' })
     } catch (error) {
-        console.log();
+        console.log(error.message);
+        next(error)
+
     }
 }
 //load about page
-const loadAbout = async (req, res) => {
+const loadAbout = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
-        const bannerData=await bannerModel.find()
-       
-        res.render('user/about', { user,bannerData })
+        const bannerData = await bannerModel.find()
+
+        res.render('user/about', { user, bannerData })
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 //load contact page
-const loadContact = async (req, res) => {
+const loadContact = async (req, res, next) => {
     try {
-        // const message = req.flash();
-        // console.log('message ', message);
-        // const message = req.flash('success') || '' // Use the key you used when setting the flash message
-        const message=req.query.message || ''
+        const message = req.query.message || ''
         console.log('message ', message);
         const user = req.session.userEmail || ''
-        res.render('user/contact', { user,message })
+        res.render('user/contact', { user, message })
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 //load otp page
-const loadOtp = async (req, res) => {
+const loadOtp = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const errMessage = req.query.errMessage || ''
         const email = req.session.email || ''
         res.render('user/otp', { email, errMessage, user })
-
-
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //otp in forgot password
-const sendForgotOtp = async (req, res) => {
+const sendForgotOtp = async (req, res, next) => {
     try {
         const { email } = req.body
         const matchUser = await userModel.findOne({ email: email })
@@ -135,13 +144,12 @@ const sendForgotOtp = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 
 //validating otp from user
-const checkOtp = async (req, res) => {
-
-
+const checkOtp = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const otpFromPage = req.body.otp
@@ -251,11 +259,12 @@ const checkOtp = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 
 }
 //updating password of the user from forgot otp
-const changePassword = async (req, res) => {
+const changePassword = async (req, res, next) => {
     try {
         const userPass = req.body.password
         const forgotPassEmail = req.session.FEmail
@@ -267,11 +276,12 @@ const changePassword = async (req, res) => {
         }
 
     } catch (error) {
-
+        console.log(error.message);
+        next(error)
     }
 }
 //registering new user
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
     try {
         const firstname = req.body.firstName
         const lastname = req.body.lastName
@@ -313,10 +323,11 @@ const registerUser = async (req, res) => {
     }
     catch (error) {
         console.log(error.message)
+        next(error)
     }
 }
 //resend otp functionality
-const resendOtp = async (req, res) => {
+const resendOtp = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const otp = generateOTP();
@@ -337,10 +348,11 @@ const resendOtp = async (req, res) => {
         res.render('user/otp', { user, email: user, errMessage: '' });
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //checking user before log in
-const checkuser = async (req, res) => {
+const checkuser = async (req, res, next) => {
 
     try {
         const { email, password } = req.body
@@ -374,11 +386,12 @@ const checkuser = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 
 }
 //load user dashboard
-const loadUserDashboard = async (req, res) => {
+const loadUserDashboard = async (req, res, next) => {
     try {
         const userId = req.session.userId
         const user = req.session.userEmail || ''
@@ -430,10 +443,11 @@ const loadUserDashboard = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //user data update through user dashboard
-const userUpdate = async (req, res) => {
+const userUpdate = async (req, res, next) => {
     try {
 
         const goto = req.query.goto
@@ -499,25 +513,27 @@ const userUpdate = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 
-const contactUsMessage = async (req, res) => {
+const contactUsMessage = async (req, res, next) => {
     try {
         const { customerName, customerEmail, contactSubject, contactMessage } = req.body
         console.log(req.body);
-       const sendMail= await contactUsMailSender(customerName, customerEmail, contactSubject, contactMessage)
-      
-            const message='email send successfully'
-            return res.redirect(`/contact?message=${message}`)
-        
+        const sendMail = await contactUsMailSender(customerName, customerEmail, contactSubject, contactMessage)
 
-       
+        const message = 'email send successfully'
+        return res.redirect(`/contact?message=${message}`)
+
+
+
 
 
 
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 

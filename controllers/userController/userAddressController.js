@@ -88,7 +88,7 @@ const updateAddress = async (req, res) => {
     }
 }
 //deleting address from the users document
-const deleteAddress = async (req, res) => {
+const deleteAddress = async (req, res,next) => {
     try {
         const userId = req.session.userId
         const index = req.query.index
@@ -99,6 +99,7 @@ const deleteAddress = async (req, res) => {
         res.status(200).json({ message: 'Address deleted successfully' });
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 module.exports = {

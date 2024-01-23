@@ -3,17 +3,19 @@ const productModel=require('../../models/productModel')
 const walletModel=require('../../models/walletModel')
 const mongoose = require('mongoose')
 //load order details of user
-const loadOrderDetails = async (req, res) => {
+const loadOrderDetails = async (req, res ,next) => {
     try {
         const id = req.query.id
         const orderData = await orderModel.find({ userId: id }).sort({orderedAt:-1})
         res.render('admin/orderDetails', { orderData })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //changing status of the order
-const changeOrderStatus = async (req, res) => {
+const changeOrderStatus = async (req, res ,next) => {
     try {
 
         const { idOforder, orderStatusSelect } = req.body
@@ -83,10 +85,12 @@ const changeOrderStatus = async (req, res) => {
         res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //load order list
-const loadAllOrders = async (req, res) => {
+const loadAllOrders = async (req, res ,next) => {
     try {
         const page = req.query.page || 1
         const count = await orderModel.find().count()
@@ -103,16 +107,20 @@ const loadAllOrders = async (req, res) => {
         })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //load single order details
-const loadSingleOrderDetails = async (req, res) => {
+const loadSingleOrderDetails = async (req, res ,next) => {
     try {
         const id = new mongoose.Types.ObjectId(req.query._id);
         const orderData = await orderModel.findOne({ _id: id }).populate('userId').populate('items.productId')
         res.render('admin/singleOrderDetails', { orderData });
     } catch (error) {
         console.log(error);
+        next(error)
+
     }
 };
 

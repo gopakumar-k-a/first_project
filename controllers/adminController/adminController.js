@@ -7,25 +7,29 @@ const bcrypt = require('bcryptjs');
 const validator = require("validator");
 
 //load admin login
-const loadLogin = async (req, res) => {
+const loadLogin = async (req, res ,next) => {
 
     try {
         res.render('admin/adminLogin', { message: '' })
     } catch (error) {
         console.log(error.message)
+        next(error)
+
     }
 }
 //log out admin
-const logout = async (req, res) => {
+const logout = async (req, res ,next) => {
     try {
         req.session.destroy()
         return res.redirect('/admin')
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //check email and password before login
-const checkAdmin = async (req, res) => {
+const checkAdmin = async (req, res ,next) => {
 
     try {
         const { email, password } = req.body
@@ -61,11 +65,13 @@ const checkAdmin = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 
 }
 //load admin dashboard
-const loadDashboard = async (req, res) => {
+const loadDashboard = async (req, res ,next) => {
     try {
         const userAddedObject = await userModel.aggregate([
             {
@@ -242,10 +248,12 @@ const loadDashboard = async (req, res) => {
         })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //load sales report page
-const loadSalesReport = async (req, res) => {
+const loadSalesReport = async (req, res ,next) => {
     try {
         const page = req.query.page || 1
         const limit = 15
@@ -378,16 +386,18 @@ const loadSalesReport = async (req, res) => {
     }
 }
 //getting date from the front end for sales report
-const dateOfSalesReport = async (req, res) => {
+const dateOfSalesReport = async (req, res ,next) => {
     try {
         const { fromDate, toDate } = req.body
         res.redirect(`/admin/salesreport?fromDate=${fromDate}&toDate=${toDate}`)
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //load users list in the admin side
-const loadUsersList = async (req, res) => {
+const loadUsersList = async (req, res ,next) => {
     try {
         const page = req.query.page || 1
         const count = await userModel.find().count()
@@ -406,26 +416,32 @@ const loadUsersList = async (req, res) => {
         })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //block specific user
-const blockUser = async (req, res) => {
+const blockUser = async (req, res ,next) => {
     try {
         const id = req.query._id
         await userModel.updateOne({ _id: id }, { $set: { isActive: false } })
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //un-block specific user
-const unBlockUser = async (req, res) => {
+const unBlockUser = async (req, res ,next) => {
     try {
         const id = req.query._id
         await userModel.updateOne({ _id: id }, { $set: { isActive: true } })
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

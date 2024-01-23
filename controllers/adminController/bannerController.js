@@ -1,16 +1,18 @@
 const bannerModel = require('../../models/bannerModel')
 
 //load banner page
-const loadBanner = async (req, res) => {
+const loadBanner = async (req, res ,next) => {
     try {
         const bannerData = await bannerModel.find({})
         res.render('admin/banner', { bannerData })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //load edit banner page
-const loadEditBanner = async (req, res) => {
+const loadEditBanner = async (req, res ,next) => {
     try {
         const { id } = req.query
         const bannerData = await bannerModel.findOne({ _id: id })
@@ -19,10 +21,12 @@ const loadEditBanner = async (req, res) => {
         res.render('admin/editBanner', { bannerData, startDate, endDate })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //update banner data with image
-const PostBannerImage = async (req, res) => {
+const PostBannerImage = async (req, res ,next) => {
     try {
         const { name, title, subtitle,
             description, targetedUrl, startDate, endDate } = req.body
@@ -55,10 +59,12 @@ const PostBannerImage = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //update banner data with out image
-const editBanner = async (req, res) => {
+const editBanner = async (req, res ,next) => {
     try {
         const {
             title,
@@ -105,10 +111,12 @@ const editBanner = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //block banner
-const blockBanner = async (req, res) => {
+const blockBanner = async (req, res ,next) => {
     try {
         const { id, operation } = req.body
         const bannerData = await bannerModel.findOne({ _id: id })
@@ -121,6 +129,8 @@ const blockBanner = async (req, res) => {
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

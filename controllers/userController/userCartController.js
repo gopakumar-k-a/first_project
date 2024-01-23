@@ -2,7 +2,7 @@
 const cartModel = require('../../models/cartModel')
 const productModel = require('../../models/productModel')
 //laoding cart page
-const loadCart = async (req, res) => {
+const loadCart = async (req, res ,next) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId || ''
@@ -12,10 +12,11 @@ const loadCart = async (req, res) => {
         res.render('user/cart', { user, cartData,errMessage })
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //add products to the cart
-const addTocart = async (req, res) => {
+const addTocart = async (req, res ,next) => {
     try {
 
         const userId = req.session.userId
@@ -67,10 +68,12 @@ const addTocart = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //remove product from the cart
-const removeProduct = async (req, res) => {
+const removeProduct = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const cartId = req.query.cartId
@@ -80,10 +83,12 @@ const removeProduct = async (req, res) => {
         res.status(200).json({ message: 'Document deleted successfully' });
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //increase or decrease product quantity from the cart page
-const cartQuantity = async (req, res) => {
+const cartQuantity = async (req, res ,next) => {
     try {
 
         const userId = req.session.userId
@@ -111,6 +116,8 @@ const cartQuantity = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 

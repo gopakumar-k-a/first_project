@@ -13,7 +13,7 @@ var instance = new Razorpay({
     key_secret: process.env.RAZOR_KEY_SECRET,
 });
 //load checkout page
-const loadCheckout = async (req, res) => {
+const loadCheckout = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const user = req.session.userEmail || ''
@@ -50,10 +50,11 @@ const loadCheckout = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //fetch coupon data to checkout
-const couponDetails = async (req, res) => {
+const couponDetails = async (req, res ,next) => {
     try {
         const userId = req.session.userId;
         const { name, total } = req.query;
@@ -104,13 +105,14 @@ const couponDetails = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Internal Server Error");
+        next(error)
+
     }
 };
 
 
 //fetch walllet data to the checkout
-const walletApply = async (req, res) => {
+const walletApply = async (req, res ,next) => {
     try {
         const userId = req.session.userId
 
@@ -146,10 +148,12 @@ const walletApply = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //placing order
-const placeOrder = async (req, res) => {
+const placeOrder = async (req, res ,next) => {
     try {
         const userId = req.session.userId
 
@@ -239,10 +243,12 @@ const placeOrder = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //razor pay integration
-const onlinePayment = async (req, res) => {
+const onlinePayment = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const stockAvailability = await updateQuantity(userId)
@@ -270,10 +276,12 @@ const onlinePayment = async (req, res) => {
     } catch (error) {
 
         console.log(error.message);
+        next(error)
+
     }
 }
 //cancel order
-const cancelOrder = async (req, res) => {
+const cancelOrder = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const { id } = req.body
@@ -315,10 +323,12 @@ const cancelOrder = async (req, res) => {
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //return order
-const returnOrder = async (req, res) => {
+const returnOrder = async (req, res ,next) => {
     try {
         const userId = req.session.userId
         const { id, returnReason } = req.body
@@ -362,10 +372,12 @@ const returnOrder = async (req, res) => {
         res.status(200).json({ message: 'success' })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 //show order details
-const orderDetails = async (req, res) => {
+const orderDetails = async (req, res ,next) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId
@@ -374,6 +386,8 @@ const orderDetails = async (req, res) => {
         res.render('user/orderDet.ejs', { user, orderData })
     } catch (error) {
         console.log(error.message);
+        next(error)
+
     }
 }
 
