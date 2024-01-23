@@ -3,7 +3,7 @@ const userModel = require('../../models/userModel')
 const orderModel = require('../../models/orderModel')
 const productModel = require('../../models/productModel')
 const categoryModel = require('../../models/categoryModel')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const validator = require("validator");
 
 //load admin login
