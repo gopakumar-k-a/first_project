@@ -82,7 +82,7 @@ const loadCategory = async (req, res) => {
         const leagueData = await leagueModel.find({})
         const teamData = await teamModel.find({})
         const brandData = await brandModel.find({})
-        res.render('admin/categoryManagement', {
+        res.render('admin/CategoryManagement', {
             ceMessage, leMessage, teMessage,
             lsMessage, csMessage, tsMessage, beMessage, bsMessage,
             catData, leagueData, teamData, brandData
