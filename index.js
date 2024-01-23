@@ -10,7 +10,7 @@ const {errorHandler}=require('./middleware/errorHandler')
 const atlasConnectionString = process.env.ATLAS_CONNECTION_STRING;
 const userRoute = require('./routes/user_routes/userRoute')
 const adminRoute = require('./routes/admin_routes/adminRoute')
-mongoose.connect(atlasConnectionString)
+mongoose.connect('mongodb://localhost:27017/myJersyDB')
     .then(() => {
         console.log('dataBase connected successfully');
     })
@@ -36,7 +36,6 @@ app.use('*',(req,res)=>{
     res.render('error/404')
 })
 app.use(errorHandler)
-
 
 
 app.listen(3000, () => {
