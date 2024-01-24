@@ -62,13 +62,13 @@
     </div>
     <!-- Li's Breadcrumb Area End Here -->
     <!--Shopping Cart Area Strat-->
-    <%if(errMessage && errMessage!=null){%>
-        <%if(cartData && cartData.length>0){%>
-            <h3 class="text-center text-danger">Please <strong>decrease the Quantity</strong> of Products Which Have No
-                Available Quantity <br> or <strong>Remove The Product</strong> From the Cart <br> <strong>to
+    <%if(errMessage){%>
+      
+            <h3 class="text-center text-danger">Please <strong>Remove Products which are out of stock</strong> From the Cart <br>  <strong>to
                     Continue</strong></h3>
-            <%}%>
-                <%}%> 
+                    <%}%>
+               
+          
     <div class="Shopping-cart-area pt-60 pb-60">
         <div class="container">
             <div class="row">
@@ -140,6 +140,7 @@
                                                     <!-- ----quantitiy--------- -->
                                                     <td class="quantity">
                                                         <!-- <label>Quantity</label> -->
+                                                        <%if(product.productId.size[product.size].quantity>0 && product.productId.size[product.size].quantity>product.quantity){%>
                                                       <form action="#" class="cart-quantity" id="quantity-form">
                                                             <div class="value-button" id="decrease"
                                                                 onclick="decreaseValue('<%=index%>')
@@ -161,6 +162,12 @@
                                                             readonly  hidden>
 
                                                         </form>
+                                                         <%}else{%>
+                                                            <p class="text-danger text-center">out of stock</p>
+                                                            <p class="text-danger text-center">stock you required <%= product.quantity%></p>
+                                                            <p class="text-success text-center">stock avail  <%=product.productId.size[product.size].quantity%></p>
+
+                                                                <%}%>
                                                     </td>
                                                     <td class="product-subtotal"><span class="amount"
                                                             id="totalAmount<%=index%>"></span></td>

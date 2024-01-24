@@ -161,7 +161,12 @@ const loadShop = async (req, res, next) => {
                 currentPage: '',
                 limit: '',
                 keyword: 'no results found',
-                foundCheck: false
+                foundCheck: false,
+                brandData: '',
+                categoryData: '',
+                brandFilter: '',
+                categoryFilter: '',
+                filterStatus: ''
             })
         }
     } catch (error) {

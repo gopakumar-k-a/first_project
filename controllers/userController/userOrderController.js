@@ -13,7 +13,7 @@ var instance = new Razorpay({
     key_secret: process.env.RAZOR_KEY_SECRET,
 });
 //load checkout page
-const loadCheckout = async (req, res ,next) => {
+const loadCheckout = async (req, res, next) => {
     try {
         const userId = req.session.userId
         const user = req.session.userEmail || ''
@@ -44,7 +44,6 @@ const loadCheckout = async (req, res ,next) => {
             }
             res.render('user/checkout', { user, cartData, couponData, walletData })
         } else {
-            console.log('stock not available');
             const errMessage = true
             res.redirect(`/user-cart?errMessage=${errMessage}`)
         }
@@ -54,7 +53,7 @@ const loadCheckout = async (req, res ,next) => {
     }
 }
 //fetch coupon data to checkout
-const couponDetails = async (req, res ,next) => {
+const couponDetails = async (req, res, next) => {
     try {
         const userId = req.session.userId;
         const { name, total } = req.query;
@@ -112,7 +111,7 @@ const couponDetails = async (req, res ,next) => {
 
 
 //fetch walllet data to the checkout
-const walletApply = async (req, res ,next) => {
+const walletApply = async (req, res, next) => {
     try {
         const userId = req.session.userId
 
@@ -153,7 +152,7 @@ const walletApply = async (req, res ,next) => {
     }
 }
 //placing order
-const placeOrder = async (req, res ,next) => {
+const placeOrder = async (req, res, next) => {
     try {
         const userId = req.session.userId
 
@@ -165,7 +164,7 @@ const placeOrder = async (req, res ,next) => {
             const userData = await userModel.findOne({ _id: userId })
             const cartData = await cartModel.findOne({ userId: userId })
             const totalAmount = await cartTotal(userId)
-            
+
             let paymentStatus = ''
             if (paymentMethod == 'upi') {
                 paymentStatus = 'success'
@@ -248,7 +247,7 @@ const placeOrder = async (req, res ,next) => {
     }
 }
 //razor pay integration
-const onlinePayment = async (req, res ,next) => {
+const onlinePayment = async (req, res, next) => {
     try {
         const userId = req.session.userId
         const stockAvailability = await updateQuantity(userId)
@@ -281,7 +280,7 @@ const onlinePayment = async (req, res ,next) => {
     }
 }
 //cancel order
-const cancelOrder = async (req, res ,next) => {
+const cancelOrder = async (req, res, next) => {
     try {
         const userId = req.session.userId
         const { id } = req.body
@@ -328,7 +327,7 @@ const cancelOrder = async (req, res ,next) => {
     }
 }
 //return order
-const returnOrder = async (req, res ,next) => {
+const returnOrder = async (req, res, next) => {
     try {
         const userId = req.session.userId
         const { id, returnReason } = req.body
@@ -377,7 +376,7 @@ const returnOrder = async (req, res ,next) => {
     }
 }
 //show order details
-const orderDetails = async (req, res ,next) => {
+const orderDetails = async (req, res, next) => {
     try {
         const user = req.session.userEmail || ''
         const userId = req.session.userId
