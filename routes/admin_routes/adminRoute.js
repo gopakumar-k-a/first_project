@@ -17,11 +17,6 @@ const bannerController=require('../../controllers/adminController/bannerControll
 const upload = require('../../utility/multer')
 //admin auth
 const adminAuth = require('../../middleware/adminAuth')
-
-
-
-
-
 //load login page page
 admin.get('/', adminAuth.isLogout, adminController.loadLogin)
 //load dashboard(dummy content)
@@ -36,11 +31,7 @@ admin.get('/edit-users', adminAuth.isLogin, adminController.loadUsersList)
 admin.patch('/block-user', adminAuth.isLogin, adminController.blockUser)
 //unblock user
 admin.patch('/unblock-user', adminAuth.isLogin, adminController.unBlockUser)
-
-
-
-
-//load projectlist page
+//load productlist page
 admin.get('/product-list', adminAuth.isLogin, productController.loadProductList)
 //load addproduct page
 admin.get('/add-product', adminAuth.isLogin, productController.loadAddProduct)
@@ -53,12 +44,9 @@ admin.post('/edit-product',adminAuth.isLogin,upload.array('newimages',3),product
 //deleting images 
 admin.delete('/edit-product',adminAuth.isLogin,productController.deleteImage)
 //===========product management====================
-
 //load product management page
 admin.get('/category-management', adminAuth.isLogin, productController.loadCategory)
 // category management=========================
-
-
 // ------category--management--------------
 //inserting new category
 admin.post('/add-category', adminAuth.isLogin, productController.addCategory)
@@ -68,7 +56,6 @@ admin.post('/edit-cat', adminAuth.isLogin, productController.updateCatName)
 admin.get('/blockCategory', adminAuth.isLogin, productController.blockCat)
 //unblocking categories
 admin.get('/unblockCategory', adminAuth.isLogin, productController.unblockCat)
-
 //----------------------league-management--------------
 //inserting data of league
 admin.post('/add-league', adminAuth.isLogin, productController.insertLeague)
@@ -78,18 +65,11 @@ admin.post('/edit-league', productController.updateLeagueName)
 admin.get('/blockLeague', adminAuth.isLogin, productController.blockLeague)
 //unblocking leagues
 admin.get('/unblockLeague', adminAuth.isLogin, productController.unblockLeague)
-
-
 //------------------------team-management---------------------------
 //inserting  data of team
 admin.post('/add-team', adminAuth.isLogin, productController.insertTeam)
 //updating data of team
 admin.post('/edit-team', adminAuth.isLogin, productController.updateTeamName)
-//blocking team
-// admin.get('/blockTeam',productController.blockTeam)
-// //unblocking team
-// admin.get('/unblockTeam',productController.unblockTeam)
-
 //inserting new brand
 admin.post('/add-brand', adminAuth.isLogin, upload.single('brandInput'), productController.insertBrand)
 //update-brand
@@ -128,7 +108,7 @@ admin.patch('/block-banner',adminAuth.isLogin,bannerController.blockBanner)
 admin.get('/banner/edit',adminAuth.isLogin,bannerController.loadEditBanner)
 //edit banner details with image
 admin.post('/banner/edit',adminAuth.isLogin,upload.single('croppedImage'),bannerController.editBanner)
-// admin.post('/banner/edit',adminAuth.isLogin,bannerController.updateBannerDet)
+
 
 
 

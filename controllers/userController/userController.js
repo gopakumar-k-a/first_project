@@ -291,7 +291,7 @@ const registerUser = async (req, res, next) => {
         const userPass = req.body.password
         const referralCode = req.body.referralCode.toUpperCase()
 
-        const userMatch = await userModel.find({ email: email })
+        const userMatch = await userModel.find({ email: email }) 
         const phoneMatch = await userModel.find({ phone: phoneno })
         if (userMatch.length > 0) {
             const message = 'email already exists'
