@@ -55,5 +55,6 @@ Special thanks to the online community and educational resources for guidance th
 ## Let's Connect
 
 For enthusiasts of web development, AWS, Nginx, and more, let's connect! Share your insights and experiences as we explore the vast realm of technology together.
+[Connect with me on LinkedIn](https://www.linkedin.com/in/gopakumar-ka-a945a4288/)
 
 #learningproject #webdevelopment #AWS #Nginx #ecommerce #coding #educationpurpose #workingvideo
